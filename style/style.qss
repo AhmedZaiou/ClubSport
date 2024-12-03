@@ -1,0 +1,166 @@
+QMainWindow {
+                background-color: #f0f0f0;
+            }   
+            #top_widget{
+                width: 148px;        
+                height: 328px;
+                margin-top: 150;
+                margin-left: 200px;
+                margin-right: 200px;
+                
+                margin-bottom: 100px;
+            }  
+            #logotop{  
+                margin-left: 240px;  /* Marge à gauche de 200px */
+                margin-top: 130;   /* Marge en haut de 35px */
+                font-family: Arial;  /* Police de caractère Arial */
+                font-size: 16px;     /* Taille de la police à 16px */
+                color: #333333;    /* Couleur du texte */
+                width: 48px;         /* Largeur du QLabel à 300px */ 
+                background-color: transparent;  /* Fond transparent */
+                margin-bottom: 150px;
+                height: 328px;
+            }
+            #titleLabel {
+                font-size: 48px;                /* Taille du texte */
+                font-weight: 700px;              /* Gras pour accentuer */
+                color: #1A1A1A;               /* Couleur sombre */
+                line-height: 30px;             /* Assure que le texte est centré verticalement */
+                margin-top: 200;               /* Ajout d'espace horizontal */
+                text-align: left;             /* Alignement à droite */
+                letter-spacing: 1.5px;         /* Espacement entre les lettres */
+                background-color: transparent; /* Fond transparent */
+                font-family: 'Arial', sans-serif; /* Police moderne */
+                margin-right: 200px;
+                margin-bottom: 200px;
+            }
+            #buttconexion {
+                font-size: 16px; /* Font size for readability */
+                padding: 10px; /* Padding for a comfortable click area */
+                background-color: #007BFF; /* Blue background color */
+                color: white; /* White text for contrast */
+                border-radius: 5px; /* Rounded corners for a modern look */
+                border: none; /* No border */
+                cursor: pointer; /* Pointer cursor to indicate it's clickable */
+            }
+            
+            #buttconexion:hover {
+                background-color: #0056b3; /* Darker blue when hovered for a hover effect */
+            }
+
+
+            #buttonmenu{
+                font-size: 16px; /* Font size for readability */
+                padding: 10px; /* Padding for a comfortable click area */
+                background-color: #007BFF; /* Blue background color */
+                color: white; /* White text for contrast */
+                border-radius: 5px; /* Rounded corners for a modern look */
+                border: none; /* No border */
+                cursor: pointer; /* Pointer cursor to indicate it's clickable */
+                margin-top: 50px;
+            }
+            #buttonmenu:hover {
+                background-color: #0056b3; /* Darker blue when hovered for a hover effect */
+            }
+
+            QLineEdit {
+                font-size: 14px;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                
+            }
+            QPushButton {
+                font-size: 16px;
+                padding: 10px;
+                background-color: #4CAF50;
+                color: black;
+                border-radius: 5px;
+                border: none;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+            
+            #contentLabel {
+                font-size: 18px;
+                color: #333;
+            }
+            #menuFrame {
+                background-color : #e6e9ed; 
+                max-width: 280px; 
+                margin: 0;
+                padding: 0;
+                max-height: 700px; 
+                min-width: 280px;
+
+            }
+            #loginframe {
+                background-color: white; /* Sleek dark background */
+                border-radius: 15px; /* Softer rounded corners */
+                border: 2px solid #333333; /* Subtle border to outline the form */
+                width: 800px; /* Standard width for a login form */
+                padding: 30px; /* Generous padding for spacing */
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Light shadow for depth */
+                margin-bottom: 50px auto; /* Center the form on the page */
+            }
+            #connexionlab {
+                font-size: 32px; /* Larger size for prominence */
+                font-weight: 600; /* Semi-bold to make the title stand out */
+                color: #2E3A3F; /* Dark color for readability */
+                text-align: center; /* Center-align the title */
+                margin-bottom: 20px; /* Space below the title */
+                padding: 10px 0; /* Padding to add space around the text */
+                font-family: 'Arial', sans-serif; /* Modern, clean font */ 
+            }
+            
+            QFrame {
+                border-radius: 10px;
+            }
+            #main{
+                background-image: url('background_image.png');
+                background-color: white;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover; /* Adapte l'image à la taille de la fenêtre */
+            }
+            #main_interface {
+                background-color: white;
+            }
+
+            #QLineEditstyle{
+                font-size: 14px;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                width: 300px;
+                
+            }
+
+            #FormulaireWidget {
+                border: 2px solid #4CAF50;
+                border-radius: 10px;
+                padding: 10px;
+                background-color: #f9f9f9;
+            }
+            #FormulaireWidget QLabel {
+                text-align: right;
+                padding: 5px;
+                font-size: 14px;
+                color: #333;
+            }
+            QDateEdit {
+                font-size: 18px;   
+                padding: 10px;     
+                height: 40px;     
+            }
+            QSpinBox{
+                font-size: 18px;   
+                padding: 10px;     
+                height: 40px;     
+            }
+            QComboBox{
+                font-size: 18px;   
+                padding: 10px;     
+                height: 40px;     
+            }
