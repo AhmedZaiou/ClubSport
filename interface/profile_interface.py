@@ -7,15 +7,15 @@ from .main_interface import MainInterface
 from datetime import datetime
 
 
-class Profile(MainInterface):
-    def __init__(self, id_profile):
-        super().__init__()
-        self.id_profile = id_profile
+class Profile():
+    def __init__(self, id_profile,main_inter): 
+        self.main_inter = main_inter
+        self.id_profile = id_profile 
 
         self.show_profile_content()
 
     def show_profile_content(self):
-        self.clear_content_frame()
+        self.main_inter.clear_content_frame()
 
         self.dashbord_widget = QWidget()
         self.dashbord_widget.setObjectName("dashbord_widget")
@@ -41,14 +41,27 @@ class Profile(MainInterface):
         
         # Ajout des graphiques au layout principal
         layout.addLayout(graphs_layout)
+
+        table_layout = QHBoxLayout()
+
+
         
         # Tableau pour afficher les adhérents avec situation = NON
         self.form_paiment = QWidget()
         self.form_paiment.setObjectName("FormulaireWidget") 
         self.show_payment_formule()
-        layout.addWidget(self.form_paiment)
+        table_layout.addWidget(self.form_paiment)
+
+        self.confirm_paiment_w = QWidget()
+        self.confirm_paiment_w.setObjectName("FormulaireWidget") 
+        self.confirm_payment()
+        table_layout.addWidget(self.confirm_paiment_w)
+
+
+
+        layout.addLayout(table_layout)
         
-        self.content_layout.addWidget(self.dashbord_widget) 
+        self.main_inter.content_layout.addWidget(self.dashbord_widget) 
     
     def show_profile(self): 
         main_layout = QVBoxLayout(self.form_widget)
@@ -143,25 +156,27 @@ class Profile(MainInterface):
             self.age_value.setText(str(row[9]))
             self.genre_value.setText(str(row[10]))
             self.tarif_value.setText(str(row[11]))
+            self.monton = int(row[11])
             self.seances_value.setText(str(row[12]))
             self.situation_value.setText(str(row[13]))
             print(row[14])
             if row[14] and row[14] != 'Aucune':
-                self.photo_label.setPixmap(QPixmap("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/profile.png").scaled(150, 150))
+                self.photo_label.setPixmap(QPixmap(row[14]).scaled(150, 150))
             else:
                 self.photo_label.setPixmap(QPixmap("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/profile.png").scaled(150, 150))
-        self.content_layout.addWidget(self.form_widget)
+        self.main_inter.content_layout.addWidget(self.form_widget)
     
     def medefier(self):
-        pass
+        from .modefier_information import ModefierADh
+        self.main_interface = ModefierADh(self.main_inter, self.id_profile) 
     
     def show_payment_formule(self):
         self.layout = QVBoxLayout(self.form_paiment)
 
         # Tableau pour afficher les paiements
         self.table_paiements = QTableWidget()
-        self.table_paiements.setColumnCount(3)
-        self.table_paiements.setHorizontalHeaderLabels(["Mois", "État", "Action"])
+        self.table_paiements.setColumnCount(4)
+        self.table_paiements.setHorizontalHeaderLabels(["moi_concerner", "montant", "mode_paiement", "date_paiement"])
         self.table_paiements.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.layout.addWidget(self.table_paiements)
 
@@ -170,6 +185,14 @@ class Profile(MainInterface):
     def charger_paiements(self):
         adherent_id = self.id_profile
         paiements = recuperer_paiements(adherent_id)
+        
+        if len(paiements) >0:
+            date_laste_paiment = paiements[-1][1].split("-")
+            year_last_paiment,moi_last_paiment = int(date_laste_paiment[0]),int(date_laste_paiment[1])
+        else:
+            start_date = self.date_entree.split('-') 
+            year_last_paiment,moi_last_paiment = int(start_date[0])-1,int(start_date[1])-1
+         
 
         # Générer la liste des mois depuis la date d'entrée jusqu'à aujourd'hui
         self.table_paiements.setRowCount(0)
@@ -177,99 +200,109 @@ class Profile(MainInterface):
         current_month = current_date.month()
         current_year = current_date.year()
 
-        # Date d'entrée
-        start_date = self.date_entree.split('-')
-        print(self.date_entree)
-        year = int(start_date[0]) 
-        month = int(start_date[1]) 
+        year,month = year_last_paiment, moi_last_paiment
+        self.year_last_paiment, self.moi_last_paiment = year_last_paiment, moi_last_paiment
 
-        while year < current_year or (year == current_year and month <= current_month):
-            # Vérifier si le mois est payé
-            month_str = f"{year}-{month:02d}"
-            is_paid = any(month_str in paiement[2] for paiement in paiements)
+        list_pa = []
 
+        while (year <= current_year and month <= current_month) or (year == current_year and month <= current_month):
+             
+            list_pa.append((f'{year}-{month}-01', str(self.monton), str("especes")))
+            year,month = increment_month(year, month)
+        
+
+        for ind in range(len(list_pa)-1,0,-1):
+            data = list_pa[ind]
+            row_index = self.table_paiements.rowCount()
+            self.table_paiements.insertRow(row_index)
+            self.table_paiements.setItem(row_index, 0, QTableWidgetItem(data[0]))
+            self.table_paiements.setItem(row_index, 1, QTableWidgetItem(data[1]))
+            self.table_paiements.setItem(row_index, 2, QTableWidgetItem(data[2]))
+            etat_item = QTableWidgetItem(str("Payer"))
+            if ind != 1:
+                etat_item.setBackground(QColor(255, 0, 255))  
+            else:
+                etat_item.setBackground(QColor(255, 0, 0))  
+            etat_item.setForeground(Qt.blue)
+            etat_item.setTextAlignment(Qt.AlignCenter)
+            etat_item.setData(Qt.UserRole,str(data[0]))  
+            self.table_paiements.setItem(row_index, 3, etat_item)
+
+ 
+        for ind in range(len(paiements)-1,0,-1):
+            data = paiements[ind]
             # Ajouter la ligne au tableau
             row_index = self.table_paiements.rowCount()
             self.table_paiements.insertRow(row_index)
 
             # Colonne Mois
-            self.table_paiements.setItem(row_index, 0, QTableWidgetItem(month_str))
-
-            # Colonne État
-            etat_item = QTableWidgetItem("Payé" if is_paid else "Non payé")
-            etat_item.setBackground(QColor(0, 255, 0) if is_paid else QColor(255, 0, 0))
-            self.table_paiements.setItem(row_index, 1, etat_item)
-
-            # Colonne Action
-            if not is_paid:
-                button = QPushButton("Payer")
-                button.clicked.connect(lambda _, m=month_str: self.payer_mois(m))
-                button.setEnabled(all(
-                    f"{year}-{m:02d}" in [p[2][:7] for p in paiements]
-                    for m in range(1, month)
-                ))
-                self.table_paiements.setCellWidget(row_index, 2, button)
-
-            # Passer au mois suivant
-            month += 1
-            if month > 12:
-                month = 1
-                year += 1
-
-    def payer_mois(self, mois):
+            self.table_paiements.setItem(row_index, 0, QTableWidgetItem(str(data[1])))
+            self.table_paiements.setItem(row_index, 1, QTableWidgetItem(str(data[2])))
+            self.table_paiements.setItem(row_index, 2, QTableWidgetItem(str(data[3])))
+            etat_item = QTableWidgetItem(str(data[4]))
+            etat_item.setBackground(QColor(0, 255, 0))
+            self.table_paiements.setItem(row_index, 3, etat_item)
+        self.table_paiements.cellClicked.connect(self.payer_mois)
+        
+         
+    
+    def payer_mois(self,row, column ):
         """
         Fonction pour payer un mois non payé.
         """
-        adherent_id = self.id_profile
-        montant = self.montant_input.value()
-        mode_paiement = self.mode_paiement_input.currentText()
-        commentaire = f"Paiement pour {mois}"
-
-        ajouter_paiement(adherent_id, montant, f"{mois}-01", mode_paiement, commentaire)
-        self.charger_paiements()
+        if column == 3: 
+            adherent_id = self.table_paiements.item(row, column).data(Qt.UserRole)
+            
+            self.month_to_pay.setText(adherent_id)
+            self.monton_to_pay.setText(str(self.monton))
+            self.month_to_pay_value = adherent_id 
+            
+         
 
     def ajouter_paiement(self):
         """
         Ajoute un paiement manuel.
         """
         adherent_id = self.id_profile
-        montant = self.montant_input.value()
-        date_paiement = self.date_paiement_input.date().toString("yyyy-MM-dd")
-        mode_paiement = self.mode_paiement_input.currentText()
-        commentaire = self.commentaire_input.text()
+        montant = self.monton
+        date = QDate.currentDate().toString("yyyy-MM-dd").split('-') 
+        date_paiement = str(date[0])+'-'+str(date[1])+'-'+str( date[2])
+        mode_paiement = 'especes'
+        month_to_pay = self.month_to_pay_value  
 
-        ajouter_paiement(adherent_id, montant, date_paiement, mode_paiement, commentaire)
-        self.clear_form()
-        self.charger_paiements()
+        ajouter_paiement(adherent_id, montant, date_paiement, mode_paiement, month_to_pay)
+        
+        self.main_interface = Profile(adherent_id, self.main_inter)
 
-    def clear_form(self):
-        self.montant_input.setValue(1)
-        self.date_paiement_input.setDate(QDate.currentDate())
-        self.mode_paiement_input.setCurrentIndex(0)
-        self.commentaire_input.clear()
+ 
 
-    def show_dashboard(self):
-        from .dashbord import Dashbord
-        self.main_interface = Dashbord()
-        self.main_interface.show()
-        self.close()
-    def show_payments(self):
-        from .payment import Payment
-        self.main_interface = Payment()
-        self.main_interface.show()
-        self.close()
-    def show_revenues(self):
-        from .revenues_interface import Revenues
-        self.main_interface = Revenues()
-        self.main_interface.show()
-        self.close()
-    def show_due_dates(self):
-        from .gestion_adherents import Gestion_adherents
-        self.main_interface = Gestion_adherents()
-        self.main_interface.show()
-        self.close()
-    def ajouter_adh(self):
-        from .ajouter_adherent import AjouterAfh
-        self.main_interface = AjouterAfh()
-        self.main_interface.show()
-        self.close()
+
+
+
+
+    def confirm_payment(self):
+        self.layout_confim = QVBoxLayout(self.confirm_paiment_w)
+        self.info_layout_c = QGridLayout()
+        self.info_layout_c.addWidget(QLabel('Moi concerner'), 0, 0)
+        self.month_to_pay = QLabel()
+        self.info_layout_c.addWidget(self.month_to_pay, 0, 1)
+        self.info_layout_c.addWidget(QLabel('Monton'), 1, 0)
+        self.monton_to_pay = QLabel()
+        self.info_layout_c.addWidget(self.monton_to_pay, 1, 1)
+        self.info_layout_c.addWidget(QLabel('mode paiement'), 2, 1)
+        self.info_layout_c.addWidget(QLabel('Especes'), 2, 2)  
+        self.confirmation = QPushButton("Confirmer")
+        self.confirmation.clicked.connect(self.ajouter_paiement)
+
+        self.info_layout_c1 = QGridLayout()
+        self.info_layout_c1.addWidget(QLabel(f'Vounaver aucun paiment depui :{self.year_last_paiment}{self.moi_last_paiment}'))
+        
+        self.layout_confim.addLayout(self.info_layout_c1)
+
+        self.layout_confim.addLayout(self.info_layout_c)
+        self.layout_confim.addWidget(self.confirmation)
+        
+
+
+        
+ 

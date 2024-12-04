@@ -90,42 +90,15 @@ class LoginWindow(QMainWindow):
 
         # Vérification des identifiants
         if username == "user1" and password == "123":
-            self.show_main_interface()
+            self.show_main_interface() 
         else:
             QMessageBox.critical(self, "Erreur", "Nom d'utilisateur ou mot de passe incorrect")
 
 
     def show_main_interface(self): 
-        self.main_interface = Dashbord()
-        self.main_interface.show()
+        Main = MainInterface()
+        self.main_interface = Dashbord(Main) 
         self.close()
     
 
-
-    def show_dashboard(self):
-        from .dashbord import Dashbord
-        self.main_interface = Dashbord()
-        self.main_interface.show()
-        self.close()
-    def show_payments(self):
-        from .payment import Payment
-        self.main_interface = Payment()
-        self.main_interface.show()
-        self.close()
-    def show_revenues(self):
-        from .revenues_interface import Revenues
-        self.main_interface = Revenues()
-        self.main_interface.show()
-        self.close()
-    def show_due_dates(self):
-        from .gestion_adherents import Gestion_adherents 
-        self.main_interface = Gestion_adherents()
-        self.main_interface.show()
-        self.close()
-    def ajouter_adh(self):
-        from .ajouter_adherent import AjouterAfh
-        self.main_interface = AjouterAfh()
-        self.main_interface.show()
-        self.close()
-        
-    
+ 

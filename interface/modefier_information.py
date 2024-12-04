@@ -6,15 +6,33 @@ from dataset.dataset import *
 from .main_interface import MainInterface
  
 
-class AjouterAfh():
-    def __init__(self,main_inter): 
+class ModefierADh():
+    def __init__(self,main_inter, id_adherent): 
         self.main_inter = main_inter
-        self.ajouter_adh_interf()
+        self.id_adherent = id_adherent
+        self.modefier_adh_interf()
 
 
 
-    def ajouter_adh_interf(self):
+    def modefier_adh_interf(self):
         self.main_inter.clear_content_frame()
+
+        data_adherent = load_data( self.id_adherent)
+        """id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nom TEXT,
+            prenom TEXT,
+            email TEXT,
+            telephone TEXT,
+            cin TEXT UNIQUE,
+            num_adh TEXT UNIQUE,
+            adresse TEXT,
+            date_entree DATE,
+            age INTEGER,
+            genre TEXT,
+            tarif INTEGER,
+            seances INTEGER,
+            situation TEXT,
+            photo_path TEXT"""
 
         self.form_widget = QWidget()
         self.form_widget.setObjectName("FormulaireWidget") 
@@ -23,16 +41,16 @@ class AjouterAfh():
         form_layout = QFormLayout(self.form_widget)
 
         # Champs du formulaire
-        self.nom_input = QLineEdit()
-        self.prenom_input = QLineEdit()
-        self.email_input = QLineEdit()
-        self.telephone_input = QLineEdit()
-        self.cin_input = QLineEdit()
-        self.num_adh_input = QLineEdit()
-        self.adresse_input = QLineEdit()
+        self.nom_input = QLineEdit(data_adherent[1])
+        self.prenom_input = QLineEdit(data_adherent[2])
+        self.email_input = QLineEdit(data_adherent[3])
+        self.telephone_input = QLineEdit(data_adherent[4])
+        self.cin_input = QLineEdit(data_adherent[5])
+        self.num_adh_input = QLineEdit(data_adherent[6])
+        self.adresse_input = QLineEdit(data_adherent[7])
 
         self.date_entree_input = QDateEdit()
-        self.date_entree_input.setDate(QDate.currentDate())
+        self.date_entree_input.setDate(QDate.fromString(data_adherent[8], "yyyy-MM-dd"))
 
         self.nom_input.setObjectName("QLineEditstyle") 
         self.prenom_input.setObjectName("QLineEditstyle") 
@@ -44,27 +62,28 @@ class AjouterAfh():
         
         self.age_input = QSpinBox()
         self.age_input.setRange(1, 100)
-        self.age_input.valueChanged.connect(self.update_tarif)
+        self.age_input.setValue(int(data_adherent[9]))
+ 
 
         self.genre_input = QComboBox()
         self.genre_input.addItems(["Homme", "Femme"])
-        self.genre_input.currentIndexChanged.connect(self.update_tarif)
+        self.genre_input.setCurrentText(data_adherent[10])
+         
 
         self.tarif_input = QSpinBox()
         self.tarif_input.setRange(1, 1000)
-        self.tarif_input.setValue(150)
-        self.tarif_input.setReadOnly(True)  # Calcul automatique
+        self.tarif_input.setValue(int(data_adherent[11])) 
 
         self.seances_input = QSpinBox()
         self.seances_input.setRange(1, 100)
-        self.seances_input.setValue(4)
-        self.seances_input.setReadOnly(True)  # Calcul automatique
+        self.seances_input.setValue(int(data_adherent[12])) 
 
         self.situation_input = QComboBox()
         self.situation_input.addItems(["Paiement effectué", "Paiement non effectué"])
+        self.situation_input.setCurrentText(data_adherent[13])
 
-        self.photo_input = QLabel("Aucune photo sélectionnée")
-        self.photo_path = None
+        self.photo_input = QLabel(data_adherent[14])
+        self.photo_path = data_adherent[14]
 
         # Ajouter les champs au formulaire
         form_layout.addRow("Nom :", self.nom_input)
@@ -97,27 +116,7 @@ class AjouterAfh():
         
         self.main_inter.content_layout.addWidget(self.form_widget)
 
-    def update_tarif(self):
-        """Met à jour le tarif et les séances en fonction de l'âge et du genre."""
-        age = self.age_input.value()
-        genre = self.genre_input.currentText()
-
-        if genre == "Homme":
-            if age >= 18:
-                self.tarif_input.setValue(150)  # Musculation plus de 18 ans
-                self.seances_input.setValue(4)  # 4 séances
-            else:
-                self.tarif_input.setValue(120)  # Musculation moins de 18 ans
-                self.seances_input.setValue(4)  # 4 séances
-        elif genre == "Femme":
-            self.tarif_input.setValue(150)  # Gymnastique et aérobie
-            self.seances_input.setValue(3)  # 3 séances par semaine
-
-        # Ajouter l'assurance annuelle obligatoire
-        assurance = 100
-        tarif_final = self.tarif_input.value() + assurance
-        self.tarif_input.setValue(tarif_final)
-
+    
     def save_adherent(self):
         # Récupération des données du formulaire
         nom = self.nom_input.text()
@@ -143,46 +142,20 @@ class AjouterAfh():
 
         # Connexion à la base de données SQLite
         try:
-            ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path)
-            QMessageBox.information(self, "Succès", "L'adhérent a été enregistré avec succès.")
-
-            # Réinitialisation du formulaire
-            self.reset_form()
-
+            modifier_adh(self.id_adherent,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path)
+            QMessageBox.information(self.main_inter, "Succès", "Les information à été modéfier avec succès.")
+            from .profile_interface import Profile
+            self.main_interface = Profile(self.id_adherent, self.main_inter)
         except sqlite3.IntegrityError as e:
-            QMessageBox.warning(self, "Erreur", f"Un problème est survenu : {str(e)}")
+            QMessageBox.warning(self.main_inter, "Erreur", f"Un problème est survenu : {str(e)}")
         except Exception as e:
-            QMessageBox.critical(self, "Erreur critique", f"Une erreur inattendue est survenue : {str(e)}")
-         
-
-    def reset_form(self):
-        """
-        Réinitialise les champs du formulaire après l'enregistrement.
-        """
-        self.nom_input.clear()
-        self.prenom_input.clear()
-        self.email_input.clear()
-        self.telephone_input.clear()
-        self.cin_input.clear()
-        self.num_adh_input.clear()
-        self.adresse_input.clear()
-        self.date_entree_input.setDate(QDate.currentDate())
-        self.age_input.setValue(1)
-        self.genre_input.setCurrentIndex(0)
-        self.tarif_input.setValue(150)
-        self.seances_input.setValue(4)
-        self.situation_input.setCurrentIndex(0)
-        self.photo_input.setText("Aucune photo sélectionnée")
-        self.photo_path = None
+            QMessageBox.critical(self.main_inter, "Erreur critique", f"Une erreur inattendue est survenue : {str(e)}")
+    
     def select_photo(self):
         """Ouvrir une boîte de dialogue pour sélectionner une photo."""
         file_name, _ = QFileDialog.getOpenFileName(self.main_inter, "Sélectionner une photo", "", "Images (*.png *.jpg *.bmp *.jpeg)")
         if file_name:
             self.photo_input.setText(file_name)
             self.photo_path = file_name
-
-
-
-
-    
-    
+         
+ 

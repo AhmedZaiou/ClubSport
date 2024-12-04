@@ -6,18 +6,25 @@ from dataset.dataset import *
 from .main_interface import MainInterface
 
 
-class Gestion_adherents(MainInterface):
-    def __init__(self):
-        super().__init__()
+class Gestion_adherents():
+    def __init__(self,main_inter): 
+        self.main_inter = main_inter
         self.show_table()
     
 
     def show_table(self):
-        self.clear_content_frame()
+        self.main_inter.clear_content_frame()
         self.table_widget = QWidget()
         self.table_widget.setObjectName("tableWidget") 
 
         layout = QVBoxLayout(self.table_widget)
+
+
+        # Search bar for filtering
+        self.search_bar = QLineEdit(self.main_inter)
+        self.search_bar.setPlaceholderText("Search by 'Nom'...")
+        self.search_bar.textChanged.connect(self.filter_table)  # Trigger filter when text changes
+        layout.addWidget(self.search_bar)
 
         # Créer le tableau pour afficher les adhérents
         self.tableWidget = QTableWidget()
@@ -33,9 +40,21 @@ class Gestion_adherents(MainInterface):
         # Créer un bouton pour charger les adhérents 
         self.load_adherents() 
 
-        self.content_layout.addWidget(self.table_widget)
+        self.main_inter.content_layout.addWidget(self.table_widget)
     
+    
+    def filter_table(self):
+        # Get the filter text from the search bar
+        filter_text = self.search_bar.text().lower()
 
+        # Loop through all rows and hide/show them based on the search
+        for row in range(self.tableWidget.rowCount()):
+            item = self.tableWidget.item(row, 0)  # Assuming column 0 is 'Nom'
+            if item is not None:
+                if filter_text in item.text().lower():  # Case-insensitive comparison
+                    self.tableWidget.setRowHidden(row, False)
+                else:
+                    self.tableWidget.setRowHidden(row, True)
 
     def load_adherents(self):
         # Connexion à la base de données SQLite
@@ -53,10 +72,25 @@ class Gestion_adherents(MainInterface):
             for col_index, data in enumerate(adherent[1:]):  # Exclure 'id' pour l'affichage
                 item = QTableWidgetItem(str(data))
                 self.tableWidget.setItem(row_index, col_index, item)
+                
 
                 # Ajouter une couleur verte à la cellule de la colonne Email
-                if col_index == 4 and data == 'Paiement non effectué':  # 3e colonne (Email)
-                    item.setBackground(QColor(255, 0, 0))  # Vert
+                if col_index == 4 :  # 3e colonne (Email)
+                    last_paiment = recuperer_last_payment(adherent[0])
+                    # Define the date to compare
+                    date_to_compare = datetime.strptime(last_paiment, "%Y-%m-%d") 
+                    current_date = datetime.now() 
+                    if date_to_compare.year == current_date.year and date_to_compare.month == current_date.month:
+                        item = QTableWidgetItem(str('Paiement effectué'))
+                        self.tableWidget.setItem(row_index, col_index, item)
+                    else:
+                        item = QTableWidgetItem(str('Paiement non effectué'))
+                        self.tableWidget.setItem(row_index, col_index, item)
+                        item.setBackground(QColor(255, 0, 0))
+                else:
+                    item = QTableWidgetItem(str(data))
+                    self.tableWidget.setItem(row_index, col_index, item)
+
 
             # Ajouter un lien cliquable dans la colonne Action
             action_item = QTableWidgetItem("Traiter")
@@ -80,37 +114,9 @@ class Gestion_adherents(MainInterface):
     def on_cell_clicked(self, row, column): 
         # Si la colonne 12 (Action) est cliquée
         if column == 5:
-            self.clear_content_frame()
+            self.main_inter.clear_content_frame()
             adherent_id = self.tableWidget.item(row, column).data(Qt.UserRole)
             from .profile_interface import Profile
-            self.main_interface = Profile(adherent_id)
-            self.main_interface.show()
-            self.close()
-
-    def show_dashboard(self):
-        from .dashbord import Dashbord
-        self.main_interface = Dashbord()
-        self.main_interface.show()
-        self.close()
-    def show_payments(self):
-        from .payment import Payment
-        self.main_interface = Payment()
-        self.main_interface.show()
-        self.close()
-    def show_revenues(self):
-        from .revenues_interface import Revenues
-        self.main_interface = Revenues()
-        self.main_interface.show()
-        self.close()
-    def show_due_dates(self):
-        self.main_interface = Gestion_adherents()
-        self.main_interface.show()
-        self.close()
-    def ajouter_adh(self):
-        from .ajouter_adherent import AjouterAfh
-        self.main_interface = AjouterAfh()
-        self.main_interface.show()
-        self.close()
-        
-    
-    
+            self.main_interface = Profile(adherent_id, self.main_inter)
+            
+ 

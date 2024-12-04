@@ -6,13 +6,14 @@ from dataset.dataset import *
 from .main_interface import MainInterface
 
 
-class Dashbord(MainInterface):
-    def __init__(self):
-        super().__init__()
+class Dashbord():
+    def __init__(self, main_inter): 
+        self.main_inter = main_inter
         self.show_dashboard_inter()
         
+        
     def show_dashboard_inter(self):
-        self.clear_content_frame()
+        self.main_inter.clear_content_frame()
 
         self.dashbord_widget = QWidget()
         self.dashbord_widget.setObjectName("dashbord_widget")
@@ -37,72 +38,64 @@ class Dashbord(MainInterface):
         layout.addLayout(graphs_layout)
         
         # Tableau pour afficher les adhérents avec situation = NON
+        # Search bar for filtering
+        self.search_bar = QLineEdit(self.main_inter)
+        self.search_bar.setPlaceholderText("Search by 'Nom'...")
+        self.search_bar.textChanged.connect(self.filter_table)  # Trigger filter when text changes
+        layout.addWidget(self.search_bar)
+
         self.tableWidget = QTableWidget()
-        self.populate_table() 
+        self.populate_table()  
         layout.addWidget(self.tableWidget)
         
-        self.content_layout.addWidget(self.dashbord_widget) 
+        self.main_inter.content_layout.addWidget(self.dashbord_widget) 
+    def filter_table(self):
+        # Get the filter text from the search bar
+        filter_text = self.search_bar.text().lower()
+
+        # Loop through all rows and hide/show them based on the search
+        for row in range(self.tableWidget.rowCount()):
+            item = self.tableWidget.item(row, 0)  # Assuming column 0 is 'Nom'
+            if item is not None:
+                if filter_text in item.text().lower():  # Case-insensitive comparison
+                    self.tableWidget.setRowHidden(row, False)
+                else:
+                    self.tableWidget.setRowHidden(row, True)
 
     def plot_situation_graph(self):
         """Affiche le pourcentage des situations pour le mois actuel"""
-        df = fetch_data()
-        df["date_entree"] = pd.to_datetime(df["date_entree"])
+        nbr_adh,nbr_pyment = recuperer_porcentage_paiment() 
         
-        # Filtrer les données pour le mois actuel
-        current_month = datetime.now().strftime("%Y-%m")
-        df_current_month = df#[df["date_entree"].dt.strftime("%Y-%m") == current_month]
-        
-        if not df_current_month.empty:
-            situation_counts = df_current_month["situation"].value_counts()
-            ax = self.situation_canvas.figure.add_subplot(111)
-            ax.clear()
-            ax.pie(
-                situation_counts, 
-                labels=situation_counts.index, 
-                autopct="%1.1f%%", 
-                startangle=90, 
-                colors=["skyblue", "orange"]
-            )
-            ax.set_title(f"Pourcentage des Situations ({current_month})")
-        else:
-            ax = self.situation_canvas.figure.add_subplot(111)
-            ax.text(0.5, 0.5, "Aucune donnée pour ce mois", ha="center", va="center")
+         
+        situation_counts = {"Paiment effectuer ": nbr_pyment, "Paiment non effectuer ": nbr_adh - nbr_pyment }
+        ax = self.situation_canvas.figure.add_subplot(111)
+        ax.clear()
+        ax.pie(
+            [nbr_pyment,nbr_adh - nbr_pyment], 
+            labels=["Paiment effectuer ", "Paiment non effectuer "], 
+            autopct="%1.1f%%", 
+            startangle=90, 
+            colors=["skyblue", "orange"]
+        ) 
+        date = datetime.now().strftime("%Y-%m-%d")
+        ax.set_title(f"Pourcentage des Situations ({date})") 
         
         self.situation_canvas.draw()
 
     def plot_revenue_graph(self):
         """Affiche les revenus mensuels pour l'année en cours avec le total annuel"""
-        df = fetch_data()
-        df["date_entree"] = pd.to_datetime(df["date_entree"])
+         
         
         # Filtrer les données pour l'année en cours
-        current_year = datetime.now().year
-        df_current_year = df[df["date_entree"].dt.year == current_year]
-        
-        if not df_current_year.empty:
-            df_current_year["month"] = df_current_year["date_entree"].dt.strftime("%B")
-            revenue_by_month = df_current_year.groupby("month")["tarif"].sum()
-            total_revenue = revenue_by_month.sum()  # Calculer le total annuel
-            
-            # Assurer que les mois sont bien ordonnés
-            revenue_by_month = revenue_by_month.reindex(
-                pd.date_range(f"{current_year}-01", f"{current_year}-12", freq="M").strftime("%B"), 
-                fill_value=0
-            )
-            
-            ax = self.revenue_canvas.figure.add_subplot(111)
-            ax.clear()
-            revenue_by_month.plot(kind="bar", ax=ax, color="green", alpha=0.75)
-            ax.set_title(f"Revenus Mensuels ({current_year}) - Total : {total_revenue} €")
-            ax.set_xlabel("Mois")
-            ax.set_ylabel("Revenus (€)")
-            
-            # Ajouter des marges autour des barres
-            ax.margins(x=0.05, y=0.1)
-        else:
-            ax = self.revenue_canvas.figure.add_subplot(111)
-            ax.text(0.5, 0.5, "Aucune donnée pour cette année", ha="center", va="center")
-        
+        current_year = datetime.now().year 
+        data, total_revenue = recuperer_stat_paiment()
+        revenue_by_month = pd.Series(data) 
+        ax = self.revenue_canvas.figure.add_subplot(111)
+        ax.clear()
+        revenue_by_month.plot(kind="bar", ax=ax, color="green", alpha=0.75)
+        ax.set_title(f"Revenus Mensuels ({current_year}) - Total : {total_revenue} €")
+        ax.set_xlabel("Mois")
+        ax.set_ylabel("Revenus (€)") 
         self.revenue_canvas.draw()
 
     def populate_table(self):
@@ -134,8 +127,14 @@ class Dashbord(MainInterface):
                 
 
                 # Ajouter une couleur verte à la cellule de la colonne Email
-                if col_index == 4 and data == 'Paiement non effectué':  # 3e colonne (Email)
+                if col_index == 4 :  # 3e colonne (Email)
+                    item = QTableWidgetItem(str('Paiement non effectué'))
+                    self.tableWidget.setItem(row_index, col_index, item)
                     item.setBackground(QColor(255, 0, 0))  # Vert 
+                else:
+                    item = QTableWidgetItem(str(data))
+                    self.tableWidget.setItem(row_index, col_index, item)
+
 
             # Ajouter un lien cliquable dans la colonne Action
             action_item = QTableWidgetItem("Traiter")
@@ -152,37 +151,11 @@ class Dashbord(MainInterface):
     def on_cell_clicked(self, row, column): 
         # Si la colonne 12 (Action) est cliquée
         if column == 5:
-            self.clear_content_frame()
+            self.main_inter.clear_content_frame()
             adherent_id = self.tableWidget.item(row, column).data(Qt.UserRole)
             from .profile_interface import Profile
-            self.main_interface = Profile(adherent_id)
-            self.main_interface.show()
-            self.close()
+            self.main_interface = Profile(adherent_id, self.main_inter)
+            
 
 
-    def show_dashboard(self):
-        from .dashbord import Dashbord
-        self.main_interface = Dashbord()
-        self.main_interface.show()
-        self.close()
-    def show_payments(self):
-        from .payment import Payment
-        self.main_interface = Payment()
-        self.main_interface.show()
-        self.close()
-    def show_revenues(self):
-        from .revenues_interface import Revenues
-        self.main_interface = Revenues()
-        self.main_interface.show()
-        self.close()
-    def show_due_dates(self):
-        from .gestion_adherents import Gestion_adherents 
-        self.main_interface = Gestion_adherents()
-        self.main_interface.show()
-        self.close()
-    def ajouter_adh(self):
-        from .ajouter_adherent import AjouterAfh
-        self.main_interface = AjouterAfh()
-        self.main_interface.show()
-        self.close()
-        
+    

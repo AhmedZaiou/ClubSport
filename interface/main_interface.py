@@ -56,6 +56,11 @@ class MainInterface(QMainWindow):
         self.menu_layout.addWidget(self.btn_ajout_adhs)
         self.btn_ajout_adhs.setObjectName("buttonmenu")
 
+        self.btn_ajout_adhs = QPushButton("Se déconnecté")
+        self.btn_ajout_adhs.clicked.connect(self.deconnexion)
+        self.menu_layout.addWidget(self.btn_ajout_adhs)
+        self.btn_ajout_adhs.setObjectName("buttonmenu")
+
         # Contenu principal
         self.content_frame = QFrame()
         self.main_interface_layout.addWidget(self.content_frame)
@@ -64,16 +69,24 @@ class MainInterface(QMainWindow):
         #self.show_dashboard()
     
     def show_dashboard(self):
-        pass
+        from .dashbord import Dashbord
+        self.main_interface = Dashbord(self)  
     def show_payments(self):
-        pass
+        from .payment import Payment
+        self.main_interface = Payment(self)  
     def show_revenues(self):
-        pass
+        from .revenues_interface import Revenues
+        self.main_interface = Revenues(self)  
     def show_due_dates(self):
-        pass
+        from .gestion_adherents import Gestion_adherents 
+        self.main_interface = Gestion_adherents(self)  
     def ajouter_adh(self):
-        pass
-    
+        from .ajouter_adherent import AjouterAfh
+        self.main_interface = AjouterAfh(self)  
+    def deconnexion(self):
+        from .login_interface import LoginWindow
+        self.close() 
+        
 
     def clear_content_frame(self):
         for i in reversed(range(self.content_layout.count())):

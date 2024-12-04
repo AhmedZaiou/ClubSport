@@ -15,14 +15,10 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from datetime import datetime
 
+import os
+import shutil
 
 
-def select_photo(self):
-        """Ouvrir une boîte de dialogue pour sélectionner une photo."""
-        file_name, _ = QFileDialog.getOpenFileName(self, "Sélectionner une photo", "", "Images (*.png *.jpg *.bmp *.jpeg)")
-        if file_name:
-            self.photo_input.setText(file_name)
-            self.photo_path = file_name
 
 
 def set_styles():
@@ -32,3 +28,58 @@ def set_styles():
             return style
     except FileNotFoundError:
         print("Style file not found. Using default styles.")
+
+
+def increment_month(year: int, month: int) -> tuple:
+    """
+    Incrémente un mois et ajuste l'année si nécessaire.
+
+    Args:
+        year (int): L'année actuelle.
+        month (int): Le mois actuel (1 à 12).
+
+    Returns:
+        tuple: Une paire (année mise à jour, mois mis à jour).
+    """
+    if not (1 <= month <= 12):
+        raise ValueError("Le mois doit être entre 1 et 12 inclus.")
+
+    # Incrémenter le mois
+    month += 1
+    if month > 12:  # Si on dépasse décembre
+        month = 1  # Revenir à janvier
+        year += 1  # Incrémenter l'année
+
+    return year, month
+
+
+
+def deplacer_et_renommer_image(source_path, destination_folder, nouveau_nom):
+    """
+    Déplace une image vers un dossier spécifique et la renomme.
+
+    Args:
+        source_path (str): Le chemin complet de l'image source.
+        destination_folder (str): Le dossier de destination.
+        nouveau_nom (str): Le nouveau nom du fichier (sans extension).
+    
+    Returns:
+        str: Le nouveau chemin complet de l'image déplacée et renommée.
+    """
+    # Vérifier si le fichier source existe
+    if not os.path.exists(source_path):
+        raise FileNotFoundError(f"Le fichier source n'existe pas : {source_path}")
+    
+    # Créer le dossier de destination s'il n'existe pas
+    os.makedirs(destination_folder, exist_ok=True)
+    
+    # Obtenir l'extension de l'image source
+    extension = os.path.splitext(source_path)[1]
+    
+    # Construire le chemin complet du nouveau fichier
+    nouveau_chemin = os.path.join(destination_folder, f"{nouveau_nom}{extension}")
+    
+    # Déplacer et renommer le fichier
+    shutil.move(source_path, nouveau_chemin)
+    
+    return nouveau_chemin
