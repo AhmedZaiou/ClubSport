@@ -16,6 +16,7 @@ class MainInterface(QMainWindow):
     
     def show_main_interface(self): 
         self.central_widget = QWidget()
+         
         self.setCentralWidget(self.central_widget)
         self.central_widget.setObjectName("main_interface") 
 
@@ -24,6 +25,8 @@ class MainInterface(QMainWindow):
         self.main_interface_frame = QFrame()
         self.main_layout.addWidget(self.main_interface_frame)
         self.main_interface_layout = QHBoxLayout(self.main_interface_frame)
+
+
         # Menu latéral
         self.menu_frame = QFrame()
         self.menu_frame.setObjectName("menuFrame")
@@ -31,35 +34,49 @@ class MainInterface(QMainWindow):
 
         self.menu_layout = QVBoxLayout(self.menu_frame)
 
+        self.logo_label = QLabel()
+        self.logo_label.setPixmap(QPixmap(path_logo).scaled(180, 180, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.logo_label.setObjectName("logomenu")
+        self.menu_layout.addWidget(self.logo_label)
+        
+        # Ajouter le titre à droite
+        self.title_label = QLabel("Bureau de Suivi des Adhérents") 
+        self.title_label.setObjectName("titremenu")
+        self.menu_layout.addWidget(self.title_label, alignment=Qt.AlignRight)
+ 
+
+
         self.btn_dashboard = QPushButton("Tableau de bord")
         self.btn_dashboard.clicked.connect(self.show_dashboard)
         self.menu_layout.addWidget(self.btn_dashboard)
         self.btn_dashboard.setObjectName("buttonmenu")
 
-        self.btn_payments = QPushButton("Gestion des paiements")
-        self.btn_payments.clicked.connect(self.show_payments)
-        self.menu_layout.addWidget(self.btn_payments)
-        self.btn_payments.setObjectName("buttonmenu")
-
-        self.btn_revenues = QPushButton("Suivi des revenus")
-        self.btn_revenues.clicked.connect(self.show_revenues)
-        self.menu_layout.addWidget(self.btn_revenues)
-        self.btn_revenues.setObjectName("buttonmenu")
-
-        self.btn_due_dates = QPushButton("Gestion des échéances")
-        self.btn_due_dates.clicked.connect(self.show_due_dates)
-        self.menu_layout.addWidget(self.btn_due_dates)
-        self.btn_due_dates.setObjectName("buttonmenu")
-
-        self.btn_ajout_adhs = QPushButton("Ajouté des échéances")
+        self.btn_ajout_adhs = QPushButton("Ajouter des abonnés")
         self.btn_ajout_adhs.clicked.connect(self.ajouter_adh)
         self.menu_layout.addWidget(self.btn_ajout_adhs)
         self.btn_ajout_adhs.setObjectName("buttonmenu")
 
-        self.btn_ajout_adhs = QPushButton("Se déconnecté")
+        self.btn_due_dates = QPushButton("Gestion des abonnés")
+        self.btn_due_dates.clicked.connect(self.show_due_dates)
+        self.menu_layout.addWidget(self.btn_due_dates)
+        self.btn_due_dates.setObjectName("buttonmenu")
+
+        """self.btn_payments = QPushButton("Gestion de paiement")
+        self.btn_payments.clicked.connect(self.show_payments)
+        self.menu_layout.addWidget(self.btn_payments)
+        self.btn_payments.setObjectName("buttonmenu")"""
+
+        self.btn_revenues = QPushButton("Suivi des revenus")
+        self.btn_revenues.clicked.connect(self.show_revenues)
+        self.menu_layout.addWidget(self.btn_revenues)
+        self.btn_revenues.setObjectName("buttonmenu") 
+
+        self.btn_ajout_adhs = QPushButton("Déconnecté")
         self.btn_ajout_adhs.clicked.connect(self.deconnexion)
         self.menu_layout.addWidget(self.btn_ajout_adhs)
         self.btn_ajout_adhs.setObjectName("buttonmenu")
+
+        
 
         # Contenu principal
         self.content_frame = QFrame()

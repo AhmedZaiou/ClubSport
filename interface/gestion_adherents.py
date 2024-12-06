@@ -15,9 +15,13 @@ class Gestion_adherents():
     def show_table(self):
         self.main_inter.clear_content_frame()
         self.table_widget = QWidget()
-        self.table_widget.setObjectName("tableWidget") 
+        self.table_widget.setObjectName("dashbord_widget") 
 
         layout = QVBoxLayout(self.table_widget)
+
+        titre_table = QLabel('Liste des adhérents : ')
+        titre_table.setObjectName("titre_table")
+        layout.addWidget(titre_table)
 
 
         # Search bar for filtering
@@ -94,9 +98,10 @@ class Gestion_adherents():
 
             # Ajouter un lien cliquable dans la colonne Action
             action_item = QTableWidgetItem("Traiter")
-            action_item.setForeground(Qt.blue)
+            action_item.setForeground(QColor('white'))
             action_item.setTextAlignment(Qt.AlignCenter)
             action_item.setData(Qt.UserRole, adherent[0])  # Stocker l'ID de l'adhérent pour le traitement
+            action_item.setBackground(QColor(0, 0, 255))  # Vert
             self.tableWidget.setItem(row_index, 5, action_item)
         # Connecter l'événement de clic pour traiter un adhérent
         self.tableWidget.cellClicked.connect(self.on_cell_clicked)

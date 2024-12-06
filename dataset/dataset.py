@@ -11,12 +11,12 @@ def fetch_data():
     return df 
 
 
-def fetch_data_Non():
+def fetch_data_Non_ans():
     """Récupère les données de la base SQLite"""
     conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
     cursor = conn.cursor()
 
-    # Récupérer uniquement les colonnes nécessaires
+    # Récupérer ment les colonnes nécessaires
     cursor.execute("SELECT id, nom, prenom, email, telephone, situation FROM adherents")
     adherents = cursor.fetchall()
     filtred_adh = []
@@ -31,12 +31,43 @@ def fetch_data_Non():
             filtred_adh.append(data)   
     return filtred_adh
 
+def fetch_data_Non():
+    """Récupère les adhérents qui n'ont pas payé ce mois-ci."""
+    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    cursor = conn.cursor()
+
+    # Obtenez directement les données des adhérents et leur dernier paiement
+    query = """
+    SELECT a.id, a.nom, a.prenom, a.email, a.telephone, a.situation, 
+           p.date_paiement
+    FROM adherents a
+    LEFT JOIN paiements p ON a.id = p.adherent_id
+    WHERE p.date_paiement IS NULL OR p.date_paiement < strftime('%Y-%m-01', 'now')
+    """
+    cursor.execute(query)
+    adherents = cursor.fetchall()
+
+    # Filtrer les adhérents qui n'ont pas payé ce mois-ci
+    current_date = datetime.now()
+    filtred_adh = []
+    for data in adherents:
+        last_payment_date = data[6]
+        if last_payment_date is None:  # Pas de paiement enregistré
+            filtred_adh.append(data)
+        else:
+            last_paiment = datetime.strptime(last_payment_date, "%Y-%m-%d")
+            if last_paiment.year != current_date.year or last_paiment.month != current_date.month:
+                filtred_adh.append(data)
+
+    return filtred_adh
+
+
 def fetch_data_all():
     """Récupère les données de la base SQLite"""
     conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
     cursor = conn.cursor()
 
-    # Récupérer uniquement les colonnes nécessaires
+    # Récupérer ment les colonnes nécessaires
     cursor.execute("SELECT id, nom, prenom, email, telephone, situation FROM adherents")
     adherents = cursor.fetchall()
     return adherents
@@ -62,8 +93,8 @@ def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entre
             prenom TEXT,
             email TEXT,
             telephone TEXT,
-            cin TEXT UNIQUE,
-            num_adh TEXT UNIQUE,
+            cin TEXT ,
+            num_adh TEXT ,
             adresse TEXT,
             date_entree DATE,
             age INTEGER,
@@ -239,4 +270,67 @@ def recuperer_stat_paiment():
         dict_moths[mois_noms[i-1]]=summ_moth[0][0] if summ_moth[0][0]  else 0
     return dict_moths, sum(dict_moths.values())
 
+def recuperer_all_paiment():
+    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT 
+        *
+        FROM paiements
+         ''',()) 
+    summ_moth = cursor.fetchall()
+    df = pd.DataFrame(summ_moth, columns=['id',  's',  'montant',  'date_inscr' , 'modep',  'date'])
+    df = df.groupby('date')['montant'].sum().reset_index()
+    return pd.Series(data=df['montant'].values, index=df['date'])
+
+
  
+def dinscription(id):
+
+    data = load_data( id)
+
+    (id_profile ,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path) = data
+    connection = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    cursor = connection.cursor()
+
+    # Création de la table si elle n'existe pas encore
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS old_adh (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_profil TEXT,
+            nom TEXT,
+            prenom TEXT,
+            email TEXT,
+            telephone TEXT,
+            cin TEXT ,
+            num_adh TEXT ,
+            adresse TEXT,
+            date_entree DATE,
+            age INTEGER,
+            genre TEXT,
+            tarif INTEGER,
+            seances INTEGER,
+            situation TEXT,
+            photo_path TEXT
+        )
+    """)
+
+    # Insertion des données dans la table
+    cursor.execute("""
+        INSERT INTO old_adh (
+            id_profil, nom, prenom, email, telephone, cin, num_adh, adresse,
+            date_entree, age, genre, tarif, seances, situation, photo_path
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (id_profile, nom, prenom, email, telephone, cin, num_adh, adresse, date_entree,
+        age, genre, tarif, seances, situation, photo_path))
+    
+    cursor.execute("""
+        DELETE FROM adherents WHERE id = ?;
+    """, (id,))
+    
+
+    # Validation de la transaction
+    connection.commit() 
+    if connection:
+                connection.close()

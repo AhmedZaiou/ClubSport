@@ -36,7 +36,7 @@ adherents = []
 cin_set = set()
 num_adh_set = set()
 
-for _ in range(2000):
+for _ in range(20):
     nom = fake.last_name()
     prenom = fake.first_name()
     email = fake.email()
@@ -54,7 +54,7 @@ for _ in range(2000):
     num_adh_set.add(num_adh)
 
     adresse = fake.address()
-    date_entree = fake.date_this_decade()
+    date_entree = fake.date_this_decade(before_today=True)
     age = random.randint(18, 70)
     genre = random.choice(["Homme", "Femme"])
     tarif = random.randint(100, 1000)

@@ -17,28 +17,18 @@ class ModefierADh():
     def modefier_adh_interf(self):
         self.main_inter.clear_content_frame()
 
-        data_adherent = load_data( self.id_adherent)
-        """id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nom TEXT,
-            prenom TEXT,
-            email TEXT,
-            telephone TEXT,
-            cin TEXT UNIQUE,
-            num_adh TEXT UNIQUE,
-            adresse TEXT,
-            date_entree DATE,
-            age INTEGER,
-            genre TEXT,
-            tarif INTEGER,
-            seances INTEGER,
-            situation TEXT,
-            photo_path TEXT"""
+        data_adherent = load_data( self.id_adherent) 
 
         self.form_widget = QWidget()
         self.form_widget.setObjectName("FormulaireWidget") 
         
         
+
         form_layout = QFormLayout(self.form_widget)
+        titre=QLabel("Modifier les informations")
+        titre.setObjectName("Titre_f")
+
+        form_layout.addWidget(titre)
 
         # Champs du formulaire
         self.nom_input = QLineEdit(data_adherent[1])
@@ -85,33 +75,77 @@ class ModefierADh():
         self.photo_input = QLabel(data_adherent[14])
         self.photo_path = data_adherent[14]
 
-        # Ajouter les champs au formulaire
-        form_layout.addRow("Nom :", self.nom_input)
-        form_layout.addRow("Prénom :", self.prenom_input)
-        form_layout.addRow("Email :", self.email_input)
-        form_layout.addRow("Téléphone :", self.telephone_input)
-        form_layout.addRow("CIN :", self.cin_input)
-        form_layout.addRow("Numéro d'adhérent :", self.num_adh_input)
-        form_layout.addRow("Adresse :", self.adresse_input)
-        form_layout.addRow("Date d'entrée :", self.date_entree_input)
-        form_layout.addRow("Âge :", self.age_input)
-        form_layout.addRow("Genre :", self.genre_input)
-        form_layout.addRow("Tarif mensuel :", self.tarif_input)
-        form_layout.addRow("Séances incluses :", self.seances_input)
-        form_layout.addRow("Situation du mois :", self.situation_input)
-        form_layout.addRow("Photo :", self.photo_input)
+        # First row: Nom, Prénom
+        row_layout_1 = QHBoxLayout()
+        row_layout_1.addWidget(self.nom_input)
+        row_layout_1.addWidget(QLabel("Prénom : "))
+        row_layout_1.addWidget(self.prenom_input)
+
+        form_layout.addRow("Nom :", row_layout_1)
+
+        # Second row: Email, Téléphone
+        row_layout_2 = QHBoxLayout()
+        row_layout_2.addWidget(self.email_input)
+        row_layout_2.addWidget(QLabel("Téléphone :"))
+        row_layout_2.addWidget(self.telephone_input)
+        form_layout.addRow("Email :", row_layout_2)
+
+        # Third row: CIN, Numéro d'adhérent
+        row_layout_3 = QHBoxLayout()
+        row_layout_3.addWidget(self.cin_input)
+        row_layout_3.addWidget(QLabel("Numéro d'adhérent :"))
+        row_layout_3.addWidget(self.num_adh_input)
+        form_layout.addRow("CIN :", row_layout_3)
+
+        # Fourth row: Adresse, Date d'entrée
+        row_layout_4 = QHBoxLayout()
+        row_layout_4.addWidget(self.adresse_input)
+        row_layout_4.addWidget(QLabel("Date d'entrée :"))
+        row_layout_4.addWidget(self.date_entree_input)
+        form_layout.addRow("Adresse :", row_layout_4)
+
+        # If you want to add more fields, you can use the same approach:
+        row_layout_5 = QHBoxLayout()
+        row_layout_5.addWidget(self.age_input)
+        row_layout_5.addWidget(QLabel("Genre :"))
+        row_layout_5.addWidget(self.genre_input)
+        form_layout.addRow("Age :", row_layout_5)
+
+        row_layout_6 = QHBoxLayout()
+        row_layout_6.addWidget(self.tarif_input)
+        row_layout_6.addWidget(QLabel("Séances incluses :"))
+        row_layout_6.addWidget(self.seances_input)
+        form_layout.addRow("Tarif mensuel :", row_layout_6)
+
+        row_layout_7 = QHBoxLayout()
+        row_layout_7.addWidget(self.situation_input)
+        row_layout_7.addWidget(QLabel("Photo :"))
+        row_layout_7.addWidget(self.photo_input)
+        form_layout.addRow("Assurance :", row_layout_7)
+
+        """row_layout_8 = QHBoxLayout()
+        row_layout_8.addWidget(self.situation_input)
+        row_layout_8.addWidget(QLabel(" "))
+        row_layout_8.addWidget(self.photo_input)
+        form_layout.addRow(" ", row_layout_8)"""
+
 
         # Bouton de sélection de photo
         self.photo_button = QPushButton("Sélectionner une photo")
         self.photo_button.clicked.connect(self.select_photo)
+        self.photo_button.setObjectName("buttonformulaire")
+        
 
         # Bouton d'enregistrement
         self.save_button = QPushButton("Enregistrer")
         self.save_button.clicked.connect(self.save_adherent)
+        self.save_button.setObjectName("buttonformulaire")
 
-        # Ajouter les boutons au layout 
-        form_layout.addWidget(self.photo_button)
-        form_layout.addWidget(self.save_button)
+        row_layout_8 = QHBoxLayout()
+        row_layout_8.addWidget(self.photo_button)
+        row_layout_8.addWidget(QLabel(" "))
+        row_layout_8.addWidget(self.save_button)
+        form_layout.addRow(" ", row_layout_8) 
  
         
         self.main_inter.content_layout.addWidget(self.form_widget)

@@ -1,6 +1,7 @@
-QMainWindow {
-                background-color: #f0f0f0;
+            QMainWindow {
+                background-color: #ffffff;
             }   
+             
             #top_widget{
                 width: 148px;        
                 height: 328px;
@@ -87,11 +88,11 @@ QMainWindow {
                 color: #333;
             }
             #menuFrame {
-                background-color : #e6e9ed; 
+                background-color : rgba(0, 0, 0, 0.1); 
                 max-width: 280px; 
                 margin: 0;
                 padding: 0;
-                max-height: 700px; 
+                max-height: 1000px; 
                 min-width: 280px;
 
             }
@@ -118,16 +119,32 @@ QMainWindow {
                 border-radius: 10px;
             }
             #main{
-                background-image: url('background_image.png');
+                background-image: url('/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/style/background_image.png');
                 background-color: white;
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: cover; /* Adapte l'image à la taille de la fenêtre */
             }
             #main_interface {
+                background-image: url("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/style/image.jpg");
                 background-color: white;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover; /* Adapte l'image à la taille de la fenêtre */
             }
-
+            #logomenu{
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            #titremenu{
+                font-size: 16px; /* Adjust the size */
+                font-weight: bold;
+                text-align: center; /* Centers the title */
+                color: white; /* Purple color, can be changed */
+                margin-top: 10px; /* Adds space above the title */
+                font-family: 'Arial', sans-serif; /* You can customize the font */
+            }
             #QLineEditstyle{
                 font-size: 14px;
                 padding: 10px;
@@ -138,17 +155,64 @@ QMainWindow {
             }
 
             #FormulaireWidget {
-                border: 2px solid #4CAF50;
-                border-radius: 10px;
-                padding: 10px;
-                background-color: #f9f9f9;
+                background-color: rgba(0, 0, 0, 0.4); ; /* Sleek dark background */
+                border-radius: 15px; /* Softer rounded corners */
+                border: 2px solid #333333; /* Subtle border to outline the form */
+                width: 800px; /* Standard width for a login form */
+                padding: 50px; /* Generous padding for spacing */
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Light shadow for depth */
+                margin-bottom: 0px; /* Center the form on the page */ 
             }
             #FormulaireWidget QLabel {
-                text-align: right;
+                text-align: left;
+                color: white;
                 padding: 5px;
-                font-size: 14px;
-                color: #333;
+                font-size: 20px;
+                min-width: 200px;
+                max-width: 300px;
+            } 
+            
+
+            #FormulaireWidget QDateEdit
+            {
+                background-color: white;
+                border-style: solid;
+                border-width: 1px;
+                border-color: rgb(100,100,100); 
+                min-width: 285px;
             }
+            #FormulaireWidget QDateEdit::up-arrow {
+                image: url(/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/ic_arrow_drop_down_black_18dp_1x.png);
+        
+            }
+            #FormulaireWidget QDateEdit::down-arrow {
+                image: url(/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/ic_arrow_drop_down_black_18dp_1x.png);
+        
+            }
+            #FormulaireWidget QComboBox {
+                background: #FFFFFF;
+                border: none;
+                padding: 2px 18px 2px 3px;
+                min-width: 285px;
+                selection-background-color: #D0D0D0;
+                selection-color: #000000;
+              }
+              #FormulaireWidget QComboBox:editable {
+                background: #FFFFFF;
+              } 
+              #FormulaireWidget QComboBox::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                border-left: none;
+              }
+              #FormulaireWidget QComboBox::down-arrow {
+                image: url(/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/ic_arrow_drop_down_black_18dp_1x.png);
+              }
+              #FormulaireWidget QComboBox QAbstractItemView {
+                background: #FFFFFF;
+                border: none;
+              }
+            
             QDateEdit {
                 font-size: 18px;   
                 padding: 10px;     
@@ -164,3 +228,137 @@ QMainWindow {
                 padding: 10px;     
                 height: 40px;     
             }
+
+            #dashbord_widget{ 
+                background-color: rgba(0, 0, 0, 0.1); 
+            }
+            #dashbord_graphe{
+                background-color: rgba(0, 0, 0, 0.3); 
+            }
+            QTableWidget {
+                background-color: rgba(227, 226, 226, 0.3); /* Fond blanc */
+                color: #ffffff; /* Texte en gris foncé pour une meilleure lisibilité */
+                border: 1px solid #ddd; /* Bordure légère */
+                border-radius: 5px; /* Coins arrondis */
+                padding: 5px; /* Espacement intérieur */
+                size: 12px;
+            }
+            
+            
+            QTableWidget::horizontalHeader, QTableWidget::verticalHeader {
+                background-color: #f1f1f1; /* Fond clair pour les en-têtes */
+                color: #555; /* Texte gris pour les en-têtes */
+                border: none; /* Pas de bordure pour les en-têtes */
+            }
+            
+            QTableWidget::horizontalHeader::section, QTableWidget::verticalHeader::section {
+                padding: 10px; /* Espacement des en-têtes */
+                font-weight: bold; /* Texte en gras pour les en-têtes */
+                border: 1px solid #ddd; /* Bordure légère autour des en-têtes */
+            }
+            
+            #titre_table{
+                text-align: left;
+                color: white;
+                padding: 5px;
+                font-size: 20px;
+                min-width: 150px;
+            } 
+            
+
+
+
+            QSpinBox,
+            QSpinBox:editable,
+            QSpinBox:hover,
+            QSpinBox:pressed {
+            border: none;
+            border-bottom: 2px solid #FFFFFF;
+            border-radius: 0;
+            background: #FFFFFF;
+            color: #000000;
+            padding: 5px 4px 4px 4px;
+            min-width: 300px;
+            }
+            QSpinBox:focus {
+            border: none;
+            border-bottom: 2px solid #42A5F5;
+            border-radius: 0;
+            background: #FFFFFF;
+            color: #000000;
+            padding: 5px 4px 4px 4px;
+            }
+            QSpinBox:disabled {
+            border: none;
+            border-bottom: 2px solid #999999;
+            border-radius: 0;
+            background: #999999;
+            color: #000000;
+            padding: 5px 15px 4px 4px;
+            }
+            QSpinBox::up-button {
+            subcontrol-origin: border;
+            subcontrol-position: top right;
+            border: none;
+            border-radius: 0;
+            background: #FFFFFF;
+            margin-top: 1px;
+            width: 18px;
+            }
+            QSpinBox::down-button {
+            subcontrol-origin: border;
+            subcontrol-position: bottom right;
+            border: none;
+            border-radius: 0;
+            background: #FFFFFF;
+            width: 18px;
+            }
+            QSpinBox::up-arrow {
+            image: url(/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/ic_arrow_drop_down_black_18dp_1x.png);
+            }
+            QSpinBox::up-arrow:disabled,
+            QSpinBox::up-arrow:off {
+            image: none;
+            }
+            QSpinBox::down-arrow {
+            image: url(/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/ic_arrow_drop_down_black_18dp_1x.png);
+            }
+            QSpinBox::down-arrow:disabled,
+            QSpinBox::down-arrow:off {
+            image: none;
+            }
+
+
+            #buttonformulaire{
+                font-size: 16px; /* Font size for readability */
+                padding: 10px; /* Padding for a comfortable click area */
+                background-color: #007BFF; /* Blue background color */
+                color: white; /* White text for contrast */
+                border-radius: 5px; /* Rounded corners for a modern look */
+                border: none; /* No border */
+                cursor: pointer; /* Pointer cursor to indicate it's clickable */
+                margin-top: 50px;
+                min-width: 200px;
+                text-align: center;
+            }
+            #buttonformulaire:hover {
+                background-color: #0056b3; /* Darker blue when hovered for a hover effect */
+            }
+
+            #Titre_f{ 
+                color: white;
+                padding: 5px;
+                size: 50px; 
+                margin-top: 70px;
+                margin-bottom: 150px; 
+                margin-left: 200px;
+                min-width: 400px;
+                font-weight: bold;
+                text-align: center;   
+                font-family: 'Arial', sans-serif; /* Police lisible */
+                
+            }
+                        
+
+                        
+                        

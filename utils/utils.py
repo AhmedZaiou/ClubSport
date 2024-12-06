@@ -18,7 +18,7 @@ from datetime import datetime
 import os
 import shutil
 
-
+path_logo = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/logoa.png"
 
 
 def set_styles():
@@ -53,6 +53,27 @@ def increment_month(year: int, month: int) -> tuple:
     return year, month
 
 
+def decrement_month(year: int, month: int) -> tuple:
+    """
+    Décrémente un mois et ajuste l'année si nécessaire.
+
+    Args:
+        year (int): L'année actuelle.
+        month (int): Le mois actuel (1 à 12).
+
+    Returns:
+        tuple: Une paire (année mise à jour, mois mis à jour).
+    """
+    if not (1 <= month <= 12):
+        raise ValueError("Le mois doit être entre 1 et 12 inclus.")
+
+    # Décrémenter le mois
+    month -= 1
+    if month < 1:  # Si on descend en dessous de janvier
+        month = 12  # Revenir à décembre
+        year -= 1  # Décrémenter l'année
+
+    return year, month
 
 def deplacer_et_renommer_image(source_path, destination_folder, nouveau_nom):
     """
