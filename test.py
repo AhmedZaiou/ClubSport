@@ -16,7 +16,7 @@ logo_path = racine/"images"/"logos"/"logoa.png"
 background_path = racine / "style"/"image.jpg"
 arrowdrop = racine/"images"/"logos"/"ic_arrow_drop_down_black_18dp_1x.png"
 
-print(str(racine/"style"/"style.qss").replace("/", "\\"))
+print(str(background_path))
 
 def set_styles():
     try:
