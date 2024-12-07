@@ -11,7 +11,7 @@ class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         # Configuration principale
-        self.setWindowTitle("Bureau de Suivi des Adhérents - Royal Fitness")
+        self.setWindowTitle("Royal Fitness - Taza")
         self.setGeometry(100, 100, 1500, 800)
         self.showFullScreen()
         self.create_login_interface()
