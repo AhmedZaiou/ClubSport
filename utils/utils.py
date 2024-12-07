@@ -53,8 +53,12 @@ def set_styles():
     try:
         with open(racine/"style"/"style.qss", "r") as file:
             style = file.read()
-            style = style.replace("background_image", str(background_path).replace("/", "\\"))
-            style = style.replace("arrowdrop", str(arrowdrop).replace("/", "\\")) 
+            background_path_str =  str(background_path).replace("/", "\\")
+            background_path_str =  background_path_str.replace("C:", "C:\\")
+            arrowdrop_str =  str(arrowdrop).replace("/", "\\")
+            arrowdrop_str =  arrowdrop_str.replace("C:", "C:\\")
+            style = style.replace("background_image",background_path_str)
+            style = style.replace("arrowdrop", arrowdrop_str) 
             return style
     except FileNotFoundError:
         print("Style file not found. Using default styles.")
