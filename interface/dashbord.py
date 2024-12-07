@@ -12,8 +12,7 @@ class Dashbord():
     def __init__(self, main_inter): 
         self.main_inter = main_inter
         self.show_dashboard_inter()
-        
-        
+    
     def show_dashboard_inter(self):
         self.main_inter.clear_content_frame()
 
@@ -58,8 +57,10 @@ class Dashbord():
         layout.addWidget(self.tableWidget)
         
         self.main_inter.content_layout.addWidget(self.dashbord_widget) 
+
     def filter_table(self):
-        self.load_all_table()
+        #if not self.all_data:
+        #    self.load_all_data()
         # Get the filter text from the search bar
         filter_text = self.search_bar.text().lower()
 
@@ -87,7 +88,7 @@ class Dashbord():
             labels=["Paiement effectué", "Paiement non effectué"], 
             autopct="%1.1f%%", 
             startangle=90, 
-            colors=["skyblue", "firebrick"]
+            colors=["lightgreen", "firebrick"]
         ) 
         date = datetime.now().strftime("%Y-%m-%d")
         ax.set_title(f"Pourcentage de la situation du mois : ({date})", color='white',  fontsize=16) 
@@ -110,13 +111,13 @@ class Dashbord():
         self.revenue_canvas.figure.set_facecolor((0, 0, 0, 0.1))
         ax.clear()
         ax.set_facecolor((0, 0, 0, 0.1))
-        revenue_by_month.plot(kind="bar", ax=ax, color="#00C000", alpha=0.75)
+        revenue_by_month.plot(kind="bar", ax=ax, color="lightgreen", alpha=0.75)
         ax.set_title(f"Revenus Mensuels ({current_year}) - Total : {total_revenue} Dhs",  color='white',  fontsize=16) 
         ax.set_ylabel("Revenus (Dhs)",  color='white',  fontsize=16) 
         ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en noir
         ax.tick_params(axis='y', colors='white')
 
-        self.revenue_canvas.figure.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.25)
+        self.revenue_canvas.figure.subplots_adjust(left=0.2, right=0.9, top=0.85, bottom=0.25)
         for label in ax.texts:
             label.set_color('white')
             label.set_fontsize(14)
@@ -126,7 +127,7 @@ class Dashbord():
         """Charge les adhérents dans le tableau avec des fonctionnalités supplémentaires"""
         # Connexion à la base de données SQLite
         
-        self.adherents = fetch_data_Non() 
+        self.adherents = fetch_data_Non_df() 
         
         # Effacer les anciennes lignes dans le tableau
         self.tableWidget.setColumnCount(6)  # Nombre de colonnes affichées
@@ -138,58 +139,28 @@ class Dashbord():
 
         self.tableWidget.setRowCount(10)
 
-        self.rows_shown = 20  # Nombre de lignes visibles à chaque fois
-        self.current_row = 0
-        self.tableWidget.verticalScrollBar().valueChanged.connect(self.on_scroll)
+        #self.all_data = False  # Nombre de lignes visibles à chaque fois 
+        #self.tableWidget.verticalScrollBar().valueChanged.connect(self.on_scroll)
 
-
-        self.load_table() 
-
+        self.load_table()  
         # Connecter l'événement de clic pour traiter un adhérent
         self.tableWidget.cellClicked.connect(self.on_cell_clicked)
+    
+    def load_all_data(self):
 
-    def load_all_table(self):
+        self.adherents = fetch_data_Non_all() 
+        self.load_table()
 
-        # Ajouter les adhérents dans le tableau
-        for  row_index in range(self.current_row, len(self.adherents)):
-            #row_index, adherent in enumerate(self.adherents):
-            self.tableWidget.insertRow(row_index)
+        self.all_data = True
 
-            # Ajouter les données dans les colonnes respectives
-            for col_index, data in enumerate(self.adherents[row_index][1:]):  # Exclure 'id' pour l'affichage
-                
-                item = QTableWidgetItem(str(data))
-                self.tableWidget.setItem(row_index, col_index, item)
-                
-
-                # Ajouter une couleur verte à la cellule de la colonne Email
-                if col_index == 4 :  # 3e colonne (Email)
-                    item = QTableWidgetItem(str('Paiement non effectué'))
-                    self.tableWidget.setItem(row_index, col_index, item)
-                    #item.setBackground(QColor(255, 0, 0))  # Vert 
-                else:
-                    item = QTableWidgetItem(str(data))
-                    self.tableWidget.setItem(row_index, col_index, item)
-            
-                    
-            # Ajouter un lien cliquable dans la colonne Action
-            action_item = QTableWidgetItem("Gestion de l'hadérent")
-            action_item.setForeground(QColor("white"))
-            action_item.setTextAlignment(Qt.AlignCenter)
-            action_item.setData(Qt.UserRole, self.adherents[row_index][0])  # Stocker l'ID de l'adhérent pour le traitement
-            action_item.setBackground(QColor(0, 0, 255))  # Vert
-            self.tableWidget.setItem(row_index, 5, action_item)
-        self.current_row += len(self.adherents)
-   
     def load_table(self):
 
         # Ajouter les adhérents dans le tableau
-        for  row_index in range(self.current_row, min(self.current_row + self.rows_shown, len(self.adherents))):
-            #row_index, adherent in enumerate(self.adherents):
+        for  row_index, adherent in self.adherents.iterrows():
             self.tableWidget.insertRow(row_index)
 
             # Ajouter les données dans les colonnes respectives
-            for col_index, data in enumerate(self.adherents[row_index][1:]):  # Exclure 'id' pour l'affichage
+            for col_index, data in enumerate(adherent[1:]):  # Exclure 'id' pour l'affichage
                 
                 item = QTableWidgetItem(str(data))
                 self.tableWidget.setItem(row_index, col_index, item)
@@ -209,10 +180,12 @@ class Dashbord():
             action_item = QTableWidgetItem("Gestion de l'hadérent")
             action_item.setForeground(QColor("white"))
             action_item.setTextAlignment(Qt.AlignCenter)
-            action_item.setData(Qt.UserRole, self.adherents[row_index][0])  # Stocker l'ID de l'adhérent pour le traitement
+            action_item.setData(Qt.UserRole, adherent[0])  # Stocker l'ID de l'adhérent pour le traitement
             action_item.setBackground(QColor(0, 0, 255))  # Vert
-            self.tableWidget.setItem(row_index, 5, action_item)
-        self.current_row += self.rows_shown
+            self.tableWidget.setItem(row_index, 5, action_item) 
+        
+    
+  
     def on_scroll(self, value):
         """
         Appelée à chaque fois que l'utilisateur fait défiler.
@@ -220,8 +193,9 @@ class Dashbord():
         max_scroll = self.tableWidget.verticalScrollBar().maximum()
 
         # Si la barre de défilement est presque en bas, charger plus de données
-        if value == max_scroll:
-            self.load_table()
+        if value == max_scroll and not self.all_data:
+            self.load_all_data()
+            
     
     def on_cell_clicked(self, row, column): 
         # Si la colonne 12 (Action) est cliquée

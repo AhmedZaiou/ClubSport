@@ -141,9 +141,11 @@ class Profile():
         button_layout = QVBoxLayout()
         self.modification = QPushButton("Mise à jour")
         self.modification.clicked.connect(self.medefier)
+        self.modification.setObjectName('button_vert')
         button_layout.addWidget(self.modification)
         self.stopsubscription = QPushButton("Arrêter l'abonnement")
         self.stopsubscription.clicked.connect(self.stopsubscription_fnc)
+        self.stopsubscription.setObjectName('button_vert')
         button_layout.addWidget(self.stopsubscription)
         content_layout.addLayout(button_layout)
 
@@ -372,6 +374,7 @@ class Profile():
         # Confirm button setup
         self.confirmation = QPushButton("Confirmer")
         self.confirmation.clicked.connect(self.ajouter_paiement)
+        self.confirmation.setObjectName('button_vert')
         # Adding sub-layouts to the main layout
         self.layout_confim.addLayout(self.info_layout_c)
         self.layout_confim.addWidget(self.confirmation)

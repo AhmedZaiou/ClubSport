@@ -20,9 +20,17 @@ class LoginWindow(QMainWindow):
         
 
     def create_login_interface(self):
+        
+
+        self.central_widget_p = QWidget()
+        self.central_widget_p.setObjectName("central_widget_p")
+
+        self.main_layout_p = QVBoxLayout(self.central_widget_p) 
+        
+        self.setCentralWidget(self.central_widget_p)
+
         self.central_widget = QWidget()
         self.central_widget.setObjectName("main") 
-        self.setCentralWidget(self.central_widget)
         
         self.main_layout = QVBoxLayout(self.central_widget) 
 
@@ -32,13 +40,12 @@ class LoginWindow(QMainWindow):
         top_widget = QWidget()
         top_layout = QHBoxLayout(top_widget)
         top_widget.setObjectName("top_widget")
-
         
         # Add the layout to your main layout
         self.main_layout.addWidget(top_widget) 
        # Ajouter le logo à gauche
         self.logo_label = QLabel()
-        self.logo_label.setPixmap(QPixmap("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/Logo.png").scaled(240, 240, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.logo_label.setPixmap(QPixmap("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/logoa.png").scaled(240, 240, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.logo_label.setObjectName("logotop")
         self.logo_label.setAlignment(Qt.AlignLeft)
         top_layout.addWidget(self.logo_label)
@@ -46,8 +53,8 @@ class LoginWindow(QMainWindow):
         # Ajouter le titre à droite
         self.title_label = QLabel("Bureau de Suivi des Adhérents")
         self.title_label.setObjectName("titleLabel")
-        self.title_label.setAlignment(Qt.AlignRight)
-        top_layout.addWidget(self.title_label, alignment=Qt.AlignRight)
+        self.title_label.setAlignment(Qt.AlignLeft)
+        top_layout.addWidget(self.title_label, alignment=Qt.AlignLeft)
 
         
         # Page de connexion
@@ -82,6 +89,10 @@ class LoginWindow(QMainWindow):
         self.login_button.clicked.connect(self.login)
         self.login_button.setObjectName("buttconexion")
         self.login_layout.addWidget(self.login_button)
+
+        self.main_layout_p.addWidget(self.central_widget)
+
+        
         
 
     def login(self):
@@ -89,16 +100,19 @@ class LoginWindow(QMainWindow):
         password = self.password_entry.text()
 
         # Vérification des identifiants
-        if username == "user1" and password == "123":
+        if (username == "User" and password == "202019") or (username == "Sport" and password == "191919"):
             self.show_main_interface() 
         else:
             QMessageBox.critical(self, "Erreur", "Nom d'utilisateur ou mot de passe incorrect")
 
 
     def show_main_interface(self): 
+        
         Main = MainInterface()
-        self.main_interface = Dashbord(Main) 
+        self.main_interface = Dashbord(Main)  
         self.close()
+         
+        
     
 
  

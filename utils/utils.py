@@ -14,9 +14,12 @@ from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QWidget, QTa
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from datetime import datetime
-
+from openpyxl import Workbook
 import os
 import shutil
+
+
+from dataset.dataset import *
 
 path_logo = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/logoa.png"
 
@@ -104,3 +107,28 @@ def deplacer_et_renommer_image(source_path, destination_folder, nouveau_nom):
     shutil.move(source_path, nouveau_chemin)
     
     return nouveau_chemin
+
+
+
+
+
+def write_to_excel(file_name="output.xlsx"):
+     
+    workbook = Workbook()
+    adherents = fetch_data()
+    paiments = recuperer_all_paiements()
+    # Feuille 1
+    sheet1 = workbook.active
+    sheet1.title = "adherents"
+    for row in adherents:
+        sheet1.append(row)
+
+    # Feuille 2
+    sheet2 = workbook.create_sheet(title="paiments")
+    for row in paiments:
+        sheet2.append(row)
+
+    # Sauvegarde du fichier Excel
+    workbook.save(file_name) 
+
+ 

@@ -48,10 +48,6 @@ class Revenues(MainInterface):
         self.situation_canvas2.setObjectName("dashbord_graphe") 
         self.plot_situation_graph2()
         graphs2_layout.addWidget(self.situation_canvas2)
-
-
-
-
         layout.addLayout(graphs2_layout)
         
         self.main_inter.content_layout.addWidget(self.dashbord_widget) 
@@ -83,7 +79,7 @@ class Revenues(MainInterface):
             labels=["Paiement effectué", "Paiement non effectué"], 
             autopct="%1.1f%%", 
             startangle=90, 
-            colors=["skyblue", "firebrick"]
+            colors=["lightgreen", "firebrick"]
         ) 
         date = datetime.now().strftime("%Y-%m-%d")
         ax.set_title(f"Pourcentage de la situation du mois : ({date})", color='white',  fontsize=16) 
@@ -104,7 +100,7 @@ class Revenues(MainInterface):
         self.situation_canvas2.figure.set_facecolor((0, 0, 0, 0.1))
         ax.clear()
         ax.set_facecolor((0, 0, 0, 0.1))
-        revenue_by_month.plot(kind="line", ax=ax, color="#00C000", alpha=0.75)
+        revenue_by_month.plot(kind="line", ax=ax, color="lightgreen", alpha=0.75)
         ax.set_title(f"Revenus Mensuels () - Total :  Dhs",  color='white',  fontsize=16) 
         ax.set_ylabel("Revenus (Dhs)",  color='white',  fontsize=16) 
         ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en noir
@@ -133,7 +129,7 @@ class Revenues(MainInterface):
         self.revenue_canvas.figure.set_facecolor((0, 0, 0, 0.1))
         ax.clear()
         ax.set_facecolor((0, 0, 0, 0.1))
-        revenue_by_month.plot(kind="bar", ax=ax, color="#00C000", alpha=0.75)
+        revenue_by_month.plot(kind="bar", ax=ax, color="lightgreen", alpha=0.75)
         ax.set_title(f"Revenus Mensuels ({current_year}) - Total : {total_revenue} Dhs",  color='white',  fontsize=16) 
         ax.set_ylabel("Revenus (Dhs)",  color='white',  fontsize=16) 
         ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en noir

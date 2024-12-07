@@ -11,7 +11,7 @@ def fetch_data():
     return df 
 
 
-def fetch_data_Non_ans():
+def fetch_data_Non():
     """Récupère les données de la base SQLite"""
     conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
     cursor = conn.cursor()
@@ -29,36 +29,28 @@ def fetch_data_Non_ans():
             pass
         else:
             filtred_adh.append(data)   
+        if len(filtred_adh)>100:
+             break
     return filtred_adh
 
-def fetch_data_Non():
-    """Récupère les adhérents qui n'ont pas payé ce mois-ci."""
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+def fetch_data_Non_all():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
     cursor = conn.cursor()
 
-    # Obtenez directement les données des adhérents et leur dernier paiement
-    query = """
-    SELECT a.id, a.nom, a.prenom, a.email, a.telephone, a.situation, 
-           p.date_paiement
-    FROM adherents a
-    LEFT JOIN paiements p ON a.id = p.adherent_id
-    WHERE p.date_paiement IS NULL OR p.date_paiement < strftime('%Y-%m-01', 'now')
-    """
-    cursor.execute(query)
+    # Récupérer ment les colonnes nécessaires
+    cursor.execute("SELECT id, nom, prenom, email, telephone, situation FROM adherents")
     adherents = cursor.fetchall()
-
-    # Filtrer les adhérents qui n'ont pas payé ce mois-ci
-    current_date = datetime.now()
     filtred_adh = []
     for data in adherents:
-        last_payment_date = data[6]
-        if last_payment_date is None:  # Pas de paiement enregistré
-            filtred_adh.append(data)
+        last_paiment = recuperer_last_payment(data[0])
+        # Define the date to compare
+        date_to_compare = datetime.strptime(last_paiment, "%Y-%m-%d") 
+        current_date = datetime.now() 
+        if date_to_compare.year == current_date.year and date_to_compare.month == current_date.month:
+            pass
         else:
-            last_paiment = datetime.strptime(last_payment_date, "%Y-%m-%d")
-            if last_paiment.year != current_date.year or last_paiment.month != current_date.month:
-                filtred_adh.append(data)
-
+            filtred_adh.append(data)    
     return filtred_adh
 
 
@@ -70,7 +62,7 @@ def fetch_data_all():
     # Récupérer ment les colonnes nécessaires
     cursor.execute("SELECT id, nom, prenom, email, telephone, situation FROM adherents")
     adherents = cursor.fetchall()
-    return adherents
+    return pd.DataFrame(adherents)
 
 def load_data( adherent_id):
         connection = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
@@ -334,3 +326,63 @@ def dinscription(id):
     connection.commit() 
     if connection:
                 connection.close()
+
+
+
+
+
+
+def fetch_data_Non_df():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
+    cursor = conn.cursor()
+
+    # Récupérer ment les colonnes nécessaires
+    cursor.execute("SELECT id, nom, prenom, email, telephone, situation FROM adherents")
+    adherents = cursor.fetchall()
+    cursor.execute("SELECT moi_concerner,adherent_id FROM paiements")
+    paiements = cursor.fetchall()
+    adherents, paiements =  pd.DataFrame(adherents, columns=["id", "nom", "prenom", "email", "telephone", "situation" ]), pd.DataFrame(paiements, columns=["moi_concerner","adherent_id"])
+    paiements["moi_concerner"] = pd.to_datetime(paiements["moi_concerner"], format='%Y-%m-%d')
+    paiements = paiements.groupby("adherent_id")["moi_concerner"].max().reset_index()
+    aujourd_hui = datetime.now()
+    date_premier = datetime(aujourd_hui.year, aujourd_hui.month, 1)
+    paiements = paiements[paiements["moi_concerner"] < date_premier]
+    return adherents.merge(paiements, left_on="id", right_on="adherent_id")
+
+def fetch_data_with_last():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
+    cursor = conn.cursor()
+
+    # Récupérer ment les colonnes nécessaires
+    cursor.execute("SELECT id, nom, prenom, email, telephone, situation FROM adherents")
+    adherents = cursor.fetchall()
+    cursor.execute("SELECT moi_concerner,adherent_id FROM paiements")
+    paiements = cursor.fetchall()
+    adherents, paiements =  pd.DataFrame(adherents, columns=["id", "nom", "prenom", "email", "telephone", "situation" ]), pd.DataFrame(paiements, columns=["moi_concerner","adherent_id"])
+    paiements["moi_concerner"] = pd.to_datetime(paiements["moi_concerner"], format='%Y-%m-%d')
+    paiements = paiements.groupby("adherent_id")["moi_concerner"].max().reset_index() 
+    return adherents.merge(paiements, left_on="id", right_on="adherent_id")
+
+def recuperer_all_paiements():
+    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM paiements ;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements
+
+def fetch_data():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM adherents;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements
