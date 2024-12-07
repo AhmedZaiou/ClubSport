@@ -165,9 +165,8 @@ class ModefierADh():
         genre = self.genre_input.currentText()
         tarif = self.tarif_input.value()
         seances = self.seances_input.value()
-        situation = self.situation_input.currentText()
-        destination_path = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/profiles"
-        photo_path = deplacer_et_renommer_image(self.photo_path, destination_path, f'{nom}-{prenom}-{cin}') if self.photo_path else "Aucune"
+        situation = self.situation_input.currentText() 
+        photo_path = deplacer_et_renommer_image(self.photo_path, path_profils_images, f'{nom}-{prenom}-{cin}') if self.photo_path else "Aucune"
 
         # Vérification des champs obligatoires
         if not nom or not prenom or not cin:

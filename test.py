@@ -1,4 +1,3 @@
-from PyInstaller.utils.hooks import collect_submodules, collect_data_files
-
-hiddenimports = collect_submodules('PySide6.QtTest')
-datas = collect_data_files('PySide6')
+with open("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/style/style.qss", "r") as file:
+            style = file.read()
+            print(style.replace('a', 'b'))

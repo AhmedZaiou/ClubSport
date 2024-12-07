@@ -175,7 +175,7 @@ class Profile():
             if row[14] and row[14] != 'Aucune':
                 self.photo_label.setPixmap(QPixmap(row[14]).scaled(150, 150))
             else:
-                self.photo_label.setPixmap(QPixmap("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/profile.png").scaled(150, 150))
+                self.photo_label.setPixmap(QPixmap(str(path_profils_images/"profile.png")).scaled(150, 150))
         self.main_inter.content_layout.addWidget(self.form_widget)
     
     def stopsubscription_fnc(self):

@@ -35,7 +35,7 @@ class MainInterface(QMainWindow):
         self.menu_layout = QVBoxLayout(self.menu_frame)
 
         self.logo_label = QLabel()
-        self.logo_label.setPixmap(QPixmap(path_logo).scaled(180, 180, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.logo_label.setPixmap(QPixmap(str(logo_path)).scaled(180, 180, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.logo_label.setObjectName("logomenu")
         self.menu_layout.addWidget(self.logo_label)
         

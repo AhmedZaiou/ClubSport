@@ -2,6 +2,7 @@ import sqlite3
 from faker import Faker
 import random
 from datetime import datetime, timedelta
+from utils.utils import *
 
 def creer_base_et_tables(nom_base):
     """Crée une base de données SQLite avec les tables adherents et paiements."""
@@ -103,7 +104,7 @@ def generer_paiements(nom_base):
 
 # Utilisation
 if __name__ == "__main__":
-    nom_base = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
+    nom_base = path_data_set
     creer_base_et_tables(nom_base)
     generer_adherents(nom_base, 2000)
     generer_paiements(nom_base)

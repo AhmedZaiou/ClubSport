@@ -1,8 +1,8 @@
 import sqlite3 
- 
+from utils.utils import *
 
 # Connexion à la base de données SQLite
-conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+conn = sqlite3.connect(path_data_set)
 cursor = conn.cursor()
 
 # Création de la table adherents si elle n'existe pas

@@ -23,7 +23,7 @@ class LoginWindow(QMainWindow):
         
 
         self.central_widget_p = QWidget()
-        self.central_widget_p.setObjectName("central_widget_p")
+        self.central_widget_p.setObjectName("central_widget_p")  
 
         self.main_layout_p = QVBoxLayout(self.central_widget_p) 
         
@@ -45,7 +45,7 @@ class LoginWindow(QMainWindow):
         self.main_layout.addWidget(top_widget) 
        # Ajouter le logo à gauche
         self.logo_label = QLabel()
-        self.logo_label.setPixmap(QPixmap("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/images/logos/logoa.png").scaled(240, 240, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.logo_label.setPixmap(QPixmap(str(logo_path)).scaled(240, 240, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.logo_label.setObjectName("logotop")
         self.logo_label.setAlignment(Qt.AlignLeft)
         top_layout.addWidget(self.logo_label)

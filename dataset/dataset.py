@@ -2,9 +2,11 @@
 import pandas as pd 
 import sqlite3 
 from datetime import datetime
+from utils.utils import *
+
 def fetch_data():
     """Récupère les données de la base SQLite"""
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     query = "SELECT * FROM adherents"
     df = pd.read_sql_query(query, conn)
     conn.close()
@@ -13,7 +15,7 @@ def fetch_data():
 
 def fetch_data_Non():
     """Récupère les données de la base SQLite"""
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
+    conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
     cursor = conn.cursor()
 
     # Récupérer ment les colonnes nécessaires
@@ -35,7 +37,7 @@ def fetch_data_Non():
 
 def fetch_data_Non_all():
     """Récupère les données de la base SQLite"""
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
+    conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
     cursor = conn.cursor()
 
     # Récupérer ment les colonnes nécessaires
@@ -56,7 +58,7 @@ def fetch_data_Non_all():
 
 def fetch_data_all():
     """Récupère les données de la base SQLite"""
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
+    conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
     cursor = conn.cursor()
 
     # Récupérer ment les colonnes nécessaires
@@ -65,7 +67,7 @@ def fetch_data_all():
     return pd.DataFrame(adherents)
 
 def load_data( adherent_id):
-        connection = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+        connection = sqlite3.connect(path_data_set)
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM adherents WHERE id = ?", (adherent_id,))
         row = cursor.fetchone()
@@ -74,7 +76,7 @@ def load_data( adherent_id):
 
 def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entree,
         age, genre, tarif, seances, situation, photo_path):
-    connection = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    connection = sqlite3.connect(path_data_set)
     cursor = connection.cursor()
 
     # Création de la table si elle n'existe pas encore
@@ -116,7 +118,7 @@ def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entre
 
 def affectuer_paiment():
     # Connexion à la base de données
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
 
     # Création de la table des paiements
@@ -136,7 +138,7 @@ def affectuer_paiment():
     conn.close()    
     
 def ajouter_paiement(adherent_id, montant, date_paiement, mode_paiement, month_to_pay):
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
 
     cursor.execute('''
@@ -148,7 +150,7 @@ def ajouter_paiement(adherent_id, montant, date_paiement, mode_paiement, month_t
     conn.close()
 
 def recuperer_paiements(adherent_id):
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
 
     cursor.execute('''
@@ -181,7 +183,7 @@ def modifier_adh(adherent_id, nom, prenom, email, telephone, cin, num_adh, adres
         situation (str): Nouvelle situation.
         photo_path (str): Nouveau chemin de photo.
     """
-    connection = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    connection = sqlite3.connect(path_data_set)
     cursor = connection.cursor()
 
     # Requête SQL de mise à jour
@@ -206,7 +208,7 @@ def modifier_adh(adherent_id, nom, prenom, email, telephone, cin, num_adh, adres
 
 
 def recuperer_last_payment(adherent_id):
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
 
     cursor.execute('''
@@ -225,7 +227,7 @@ def recuperer_last_payment(adherent_id):
 
 
 def recuperer_porcentage_paiment():
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
 
     cursor.execute('''
@@ -244,7 +246,7 @@ def recuperer_porcentage_paiment():
     return number_of_adhs[0][0],number_of_payment[0][0]
 
 def recuperer_stat_paiment():
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
 
     dict_moths = {}
@@ -263,7 +265,7 @@ def recuperer_stat_paiment():
     return dict_moths, sum(dict_moths.values())
 
 def recuperer_all_paiment():
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
 
     cursor.execute('''
@@ -283,7 +285,7 @@ def dinscription(id):
     data = load_data( id)
 
     (id_profile ,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path) = data
-    connection = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    connection = sqlite3.connect(path_data_set)
     cursor = connection.cursor()
 
     # Création de la table si elle n'existe pas encore
@@ -334,7 +336,7 @@ def dinscription(id):
 
 def fetch_data_Non_df():
     """Récupère les données de la base SQLite"""
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
+    conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
     cursor = conn.cursor()
 
     # Récupérer ment les colonnes nécessaires
@@ -352,7 +354,7 @@ def fetch_data_Non_df():
 
 def fetch_data_with_last():
     """Récupère les données de la base SQLite"""
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")  # Nom de votre fichier de base de données
+    conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
     cursor = conn.cursor()
 
     # Récupérer ment les colonnes nécessaires
@@ -366,7 +368,7 @@ def fetch_data_with_last():
     return adherents.merge(paiements, left_on="id", right_on="adherent_id")
 
 def recuperer_all_paiements():
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
     cursor.execute('''
     SELECT * FROM paiements ;
@@ -377,7 +379,7 @@ def recuperer_all_paiements():
 
 def fetch_data():
     """Récupère les données de la base SQLite"""
-    conn = sqlite3.connect("/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db")
+    conn = sqlite3.connect(path_data_set)
     
     cursor = conn.cursor()
     cursor.execute('''
