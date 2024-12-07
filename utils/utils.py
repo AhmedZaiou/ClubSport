@@ -55,6 +55,7 @@ def set_styles():
             style = file.read()
             style = style.replace("background_image", str(background_path))
             style = style.replace("arrowdrop", str(arrowdrop))
+            style = style.replace("/", "\\")
             return style
     except FileNotFoundError:
         print("Style file not found. Using default styles.")
