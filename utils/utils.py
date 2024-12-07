@@ -19,9 +19,6 @@ import os
 import shutil
 
 
-from dataset.dataset import *
-
-
 
 
 from pathlib import Path
@@ -30,7 +27,7 @@ current_directory = Path(__file__).parent
 racine = current_directory.parent 
 
 
- 
+
 
 path_data_set = racine / "dataset"/"royal_fitness.db"
 
@@ -41,6 +38,9 @@ logo_path = racine/"images"/"logos"/"logoa.png"
 
 background_path = racine / "style"/"image.jpg"
 arrowdrop = racine/"images"/"logos"/"ic_arrow_drop_down_black_18dp_1x.png"
+
+from dataset.dataset import *
+
 
 
 
