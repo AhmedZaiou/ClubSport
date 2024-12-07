@@ -11,7 +11,7 @@ class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         # Configuration principale
-        self.setWindowTitle("Royal Fitness - Taza")
+        self.setWindowTitle("Bureau de Royal Fitness, Taza")
         self.setGeometry(100, 100, 1500, 800)
         self.showFullScreen()
         self.create_login_interface()
@@ -51,7 +51,7 @@ class LoginWindow(QMainWindow):
         top_layout.addWidget(self.logo_label)
         
         # Ajouter le titre à droite
-        self.title_label = QLabel("Bureau de Suivi des Adhérents")
+        self.title_label = QLabel("Bureau de Royal Fitness, Taza")
         self.title_label.setObjectName("titleLabel")
         self.title_label.setAlignment(Qt.AlignLeft)
         top_layout.addWidget(self.title_label, alignment=Qt.AlignLeft)
