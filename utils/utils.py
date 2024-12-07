@@ -53,10 +53,8 @@ def set_styles():
     try:
         with open(racine/"style"/"style.qss", "r") as file:
             style = file.read()
-            background_path_str =  str(background_path).replace("/", "\\")
-            background_path_str =  background_path_str.replace("C:", "C:\\")
-            arrowdrop_str =  str(arrowdrop).replace("/", "\\")
-            arrowdrop_str =  arrowdrop_str.replace("C:", "C:\\")
+            background_path_str =  str(background_path).replace("\\", "/") 
+            arrowdrop_str =  str(arrowdrop).replace("\\", "/") 
             style = style.replace("background_image",background_path_str)
             style = style.replace("arrowdrop", arrowdrop_str) 
             return style
