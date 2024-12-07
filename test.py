@@ -16,7 +16,7 @@ logo_path = racine/"images"/"logos"/"logoa.png"
 background_path = racine / "style"/"image.jpg"
 arrowdrop = racine/"images"/"logos"/"ic_arrow_drop_down_black_18dp_1x.png"
 
-print(str(racine/"style"/"style.qss"))
+print(str(racine/"style"/"style.qss").replace("/", "\\"))
 
 def set_styles():
     try:
@@ -27,4 +27,3 @@ def set_styles():
             return style
     except FileNotFoundError:
         print("Style file not found. Using default styles.")
-print(set_styles())
