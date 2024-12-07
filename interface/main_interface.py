@@ -40,7 +40,7 @@ class MainInterface(QMainWindow):
         self.menu_layout.addWidget(self.logo_label)
         
         # Ajouter le titre à droite
-        self.title_label = QLabel("Bureau de Suivi des Adhérents") 
+        self.title_label = QLabel("Royal Fitness, Taza") 
         self.title_label.setObjectName("titremenu")
         self.menu_layout.addWidget(self.title_label, alignment=Qt.AlignRight)
  
