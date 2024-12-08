@@ -226,7 +226,17 @@ class Payment( ):
         image_path = self.generer_graphe_situation(nbr_adh,nbr_pyment)
 
         
-        output_pdf = "example.pdf"
+        options = QFileDialog.Options()
+        output_pdf, _ = QFileDialog.getSaveFileName(
+            self.main_inter,
+            "Enregistrer le fichier",
+            f"rapport-{date}.pdf",
+            "Documents (*.pdf);;All Files (*)",
+            options=options
+        )
+        if not output_pdf:
+            QMessageBox.information(self.main_inter, "Le téléchargement est annulé.", "Le téléchargement est annulé.")
+            return 
 
         # Création d'un objet Canvas pour générer le PDF
         c = canvas.Canvas(output_pdf, pagesize=letter)
@@ -326,8 +336,17 @@ class Payment( ):
 
 
 
-        
-        output_pdf = "evolution.pdf"
+        options = QFileDialog.Options()
+        output_pdf, _ = QFileDialog.getSaveFileName(
+            self.main_inter,
+            "Enregistrer le fichier",
+            "rapport-total.pdf",
+            "Documents (*.pdf);;All Files (*)",
+            options=options
+        )
+        if not output_pdf:
+            QMessageBox.information(self.main_inter, "Le téléchargement est annulé.", "Le téléchargement est annulé.")
+            return 
 
         # Création d'un objet Canvas pour générer le PDF
         c = canvas.Canvas(output_pdf, pagesize=letter)
