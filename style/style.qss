@@ -117,6 +117,15 @@
                 padding: 10px 0; /* Padding to add space around the text */
                 font-family: 'Arial', sans-serif; /* Modern, clean font */ 
             }
+            #depenseslab {
+                font-size: 32px; /* Larger size for prominence */
+                font-weight: 300; /* Semi-bold to make the title stand out */
+                color: #2E3A3F; /* Dark color for readability */
+                text-align: center; /* Center-align the title */
+                margin-bottom: 20px; /* Space below the title */
+                padding: 10px 0; /* Padding to add space around the text */
+                font-family: 'Arial', sans-serif; /* Modern, clean font */ 
+            }
             
             QFrame {
                 border-radius: 10px;
@@ -223,11 +232,40 @@
                 background: #FFFFFF;
                 border: none;
               }
-            
+              #depenseframe{
+
+                background-color : rgba(0, 0, 0, 0.3);   
+                max-width: 600px; /* Standard width for a login form */
+                padding: 30px; /* Generous padding for spacing */  
+            }
+            #depenseframe QLabel{
+                color: white;
+            }
+            #buttonExtraction{
+                font-size: 16px; /* Font size for readability */
+                padding: 10px; /* Padding for a comfortable click area */
+                background-color: #007BFF; /* Blue background color */
+                color: white; /* White text for contrast */
+                border-radius: 5px; /* Rounded corners for a modern look */
+                border: none; /* No border */
+                cursor: pointer; /* Pointer cursor to indicate it's clickable */
+                 
+                min-width: 200px;
+                text-align: center;
+            }
+            #buttonExtraction:hover {
+                background-color: #0056b3; /* Darker blue when hovered for a hover effect */
+            }
             QDateEdit {
-                font-size: 18px;   
-                padding: 10px;     
-                height: 40px;     
+                font-size: 18px;      
+                height: 40px; 
+                background-color: white;
+                border-style: solid;
+                border-width: 1px;
+                border-color: rgb(100,100,100); 
+                min-width: 285px;    
+
+                border-radius: 5px; /* Softer rounded corners */
             }
             QSpinBox{
                 font-size: 18px;   
@@ -269,6 +307,14 @@
                 padding: 10px; /* Espacement des en-têtes */
                 font-weight: bold; /* Texte en gras pour les en-têtes */
                 border: 1px solid #ddd; /* Bordure légère autour des en-têtes */
+            }
+            #ButtonRapport{
+
+                background-color : rgba(0, 0, 0, 0.3);    
+                padding: 30px; /* Generous padding for spacing */  
+            }
+            #ButtonRapport QLabel{
+                color: white;
             }
             
             #titre_table{

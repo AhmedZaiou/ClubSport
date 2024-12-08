@@ -21,8 +21,6 @@ class ModefierADh():
 
         self.form_widget = QWidget()
         self.form_widget.setObjectName("FormulaireWidget") 
-        
-        
 
         form_layout = QFormLayout(self.form_widget)
         titre=QLabel("Modifier les informations")

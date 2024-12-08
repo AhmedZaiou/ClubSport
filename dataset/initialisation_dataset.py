@@ -1,5 +1,17 @@
-import sqlite3 
-from utils.utils import *
+import sqlite3  
+
+
+
+from pathlib import Path
+
+current_directory = Path(__file__).parent
+racine = current_directory.parent 
+
+
+
+
+path_data_set = racine / "dataset"/"royal_fitness.db"
+
 
 # Connexion à la base de données SQLite
 conn = sqlite3.connect(path_data_set)
@@ -37,5 +49,14 @@ cursor.execute('''
         FOREIGN KEY (adherent_id) REFERENCES adherents (id)
     )
     ''')
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS depenses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        commentaire TEXT,
+        montant INTEGER,
+        date_depense DATE
+    )
+    ''')
+
 conn.commit()
 conn.close()

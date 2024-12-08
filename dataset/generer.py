@@ -2,7 +2,16 @@ import sqlite3
 from faker import Faker
 import random
 from datetime import datetime, timedelta
-from utils.utils import *
+
+from pathlib import Path
+
+current_directory = Path(__file__).parent
+racine = current_directory.parent 
+
+
+
+
+path_data_set = racine / "dataset"/"royal_fitness.db"
 
 def creer_base_et_tables(nom_base):
     """Crée une base de données SQLite avec les tables adherents et paiements."""
@@ -88,7 +97,7 @@ def generer_paiements(nom_base):
     modes_paiement = ["Espèces", "Carte bancaire", "Virement", "Chèque"]
 
     for adherent_id in adherents:
-        for _ in range(100):  # Nombre aléatoire de paiements par adhérent
+        for _ in range(10):  # Nombre aléatoire de paiements par adhérent
             montant = random.choice([300, 400, 500])
             date_paiement = fake.date_between(start_date="-5y", end_date="today")
             moi_concerner = date_paiement.strftime("%Y-%m")+"-01"
@@ -102,10 +111,30 @@ def generer_paiements(nom_base):
     conn.commit()
     conn.close()
 
+def generer_depenses(nom_base):
+    """Génère des dépéense pour chaque adhérent sur les 5 dernières années."""
+    fake = Faker()
+    conn = sqlite3.connect(nom_base)
+    cursor = conn.cursor()
+
+    for _ in range(500):  # Nombre aléatoire de paiements par adhérent
+        montant = random.choice([300, 400, 500])
+        date_paiement = fake.date_between(start_date="-5y", end_date="today")  
+        commentaire="Commentaire"
+
+        cursor.execute("""
+        INSERT INTO depenses (commentaire, montant, date_depense )
+        VALUES (?, ?, ?)
+        """, (commentaire, montant, date_paiement))
+
+    conn.commit()
+    conn.close()
+
 # Utilisation
 if __name__ == "__main__":
     nom_base = path_data_set
     creer_base_et_tables(nom_base)
-    generer_adherents(nom_base, 2000)
+    generer_adherents(nom_base, 200)
     generer_paiements(nom_base)
+    generer_depenses(nom_base)
     print("Base de données remplie avec succès !")

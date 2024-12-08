@@ -4,6 +4,8 @@ from PyQt5.QtCore import Qt
 from utils.utils import *
 from dataset.dataset import * 
 from .main_interface import MainInterface
+
+
 from matplotlib.ticker import FuncFormatter
  
 
@@ -47,10 +49,20 @@ class Revenues(MainInterface):
         self.situation_canvas2 = FigureCanvas(Figure(figsize=(5, 4)))
         self.situation_canvas2.setObjectName("dashbord_graphe") 
         self.plot_situation_graph2()
-        graphs2_layout.addWidget(self.situation_canvas2)
+        graphs2_layout.addWidget(self.situation_canvas2) 
+
         layout.addLayout(graphs2_layout)
         
+        
+        
         self.main_inter.content_layout.addWidget(self.dashbord_widget) 
+
+
+
+
+
+
+
     def filter_table(self):
         # Get the filter text from the search bar
         filter_text = self.search_bar.text().lower()

@@ -3,6 +3,7 @@ import pandas as pd
 import sqlite3 
 from datetime import datetime
 from utils.utils import *
+import calendar
 
 def fetch_data():
     """Récupère les données de la base SQLite"""
@@ -30,9 +31,7 @@ def fetch_data_Non():
         if date_to_compare.year == current_date.year and date_to_compare.month == current_date.month:
             pass
         else:
-            filtred_adh.append(data)   
-        if len(filtred_adh)>100:
-             break
+            filtred_adh.append(data)    
     return filtred_adh
 
 def fetch_data_Non_all():
@@ -53,6 +52,25 @@ def fetch_data_Non_all():
             pass
         else:
             filtred_adh.append(data)    
+    return filtred_adh
+
+def fetch_data_Oui_all():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
+    cursor = conn.cursor()
+
+    # Récupérer ment les colonnes nécessaires
+    cursor.execute("SELECT id, nom, prenom, email, telephone, situation FROM adherents")
+    adherents = cursor.fetchall()
+    filtred_adh = []
+    for data in adherents:
+        last_paiment = recuperer_last_payment(data[0])
+        # Define the date to compare
+        date_to_compare = datetime.strptime(last_paiment, "%Y-%m-%d") 
+        current_date = datetime.now() 
+        if date_to_compare.year == current_date.year and date_to_compare.month == current_date.month:
+            filtred_adh.append(data) 
+                
     return filtred_adh
 
 
@@ -245,6 +263,25 @@ def recuperer_porcentage_paiment():
     conn.close()
     return number_of_adhs[0][0],number_of_payment[0][0]
 
+def recuperer_porcentage_paiment_date(date):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    SELECT COUNT(*) AS total_adherents FROM adherents;
+    ''',)
+    number_of_adhs = cursor.fetchall()
+
+    cursor.execute('''
+    SELECT COUNT(*) AS paiements_ce_mois
+    FROM paiements
+    WHERE  moi_concerner = ?
+    ''',(f'{date.strftime("%Y-%m")}-01',)) 
+    number_of_payment = cursor.fetchall()
+
+    conn.close()
+    return number_of_adhs[0][0],number_of_payment[0][0]
+
 def recuperer_stat_paiment():
     conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
@@ -275,6 +312,21 @@ def recuperer_all_paiment():
          ''',()) 
     summ_moth = cursor.fetchall()
     df = pd.DataFrame(summ_moth, columns=['id',  's',  'montant',  'date_inscr' , 'modep',  'date'])
+    df = df.groupby('date')['montant'].sum().reset_index()
+    return pd.Series(data=df['montant'].values, index=df['date'])
+
+def recuperer_all_depenses():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT 
+        *
+        FROM depenses
+         ''',()) 
+    summ_moth = cursor.fetchall()
+    df = pd.DataFrame(summ_moth, columns=['id',  'commentaire',  'montant', 'date'])
+    df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m')
     df = df.groupby('date')['montant'].sum().reset_index()
     return pd.Series(data=df['montant'].values, index=df['date'])
 
@@ -388,3 +440,53 @@ def fetch_data():
     paiements = cursor.fetchall()
     conn.close()
     return paiements
+
+def fetch_depenses():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect(path_data_set)
+    
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM depenses;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements
+
+
+
+def insertion_depense(commentaire,montant, date):
+    # Connexion à la base de données
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table des paiements
+    cursor.execute("""
+        INSERT INTO depenses (
+            commentaire, montant, date_depense ) VALUES (?, ?, ?)
+    """, (commentaire,montant, date)) 
+
+    conn.commit()
+    conn.close() 
+
+def recuperer_stat_depenses():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    dict_moths = {}
+    mois_noms = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+    current_date = datetime.now()
+    last_day_of_current_month = datetime(current_date.year, current_date.month, calendar.monthrange(current_date.year, current_date.month)[1])
+
+
+    for i in range(1,int(datetime.now().strftime("%m"))+1):
+        month = str(i) if i>10 else str(f'0{i}') 
+        cursor.execute('''
+                       SELECT SUM(montant) AS revenu_total_annuel
+                        FROM depenses
+                        WHERE  date_depense BETWEEN ? AND ?
+        ''',(f'{datetime.now().strftime("%Y")}-{month}-01', f'{datetime.now().strftime("%Y")}-{month}-{str(last_day_of_current_month)}'))
+        summ_moth = cursor.fetchall()
+        dict_moths[mois_noms[i-1]]=summ_moth[0][0] if summ_moth[0][0]  else 0
+        print(dict_moths)
+    return dict_moths, sum(dict_moths.values())

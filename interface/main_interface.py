@@ -61,15 +61,17 @@ class MainInterface(QMainWindow):
         self.menu_layout.addWidget(self.btn_due_dates)
         self.btn_due_dates.setObjectName("buttonmenu")
 
-        """self.btn_payments = QPushButton("Gestion de paiement")
+        self.btn_payments = QPushButton("Gestion des dépenses")
         self.btn_payments.clicked.connect(self.show_payments)
         self.menu_layout.addWidget(self.btn_payments)
-        self.btn_payments.setObjectName("buttonmenu")"""
+        self.btn_payments.setObjectName("buttonmenu")
 
         self.btn_revenues = QPushButton("Suivi des revenus")
         self.btn_revenues.clicked.connect(self.show_revenues)
         self.menu_layout.addWidget(self.btn_revenues)
         self.btn_revenues.setObjectName("buttonmenu") 
+
+        
 
         self.btn_ajout_adhs = QPushButton("Déconnecté")
         self.btn_ajout_adhs.clicked.connect(self.deconnexion)
@@ -103,6 +105,9 @@ class MainInterface(QMainWindow):
     def deconnexion(self):
         from .login_interface import LoginWindow
         self.close() 
+
+     
+    
         
 
     def clear_content_frame(self):
