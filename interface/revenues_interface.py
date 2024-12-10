@@ -112,6 +112,15 @@ class Revenues(MainInterface):
         self.situation_canvas2.figure.set_facecolor((0, 0, 0, 0.1))
         ax.clear()
         ax.set_facecolor((0, 0, 0, 0.1))
+        if len(revenue_by_month) ==0 :
+            data = {
+                    'date': ['2024-12', '2024-11'],   
+                    'montant': [0, 0]  
+                } 
+            df = pd.DataFrame(data) 
+            df.set_index('date', inplace=True) 
+            result = pd.Series(data=df['montant'].values, index=df.index)  
+            revenue_by_month = result 
         revenue_by_month.plot(kind="line", ax=ax, color="lightgreen", alpha=0.75)
         ax.set_title(f"Revenus Mensuels () - Total :  Dhs",  color='white',  fontsize=16) 
         ax.set_ylabel("Revenus (Dhs)",  color='white',  fontsize=16) 

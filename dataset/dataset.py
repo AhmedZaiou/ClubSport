@@ -496,6 +496,5 @@ def recuperer_stat_depenses():
                         WHERE  date_depense BETWEEN ? AND ?
         ''',(f'{datetime.now().strftime("%Y")}-{month}-01', f'{datetime.now().strftime("%Y")}-{month}-{str(last_day_of_current_month)}'))
         summ_moth = cursor.fetchall()
-        dict_moths[mois_noms[i-1]]=summ_moth[0][0] if summ_moth[0][0]  else 0
-        print(dict_moths)
+        dict_moths[mois_noms[i-1]]=summ_moth[0][0] if summ_moth[0][0]  else 0 
     return dict_moths, sum(dict_moths.values())

@@ -331,7 +331,8 @@ class Payment( ):
         revenue_by_month = recuperer_all_paiment() 
         depenses_by_month = recuperer_all_depenses() 
         revenue_by_month.index = pd.to_datetime(revenue_by_month.index).strftime('%Y-%m')
-
+        
+        
         path_evolution = self.generer_graphe_evolution(revenue_by_month, depenses_by_month)
 
 
@@ -346,8 +347,8 @@ class Payment( ):
         )
         if not output_pdf:
             QMessageBox.information(self.main_inter, "Le téléchargement est annulé.", "Le téléchargement est annulé.")
-            return 
-
+            return  
+        
         # Création d'un objet Canvas pour générer le PDF
         c = canvas.Canvas(output_pdf, pagesize=letter)
 
@@ -426,8 +427,18 @@ class Payment( ):
         fig, ax = plt.subplots(figsize=(10, 6))
 
         # Personnalisation de la figure et de l'axe 
+        if len(revenue_by_month) ==0 and len(depense_by_month) == 0:
+            data = {
+                    'date': ['2024-12', '2024-11'],   
+                    'montant': [0, 0]  
+                } 
+            df = pd.DataFrame(data) 
+            df.set_index('date', inplace=True) 
+            result = pd.Series(data=df['montant'].values, index=df.index)  
+            revenue_by_month = result
+            depense_by_month = result
 
-        # Tracer les revenus mensuels
+            # Tracer les revenus mensuels
         revenue_by_month.plot(kind="line", ax=ax, color="lightgreen", alpha=0.75, label= "Revenues")
         depense_by_month.plot(kind="line", ax=ax, color="firebrick", alpha=0.75, label= "Dépenses")
         

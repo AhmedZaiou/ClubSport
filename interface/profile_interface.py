@@ -170,8 +170,7 @@ class Profile():
             self.tarif_abbonement = str(row[11])
             self.monton = int(row[11])
             self.seances_value.setText(str(row[12]))
-            self.situation_value.setText(str(row[13]))
-            print(row[14])
+            self.situation_value.setText(str(row[13])) 
             if row[14] and row[14] != 'Aucune':
                 self.photo_label.setPixmap(QPixmap(row[14]).scaled(150, 150))
             else:
