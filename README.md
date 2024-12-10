@@ -83,10 +83,10 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=C:\Users\mohamed zaiou\Document\projet\ClubSport\license.txt
+LicenseFile=C:\Users\mohamed zaiou\Document\proj\ClubSport\license.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=C:\Users\mohamed zaiou\Document\projet
+OutputDir=C:\Users\mohamed zaiou\Document\proj
 OutputBaseFilename=SetupRoyalFitnes 
 Compression=lzma
 SolidCompression=yes
@@ -99,12 +99,14 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\mohamed zaiou\Document\projet\ClubSport\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\mohamed zaiou\Document\projet\ClubSport\style\*"; DestDir: "{app}\style"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\mohamed zaiou\Document\projet\ClubSport\dataset\*"; DestDir: "{app}\dataset"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\mohamed zaiou\Document\projet\ClubSport\images\logos\*"; DestDir: "{app}\images\logos"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\mohamed zaiou\Document\projet\ClubSport\images\profiles\*"; DestDir: "{app}\images\profiles"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\mohamed zaiou\Document\projet\ClubSport\dist\*"; DestDir: "{app}\dist"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\mohamed zaiou\Document\proj\ClubSport\dist\{#MyAppExeName}"; DestDir: "{app}"; 
+Source: "C:\Users\mohamed zaiou\Document\proj\ClubSport\style\*"; DestDir: "{app}\style"; 
+Source: "C:\Users\mohamed zaiou\Document\proj\ClubSport\dataset\royal_fitness.db"; DestDir: "{app}\dataset\royal_fitness.db";
+Source: "C:\Users\mohamed zaiou\Document\proj\ClubSport\images\logos\ic_arrow_drop_down_black_18dp_1x.png"; DestDir: "{app}\images\logos\ic_arrow_drop_down_black_18dp_1x.png";  
+Source: "C:\Users\mohamed zaiou\Document\proj\ClubSport\images\logos\Logo.png; DestDir: "{app}\images\logos\Logo.png"; 
+Source: "C:\Users\mohamed zaiou\Document\proj\ClubSport\images\logos\logoa.png; DestDir: "{app}\images\logos\logoa.png"; 
+Source: "C:\Users\mohamed zaiou\Document\proj\ClubSport\images\profiles\profile.png"; DestDir: "{app}\images\profiles\profile.png";  
+Source: "C:\Users\mohamed zaiou\Document\proj\ClubSport\dist\*"; DestDir: "{app}\dist"; 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
