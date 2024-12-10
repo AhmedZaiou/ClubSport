@@ -2,9 +2,9 @@
 import pandas as pd 
 import sqlite3 
 from datetime import datetime
-#from utils.utils import *
+from utils.utils import *
 import calendar
-path_data_set = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
+#path_data_set = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
 
 def fetch_data():
     """Récupère les données de la base SQLite"""
