@@ -2,8 +2,9 @@
 import pandas as pd 
 import sqlite3 
 from datetime import datetime
-from utils.utils import *
+#from utils.utils import *
 import calendar
+path_data_set = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
 
 def fetch_data():
     """Récupère les données de la base SQLite"""
@@ -11,7 +12,7 @@ def fetch_data():
     query = "SELECT * FROM adherents"
     df = pd.read_sql_query(query, conn)
     conn.close()
-    return df 
+    return df  
 
 
 def fetch_data_Non():
@@ -385,25 +386,6 @@ def dinscription(id):
 
 
 
-
-def fetch_data_Non_df():
-    """Récupère les données de la base SQLite"""
-    conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
-    cursor = conn.cursor()
-
-    # Récupérer ment les colonnes nécessaires
-    cursor.execute("SELECT id, nom, prenom, email, telephone, situation FROM adherents")
-    adherents = cursor.fetchall()
-    cursor.execute("SELECT moi_concerner,adherent_id FROM paiements")
-    paiements = cursor.fetchall()
-    adherents, paiements =  pd.DataFrame(adherents, columns=["id", "nom", "prenom", "email", "telephone", "situation" ]), pd.DataFrame(paiements, columns=["moi_concerner","adherent_id"])
-    paiements["moi_concerner"] = pd.to_datetime(paiements["moi_concerner"], format='%Y-%m-%d')
-    paiements = paiements.groupby("adherent_id")["moi_concerner"].max().reset_index()
-    aujourd_hui = datetime.now()
-    date_premier = datetime(aujourd_hui.year, aujourd_hui.month, 1)
-    paiements = paiements[paiements["moi_concerner"] < date_premier]
-    return adherents.merge(paiements, left_on="id", right_on="adherent_id")
-
 def fetch_data_with_last():
     """Récupère les données de la base SQLite"""
     conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
@@ -417,7 +399,23 @@ def fetch_data_with_last():
     adherents, paiements =  pd.DataFrame(adherents, columns=["id", "nom", "prenom", "email", "telephone", "situation" ]), pd.DataFrame(paiements, columns=["moi_concerner","adherent_id"])
     paiements["moi_concerner"] = pd.to_datetime(paiements["moi_concerner"], format='%Y-%m-%d')
     paiements = paiements.groupby("adherent_id")["moi_concerner"].max().reset_index() 
-    return adherents.merge(paiements, left_on="id", right_on="adherent_id")
+    merged_df = adherents.merge(paiements, left_on="id", right_on="adherent_id", how="left")
+    merged_df["moi_concerner"] = merged_df["moi_concerner"].fillna(datetime.now() - pd.DateOffset(months=1))
+
+    return merged_df
+
+def fetch_data_Non_df():
+    merged_df = fetch_data_with_last()
+    year_now = datetime.now().year
+    month_now = datetime.now().month
+
+    # Create a date with year_now, month_now, and 01 as the day
+    date = datetime(year_now, month_now, 1)
+    merged_df = merged_df[merged_df["moi_concerner"] < date]
+    merged_df.reset_index(drop=True, inplace=True)
+    
+    return merged_df
+
 
 def recuperer_all_paiements():
     conn = sqlite3.connect(path_data_set)

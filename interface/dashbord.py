@@ -162,14 +162,14 @@ class Dashbord():
 
         self.all_data = True
 
-    def load_table(self):
-
+    def load_table(self): 
+        
         # Ajouter les adhérents dans le tableau
         for  row_index, adherent in self.adherents.iterrows():
             self.tableWidget.insertRow(row_index)
 
             # Ajouter les données dans les colonnes respectives
-            for col_index, data in enumerate(adherent[1:]):  # Exclure 'id' pour l'affichage
+            for col_index, data in enumerate(adherent[1:6]):  # Exclure 'id' pour l'affichage
                 
                 item = QTableWidgetItem(str(data))
                 self.tableWidget.setItem(row_index, col_index, item)

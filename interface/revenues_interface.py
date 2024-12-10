@@ -94,7 +94,7 @@ class Revenues(MainInterface):
             colors=["lightgreen", "firebrick"]
         ) 
         date = datetime.now().strftime("%Y-%m-%d")
-        ax.set_title(f"Pourcentage de la situation du mois : ({date})", color='white',  fontsize=16) 
+        ax.set_title(f"Pourcentage de la situation du mois : {date}", color='white',  fontsize=16) 
         ax.tick_params(axis='both', labelcolor='purple')
         for label in ax.texts:
             label.set_color('white')
@@ -122,7 +122,7 @@ class Revenues(MainInterface):
             result = pd.Series(data=df['montant'].values, index=df.index)  
             revenue_by_month = result 
         revenue_by_month.plot(kind="line", ax=ax, color="lightgreen", alpha=0.75)
-        ax.set_title(f"Revenus Mensuels () - Total :  Dhs",  color='white',  fontsize=16) 
+        ax.set_title(f"Revenus Mensuels ",  color='white',  fontsize=16) 
         ax.set_ylabel("Revenus (Dhs)",  color='white',  fontsize=16) 
         ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en noir
         ax.tick_params(axis='y', colors='white')
@@ -151,7 +151,7 @@ class Revenues(MainInterface):
         ax.clear()
         ax.set_facecolor((0, 0, 0, 0.1))
         revenue_by_month.plot(kind="bar", ax=ax, color="lightgreen", alpha=0.75)
-        ax.set_title(f"Revenus Mensuels ({current_year}) - Total : {total_revenue} Dhs",  color='white',  fontsize=16) 
+        ax.set_title(f"Revenus Mensuels {current_year} - Total : {total_revenue} Dhs",  color='white',  fontsize=16) 
         ax.set_ylabel("Revenus (Dhs)",  color='white',  fontsize=16) 
         ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en noir
         ax.tick_params(axis='y', colors='white')
