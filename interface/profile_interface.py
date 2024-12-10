@@ -255,10 +255,12 @@ class Profile():
             self.table_paiements.setItem(row_index, 0, QTableWidgetItem(data[0]))
             self.table_paiements.setItem(row_index, 1, QTableWidgetItem(data[1]))
             self.table_paiements.setItem(row_index, 2, QTableWidgetItem(data[2]))
-            etat_item = QTableWidgetItem(str("Payer"))
+            
             if ind != 1:
-                etat_item.setBackground(QColor(255, 0, 255))  
+                etat_item = QTableWidgetItem(str("En retard"))
+                etat_item.setBackground(QColor(200, 200, 255))  
             else:
+                etat_item = QTableWidgetItem(str("Payer"))
                 etat_item.setBackground(QColor(255, 0, 0))  
                 self.month_to_pay_value = data[0]
 
@@ -344,9 +346,13 @@ class Profile():
 
         # Layout for last payment info (centered message)
         self.info_layout_c1 = QGridLayout()
-        last_payment_info = QLabel(f"Vous n'avez effectué aucun paiement depuis : {self.year_last_paiment}/{self.moi_last_paiment}")
+        last_payment_info = QLabel(f"Effectuer un paiement ") 
         last_payment_info.setAlignment(Qt.AlignCenter)  # Center the label text
+        last_payment_info1 = QLabel(f" Dernier paiement : {self.moi_last_paiment if self.moi_last_paiment >10 else '0'+str(self.moi_last_paiment ) }-{self.year_last_paiment}") 
+        last_payment_info1.setAlignment(Qt.AlignCenter)  # Center the label text
         self.info_layout_c1.addWidget(last_payment_info, 0, 0, Qt.AlignCenter)
+        self.info_layout_c1.addWidget(last_payment_info1, 1, 0, Qt.AlignCenter)
+        self.info_layout_c1.setVerticalSpacing(5)
         self.layout_confim.addLayout(self.info_layout_c1)
 
         # Layout for payment info
@@ -369,7 +375,7 @@ class Profile():
 
         # Set alignment and spacing for better visual balance
         self.info_layout_c.setHorizontalSpacing(10)
-        self.info_layout_c.setVerticalSpacing(10)
+        self.info_layout_c.setVerticalSpacing(5)
 
         # Confirm button setup
         self.confirmation = QPushButton("Confirmer")

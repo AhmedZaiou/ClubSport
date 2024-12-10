@@ -223,7 +223,7 @@ class Payment( ):
         if nbr_adh ==0 :
             nbr_adh=1 
 
-        image_path = self.generer_graphe_situation(nbr_adh,nbr_pyment)
+        image_path = self.generer_graphe_situation(nbr_adh,nbr_pyment, date)
 
         
         options = QFileDialog.Options()
@@ -403,6 +403,12 @@ class Payment( ):
             c.drawString(x+10, y-40, f"Dépenses :  {depense_index} Dhs")
             c.drawString(x+10, y-60, f"Résultats : {revenue_index - depense_index} Dhs") 
             y -= (4 * line_height)
+        
+        
+        
+
+
+
         c.save()
 
 
@@ -450,7 +456,8 @@ class Payment( ):
 
 
 
-    def generer_graphe_situation(self, nbr_adh,nbr_pyment):
+    def generer_graphe_situation(self, nbr_adh,nbr_pyment, date):
+    
         
         # Création du graphique
         fig, ax = plt.subplots(figsize=(6, 6))  # Créer une figure et un axe
@@ -463,9 +470,9 @@ class Payment( ):
             autopct="%1.1f%%", 
             startangle=90, 
             colors=["lightgreen", "firebrick"]
-        ) 
-        # Ajouter un titre avec la date du jour
-        date = datetime.now().strftime("%Y-%m-%d")
+        )  
+        
+
         ax.set_title(f"Pourcentage de la situation du mois : ({date})", color='black', fontsize=16) 
 
         # Paramétrer les couleurs des ticks et des labels

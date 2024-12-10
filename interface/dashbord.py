@@ -91,7 +91,7 @@ class Dashbord():
             colors=["lightgreen", "firebrick"]
         ) 
         date = datetime.now().strftime("%Y-%m-%d")
-        ax.set_title(f"Pourcentage de la situation du mois : ({date})", color='white',  fontsize=16) 
+        ax.set_title(f"Pourcentage de la situation du mois : {date}", color='white',  fontsize=16) 
         ax.tick_params(axis='both', labelcolor='purple')
         for label in ax.texts:
             label.set_color('white')
@@ -120,7 +120,7 @@ class Dashbord():
 
         ax.plot(difference.index, difference, color="blue", marker=".", label="Résultats", linewidth=.7)
 
-        ax.set_title(f"{current_year} - Résultats de l'années : {total_revenue-total_depense} Dhs",  color='white',  fontsize=16) 
+        ax.set_title(f"Résultats de l'années {current_year}  : {total_revenue-total_depense} Dhs",  color='white',  fontsize=16) 
         ax.set_ylabel("Revenus et dépenses Mensuels (Dhs)",  color='white',  fontsize=12) 
         ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en noir
         ax.tick_params(axis='y', colors='white')

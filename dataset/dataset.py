@@ -428,6 +428,15 @@ def recuperer_all_paiements():
     paiements = cursor.fetchall()
     conn.close()
     return paiements
+def recuperer_all_depenses1():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM depenses ;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements
 
 def fetch_data():
     """Récupère les données de la base SQLite"""

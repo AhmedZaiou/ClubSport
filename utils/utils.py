@@ -146,6 +146,7 @@ def write_to_excel(file_name="output.xlsx"):
     workbook = Workbook()
     adherents = fetch_data()
     paiments = recuperer_all_paiements()
+    depenses = recuperer_all_depenses1()
     # Feuille 1
     sheet1 = workbook.active
     sheet1.title = "adherents"
@@ -156,6 +157,10 @@ def write_to_excel(file_name="output.xlsx"):
     sheet2 = workbook.create_sheet(title="paiments")
     for row in paiments:
         sheet2.append(row)
+    # Feuille 2
+    sheet3 = workbook.create_sheet(title="depenses")
+    for row in depenses:
+        sheet3.append(row)
 
     # Sauvegarde du fichier Excel
     workbook.save(file_name) 
