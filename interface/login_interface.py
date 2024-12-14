@@ -97,13 +97,14 @@ class LoginWindow(QMainWindow):
 
     def login(self):
         username = self.user_entry.text()
-        password = self.password_entry.text()
+        password = self.password_entry.text() 
 
         # Vérification des identifiants
-        if (username == "admin" and password == "10122024") or (username == "admin1" and password == "11221122"):
+        if (username == "admin" and password == "123") or (username == "admin1" and password == "11221122"):
             self.show_main_interface() 
         else:
             QMessageBox.critical(self, "Erreur", "Nom d'utilisateur ou mot de passe incorrect")
+            
 
 
     def show_main_interface(self): 

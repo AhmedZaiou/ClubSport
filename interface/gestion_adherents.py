@@ -13,13 +13,15 @@ class Gestion_adherents():
     
 
     def show_table(self):
-        self.main_inter.clear_content_frame()
+        self.main_inter.clear_content_frame() 
+
         self.table_widget = QWidget()
         self.table_widget.setObjectName("dashbord_widget") 
 
         layout = QVBoxLayout(self.table_widget)
 
-        titre_table = QLabel('Liste des adhérents : ')
+
+        titre_table = QLabel('Liste de tous les adhérents : ')
         titre_table.setObjectName("titre_table")
         layout.addWidget(titre_table)
 
@@ -27,8 +29,9 @@ class Gestion_adherents():
         # Search bar for filtering
         self.search_bar = QLineEdit(self.main_inter)
         self.search_bar.setPlaceholderText("Search by 'Nom'...")
-        self.search_bar.textChanged.connect(self.filter_table)  # Trigger filter when text changes
         layout.addWidget(self.search_bar)
+
+        self.search_bar.textChanged.connect(self.filter_table)  # Trigger filter when text changes
 
         # Créer le tableau pour afficher les adhérents
         self.tableWidget = QTableWidget()
@@ -42,11 +45,41 @@ class Gestion_adherents():
         layout.addWidget(self.tableWidget)
 
         # Créer un bouton pour charger les adhérents 
-        self.load_adherents() 
+        self.load_adherents()
+
+        titre_table_sanction = QLabel('Liste des adhérents sanctionnés : ')
+        titre_table_sanction.setObjectName("titre_table")
+        layout.addWidget(titre_table_sanction) 
+
+        self.search_bar_sanction = QLineEdit(self.main_inter)
+        self.search_bar_sanction.setPlaceholderText("Search by 'Nom'...")
+        layout.addWidget(self.search_bar_sanction) 
+
+        self.search_bar_sanction.textChanged.connect(self.filter_table)  # Trigger filter when text changes
+
+        # Créer le tableau pour afficher les adhérents
+        self.tableWidgetSanction = QTableWidget()
+        self.tableWidgetSanction.setColumnCount(8)  # Nombre de colonnes affichées
+        self.tableWidgetSanction.setHorizontalHeaderLabels([
+            'Nom', 'Prénom', 'Cause', 'Genre', 'La durée', "Date de début", 'Date de fin','Action'
+        ])
+        self.tableWidgetSanction.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        # Ajouter le tableau au layout
+        layout.addWidget(self.tableWidgetSanction)
+
+        # Créer un bouton pour charger les adhérents 
+        self.load_adherents_sanction() 
+
+
+
+
+
 
         self.modification = QPushButton("Télécharger la base de données")
         self.modification.clicked.connect(self.telecharger_dataset)
         layout.addWidget(self.modification)
+
         self.modification.setObjectName('button_vert')
         
 
@@ -64,6 +97,20 @@ class Gestion_adherents():
                     self.tableWidget.setRowHidden(row, False)
                 else:
                     self.tableWidget.setRowHidden(row, True)
+        # Loop through all rows and hide/show them based on the search
+        for row in range(self.tableWidgetSanction.rowCount()):
+            item = self.tableWidgetSanction.item(row, 0)  # Assuming column 0 is 'Nom'
+            if item is not None:
+                if filter_text in item.text().lower():  # Case-insensitive comparison
+                    self.tableWidgetSanction.setRowHidden(row, False)
+                else:
+                    self.tableWidgetSanction.setRowHidden(row, True)
+    
+
+    def filter_table_sanction(self):
+        # Get the filter text from the search bar
+        filter_text = self.search_bar.text().lower() 
+        
 
     def load_adherents(self):
         # Connexion à la base de données SQLite
@@ -109,6 +156,34 @@ class Gestion_adherents():
         # Connecter l'événement de clic pour traiter un adhérent
         self.tableWidget.cellClicked.connect(self.on_cell_clicked)
 
+    def load_adherents_sanction(self):
+        # Connexion à la base de données SQLite
+         
+        adherents = fetch_data_sanctionner()
+
+        # Effacer les anciennes lignes dans le tableau
+        self.tableWidgetSanction.setRowCount(0)
+
+        # Ajouter les adhérents dans le tableau
+        for row_index, adherent in adherents.iterrows():
+            self.tableWidgetSanction.insertRow(row_index)
+            adh =[adherent[i] for i in range(len(adherent)) if i not in  (3,4)]
+
+            # Ajouter les données dans les colonnes respectives
+            for col_index, data in enumerate(adh[1:]):  # Exclure 'id' pour l'affichage
+                item = QTableWidgetItem(str(data))
+                self.tableWidgetSanction.setItem(row_index, col_index, item) 
+
+            # Ajouter un lien cliquable dans la colonne Action
+            action_item = QTableWidgetItem("Supprimer")
+            action_item.setForeground(QColor('white'))
+            action_item.setTextAlignment(Qt.AlignCenter)
+            action_item.setData(Qt.UserRole, adherent[3])  # Stocker l'ID de l'adhérent pour le traitement
+            action_item.setBackground(QColor(0, 0, 255))  # Vert
+            self.tableWidgetSanction.setItem(row_index, 7, action_item)
+        # Connecter l'événement de clic pour traiter un adhérent
+        self.tableWidgetSanction.cellClicked.connect(self.on_cell_clicked_sanction)
+
 
 
     
@@ -137,5 +212,12 @@ class Gestion_adherents():
             adherent_id = self.tableWidget.item(row, column).data(Qt.UserRole)
             from .profile_interface import Profile
             self.main_interface = Profile(adherent_id, self.main_inter)
+    def on_cell_clicked_sanction(self, row, column): 
+        # Si la colonne 12 (Action) est cliquée
+        if column == 7:
+            sanction_id = self.tableWidgetSanction.item(row, column).data(Qt.UserRole) 
+            supprimer_sanction(sanction_id)
+            print(sanction_id)
+            self.main_interface = Gestion_adherents( self.main_inter)
             
  

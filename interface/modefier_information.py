@@ -66,12 +66,47 @@ class ModefierADh():
         self.seances_input.setRange(1, 100)
         self.seances_input.setValue(int(data_adherent[12])) 
 
-        self.situation_input = QComboBox()
-        self.situation_input.addItems(["Paiement effectué", "Paiement non effectué"])
-        self.situation_input.setCurrentText(data_adherent[13])
+        self.situation_input = QSpinBox()
+        self.situation_input.setRange(1, 10000)
+        self.situation_input.setValue(int(data_adherent[13]))
 
         self.photo_input = QLabel(data_adherent[14])
         self.photo_path = data_adherent[14]
+
+
+
+        self.poids = QLineEdit()
+        self.longueur = QLineEdit()
+        self.situation_sanitaire = QComboBox()
+        self.situation_sanitaire.addItems([ 'Inapte','Apte'])
+
+
+        self.poids.setObjectName("QLineEditstyle") 
+        self.longueur.setObjectName("QLineEditstyle") 
+         
+        
+        self.situation_sanitaire.currentIndexChanged.connect(self.deactiver_sanitaire)
+        
+        self.situation_sanitaire_text = QLineEdit()
+        self.situation_sanitaire_text.setReadOnly(True)
+        self.situation_sanitaire_text.setObjectName("QLineEditstyle") 
+
+        self.titre_sport = QComboBox()
+        list_sport = ["Arats martiaux ","kick-boxing", "teak-wando", "karaté ", "Fitness-musculation ", "Aérobic", "zumba" , "gymnastique",  "buildings"]
+        list_sani = ['Inapte', 'Apte']
+        self.titre_sport.addItems(list_sport)
+        
+        self.nom_parent = QLineEdit()
+        self.contact_parent = QLineEdit()
+
+
+        self.poids.setText(str(data_adherent[15]))
+        self.longueur.setText(str(data_adherent[16]))
+        self.titre_sport.itemText(list_sport.index(str(data_adherent[17])))
+        self.nom_parent.setText(str(data_adherent[18]))
+        self.contact_parent.setText(str(data_adherent[19]))
+        self.situation_sanitaire.itemText(list_sani.index(data_adherent[20]))
+        self.situation_sanitaire_text.setText(str(data_adherent[21]))
 
         # First row: Nom, Prénom
         row_layout_1 = QHBoxLayout()
@@ -115,6 +150,27 @@ class ModefierADh():
         row_layout_6.addWidget(self.seances_input)
         form_layout.addRow("Tarif mensuel :", row_layout_6)
 
+
+        row_layout_9 = QHBoxLayout()
+        row_layout_9.addWidget(self.poids)
+        row_layout_9.addWidget(QLabel("Longueur :"))
+        row_layout_9.addWidget(self.longueur)
+        form_layout.addRow("Poids :", row_layout_9)
+
+        
+
+        row_layout_11 = QHBoxLayout()
+        row_layout_11.addWidget(self.situation_sanitaire)
+        row_layout_11.addWidget(QLabel("Genre de maladie :"))
+        row_layout_11.addWidget(self.situation_sanitaire_text)
+        form_layout.addRow("Situation sanitaire :", row_layout_11)
+
+        row_layout_12 = QHBoxLayout()
+        row_layout_12.addWidget(self.titre_sport)
+        row_layout_12.addWidget(QLabel(' '))
+        row_layout_12.addWidget(QLabel('  '))
+        form_layout.addRow("Titre de sport  :", row_layout_12)
+
         row_layout_7 = QHBoxLayout()
         row_layout_7.addWidget(self.situation_input)
         row_layout_7.addWidget(QLabel("Photo :"))
@@ -148,6 +204,14 @@ class ModefierADh():
         
         self.main_inter.content_layout.addWidget(self.form_widget)
 
+
+
+    def deactiver_sanitaire(self):
+        if self.situation_sanitaire.currentText() == 'Apte':
+            self.situation_sanitaire_text.setReadOnly(False)
+        else:
+            self.situation_sanitaire_text.setReadOnly(True)
+
     
     def save_adherent(self):
         # Récupération des données du formulaire
@@ -163,8 +227,23 @@ class ModefierADh():
         genre = self.genre_input.currentText()
         tarif = self.tarif_input.value()
         seances = self.seances_input.value()
-        situation = self.situation_input.currentText() 
+        situation = self.situation_input.value() 
         photo_path = deplacer_et_renommer_image(self.photo_path, path_profils_images, f'{nom}-{prenom}-{cin}') if self.photo_path else "Aucune"
+
+        if age < 18:
+            nom_parent = self.nom_parent.text()
+            contact_parent = self.contact_parent.text()
+        poids = self.poids.text()
+        situation_sanitaire = self.situation_sanitaire.currentText()
+        if situation_sanitaire == "apte": 
+            situation_sanitaire_text = self.situation_sanitaire_text.text()
+        else:
+            situation_sanitaire_text = ""
+        longeur = self.longueur.text()
+        titre_sport = self.titre_sport.currentText()
+
+
+
 
         # Vérification des champs obligatoires
         if not nom or not prenom or not cin:
@@ -173,7 +252,7 @@ class ModefierADh():
 
         # Connexion à la base de données SQLite
         try:
-            modifier_adh(self.id_adherent,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path)
+            modifier_adh(self.id_adherent,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text)
             QMessageBox.information(self.main_inter, "Succès", "Les information à été modéfier avec succès.")
             from .profile_interface import Profile
             self.main_interface = Profile(self.id_adherent, self.main_inter)

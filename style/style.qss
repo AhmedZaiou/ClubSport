@@ -58,7 +58,7 @@
                 border-radius: 5px; /* Rounded corners for a modern look */
                 border: none; /* No border */
                 cursor: pointer; /* Pointer cursor to indicate it's clickable */
-                margin-top: 50px;
+                margin-top: 10px;
             }
             #buttonmenu:hover {
                 background-color: #0056b3; /* Darker blue when hovered for a hover effect */
@@ -122,6 +122,14 @@
                 font-weight: 300; /* Semi-bold to make the title stand out */
                 color: #2E3A3F; /* Dark color for readability */
                 text-align: center; /* Center-align the title */
+                margin-bottom: 20px; /* Space below the title */
+                padding: 10px 0; /* Padding to add space around the text */
+                font-family: 'Arial', sans-serif; /* Modern, clean font */ 
+            }
+            #depensesvente {
+                font-size: 32px; /* Larger size for prominence */ 
+                color: #2E3A3F; /* Dark color for readability */
+                text-align: left; /* Center-align the title */
                 margin-bottom: 20px; /* Space below the title */
                 padding: 10px 0; /* Padding to add space around the text */
                 font-family: 'Arial', sans-serif; /* Modern, clean font */ 
@@ -428,9 +436,166 @@
                 cursor: pointer; /* Pointer cursor to indicate it's clickable */
             
             }
-
+            #FormulaireWidgetstock {
+                background-color: rgba(0, 0, 0, 0.4); ; /* Sleek dark background */
+                border-radius: 15px; /* Softer rounded corners */
+                border: 2px solid #333333; /* Subtle border to outline the form */
+                width: 200px; /* Standard width for a login form */
+                padding: 20px; /* Generous padding for spacing */
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Light shadow for depth */
+                margin-bottom: 0px; /* Center the form on the page */ 
+                max-height: 380px;
+            }
+            #FormulaireWidgetstock QLabel {
+                text-align: left;
+                color: white;
+                padding: 5px;
+                font-size: 20px;
+                min-width: 180px; 
+            } 
+            #FormulaireWidgetstock QLineEdit {
+                text-align: left;
+                color: white;
+                padding: 5px;
+                font-size: 20px;
+                min-width: 180px; 
+            } 
+            #FormulaireWidgetstock QSpinBox {
+                text-align: left;
+                color: black; 
+                font-size: 20px;
+                min-width: 180px; 
+            } 
             
-                        
+
+            #FormulaireWidgetstock QDateEdit
+            {
+                background-color: white;
+                border-style: solid;
+                border-width: 1px;
+                border-color: rgb(100,100,100); 
+                min-width: 180px;
+            }
+            #FormulaireWidgetstock QDateEdit::up-arrow {
+                image: url(arrowdrop);
+        
+            }
+            #FormulaireWidgetstock QDateEdit::down-arrow {
+                image: url(arrowdrop);
+                
+        
+            } 
+            #FormulaireWidgetstock QComboBox {
+                background: #FFFFFF;
+                border: none; 
+                min-width: 150px;
+                selection-background-color: #D0D0D0;
+                selection-color: #000000;
+              }
+              #FormulaireWidgetstock QComboBox:editable {
+                background: #FFFFFF;
+              } 
+              #FormulaireWidgetstock QComboBox::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                border-left: none;
+              }
+              #FormulaireWidgetstock QComboBox::down-arrow {
+                image: url(arrowdrop);
+              }
+              #FormulaireWidgetstock QComboBox QAbstractItemView {
+                background: #FFFFFF;
+                border: none;
+              }
+            
+
+
+
+              #FormulaireWidgetstock1{
+                background-color: rgba(0, 0, 0, 0.4); ; /* Sleek dark background */   
+                padding: 5px; /* Generous padding for spacing */   
+                text-align: center;
+                color: white; 
+                font-size: 20px; 
+            } 
+            #FormulaireWidgetstock2{
+                background-color: rgba(0, 0, 0, 0.4); ; /* Sleek dark background */   
+                padding: 5px; /* Generous padding for spacing */   
+                text-align: center;
+                color: white; 
+                font-size: 20px;
+                min-width: 450px; 
+                max-width: 450px; 
+            } 
+                   
+            
+
+            #FormulaireWidgetstock22 {
+                background-color: rgba(0, 0, 0, 0.4); ; /* Sleek dark background */
+                border-radius: 15px; /* Softer rounded corners */
+                border: 2px solid #333333; /* Subtle border to outline the form */
+                width: 200px; /* Standard width for a login form */
+                padding: 5px; /* Generous padding for spacing */
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Light shadow for depth */
+                margin-bottom: 0px; /* Center the form on the page */ 
+                min-width: 450px; 
+                max-width: 450px; 
+            }
+            #FormulaireWidgetstock22 QLabel {
+                text-align: left;
+                color: white;
+                padding: 5px;
+                font-size: 20px;
+                min-width: 150px; 
+            } 
+            #FormulaireWidgetstock22 QSpinBox {
+                text-align: left;
+                color: black;
+                padding: 5px;
+                font-size: 20px;
+                min-width: 130px; 
+            } 
+            
+
+            #FormulaireWidgetstock22 QDateEdit
+            {
+                background-color: white;
+                border-style: solid;
+                border-width: 1px;
+                border-color: rgb(100,100,100); 
+                min-width: 130px;
+            }
+            #FormulaireWidgetstock22 QDateEdit::up-arrow {
+                image: url(arrowdrop);
+        
+            }
+            #FormulaireWidgetstock22 QDateEdit::down-arrow {
+                image: url(arrowdrop);
+        
+            }
+            #FormulaireWidgetstock22 QComboBox {
+                background: #FFFFFF;
+                border: none;
+                padding: 2px 18px 2px 3px;
+                min-width: 120px;
+                selection-background-color: #D0D0D0;
+                selection-color: #000000;
+              }
+              #FormulaireWidgetstock22 QComboBox:editable {
+                background: #FFFFFF;
+              } 
+              #FormulaireWidgetstock22 QComboBox::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                border-left: none;
+              }
+              #FormulaireWidgetstock22 QComboBox::down-arrow {
+                image: url(arrowdrop);
+              }
+              #FormulaireWidgetstock22 QComboBox QAbstractItemView {
+                background: #FFFFFF;
+                border: none;
+              }
 
                         
                         

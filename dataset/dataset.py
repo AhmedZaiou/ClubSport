@@ -2,9 +2,9 @@
 import pandas as pd 
 import sqlite3 
 from datetime import datetime
-from utils.utils import *
+#from utils.utils import *
 import calendar
-#path_data_set = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
+path_data_set = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
 
 def fetch_data():
     """Récupère les données de la base SQLite"""
@@ -94,7 +94,8 @@ def load_data( adherent_id):
         return row
 
 def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entree,
-        age, genre, tarif, seances, situation, photo_path):
+        age, genre, tarif, seances, situation, photo_path,
+        poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text):
     connection = sqlite3.connect(path_data_set)
     cursor = connection.cursor()
 
@@ -115,7 +116,14 @@ def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entre
             tarif INTEGER,
             seances INTEGER,
             situation TEXT,
-            photo_path TEXT
+            photo_path TEXT,
+            poids TEXT,
+            longeur TEXT,
+            titre_sport TEXT,
+            nom_parent TEXT,
+            contact_parent TEXT,
+            situation_sanitaire TEXT,
+            situation_sanitaire_text TEXT
         )
     """)
 
@@ -123,10 +131,10 @@ def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entre
     cursor.execute("""
         INSERT INTO adherents (
             nom, prenom, email, telephone, cin, num_adh, adresse,
-            date_entree, age, genre, tarif, seances, situation, photo_path
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (nom, prenom, email, telephone, cin, num_adh, adresse, date_entree,
-        age, genre, tarif, seances, situation, photo_path))
+        age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text))
 
     # Validation de la transaction
     connection.commit() 
@@ -168,6 +176,19 @@ def ajouter_paiement(adherent_id, montant, date_paiement, mode_paiement, month_t
     conn.commit()
     conn.close()
 
+def ajouter_sanction(id_adherent, cause, genre, duree, date_s,date_f):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+ 
+    cursor.execute('''
+    INSERT INTO sanction (id_adherent, cause, genre, duree, date_start, date_fin)
+    VALUES (?, ?, ?, ?, ?, ?)
+    ''', (id_adherent, cause, genre, duree, date_s,date_f))
+
+    conn.commit()
+    conn.close()
+
+
 def recuperer_paiements(adherent_id):
     conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
@@ -181,27 +202,9 @@ def recuperer_paiements(adherent_id):
     return paiements
 
 def modifier_adh(adherent_id, nom, prenom, email, telephone, cin, num_adh, adresse, 
-                        date_entree, age, genre, tarif, seances, situation, photo_path):
-    """
-    Modifier les informations d'un adhérent dans la base de données.
-
-    Args:
-        adherent_id (int): ID de l'adhérent à modifier.
-        nom (str): Nouveau nom.
-        prenom (str): Nouveau prénom.
-        email (str): Nouveau email.
-        telephone (str): Nouveau téléphone.
-        cin (str): Nouveau CIN.
-        num_adh (str): Nouveau numéro d'adhérent.
-        adresse (str): Nouvelle adresse.
-        date_entree (str): Nouvelle date d'entrée (format YYYY-MM-DD).
-        age (int): Nouvel âge.
-        genre (str): Nouveau genre.
-        tarif (int): Nouveau tarif.
-        seances (int): Nouveau nombre de séances.
-        situation (str): Nouvelle situation.
-        photo_path (str): Nouveau chemin de photo.
-    """
+                        date_entree, age, genre, tarif, seances, situation, photo_path
+                        , poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text):
+     
     connection = sqlite3.connect(path_data_set)
     cursor = connection.cursor()
 
@@ -211,10 +214,12 @@ def modifier_adh(adherent_id, nom, prenom, email, telephone, cin, num_adh, adres
         SET 
             nom = ?, prenom = ?, email = ?, telephone = ?, cin = ?, 
             num_adh = ?, adresse = ?, date_entree = ?, age = ?, 
-            genre = ?, tarif = ?, seances = ?, situation = ?, photo_path = ?
+            genre = ?, tarif = ?, seances = ?, situation = ?, photo_path = ?,
+             poids = ?, longeur = ?, titre_sport = ?, nom_parent = ?, contact_parent = ?, situation_sanitaire = ?, situation_sanitaire_text = ?
         WHERE id = ?
     """, (nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, 
-          age, genre, tarif, seances, situation, photo_path, adherent_id))
+          age, genre, tarif, seances, situation, photo_path, 
+          poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text,adherent_id,))
 
     # Validation de la transaction
     connection.commit()
@@ -404,6 +409,22 @@ def fetch_data_with_last():
 
     return merged_df
 
+def fetch_data_sanctionner():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect(path_data_set)  # Nom de votre fichier de base de données
+    cursor = conn.cursor()
+
+    # Récupérer ment les colonnes nécessaires
+    cursor.execute("SELECT id, nom, prenom FROM adherents")
+    adherents = cursor.fetchall()
+    cursor.execute("SELECT * FROM sanction")
+    sanctions = cursor.fetchall()
+    adherents, sanctions =  pd.DataFrame(adherents, columns=["id", "nom", "prenom" ]), pd.DataFrame(sanctions, columns=["id","id_adherent", "cause", "genre", "duree", "date_start", "date_fin"])
+    
+    merged_df = adherents.merge(sanctions, left_on="id", right_on="id_adherent") 
+
+    return merged_df
+
 def fetch_data_Non_df():
     merged_df = fetch_data_with_last()
     year_now = datetime.now().year
@@ -460,6 +481,21 @@ def fetch_depenses():
     conn.close()
     return paiements
 
+def fetch_products():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect(path_data_set)
+    
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT nom_produit FROM produits;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    list_product = [i[0] for i in paiements]
+    list_product.append("Autre")
+    return list_product
+
+
 
 
 def insertion_depense(commentaire,montant, date):
@@ -496,3 +532,163 @@ def recuperer_stat_depenses():
         summ_moth = cursor.fetchall()
         dict_moths[mois_noms[i-1]]=summ_moth[0][0] if summ_moth[0][0]  else 0 
     return dict_moths, sum(dict_moths.values())
+
+
+def insertion_produit(produit):
+    # Connexion à la base de données
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table des paiements
+    cursor.execute("""
+        INSERT INTO produits (
+            nom_produit) VALUES (?)
+    """, (produit,)) 
+
+    conn.commit()
+    conn.close() 
+    return cursor.lastrowid
+
+def get_id_produit(produit):
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect(path_data_set)
+    
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT id FROM produits WHERE  nom_produit = ?
+    ''', (produit,))
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements[-1][0]
+def insertion_product_stock(id_prodult, quantite, prix_achat,prix_vente, datae_expiration):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table des paiements
+    cursor.execute("""
+        INSERT INTO stock (id_produit, 
+        quentite,
+        prix_achat,
+        prix_vent_proposer,
+        date_expiration,
+        date_ajout) VALUES (?,?,?,?,?,?)
+    """, (id_prodult, quantite, prix_achat,prix_vente, datae_expiration, datetime.now().strftime('%Y-%m-%d'),)) 
+
+    conn.commit()
+    conn.close()
+
+
+
+def fetch_stock():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect(path_data_set)
+    
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT p.nom_produit, s.* FROM  stock s JOIN   produits p ON  s.id_produit = p.id;
+    ''', ())
+    stock = cursor.fetchall()
+    conn.close()
+     
+    return stock
+
+def fetch_ventes():
+    """Récupère les données de la base SQLite"""
+    conn = sqlite3.connect(path_data_set)
+    
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * from vente;
+    ''', ())
+    stock = cursor.fetchall()
+    conn.close()
+     
+    return stock
+
+
+def insertion_vente(nom_produit, quantite, prix_achat,prix_vente, datae_expiration, idvent, ancien_q):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table des paiements
+    cursor.execute("""
+        INSERT INTO vente (nom_produit, 
+        quentite,
+        prix_achat,
+        prix_vent_final,
+        date_expiration,
+        date_vente) VALUES (?,?,?,?,?,?)
+    """, (nom_produit, quantite, prix_achat,prix_vente, datae_expiration, datetime.now().strftime('%Y-%m-%d'),)) 
+
+    cursor.execute("""
+        UPDATE stock
+        SET quentite = ?
+        WHERE id = ?;
+    """, (ancien_q-quantite, idvent,)) 
+    cursor.execute("""
+        DELETE FROM stock WHERE quentite = ?;
+    """, (0,)) 
+
+
+    
+    conn.commit()
+    conn.close()
+
+
+
+def supprimer_sanction(sanction_id):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM sanction WHERE id = ?;
+    """, (sanction_id,))  
+
+
+    
+    conn.commit()
+    conn.close()
+
+
+
+def insertSalarié(nom_prenom, contact, salaire,admin,password):
+
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table des paiements
+    cursor.execute("""
+        INSERT INTO salaries (nomprenem , 
+        contat , 
+        salaire ,
+        date_commance ,
+        last_payment,
+        admin,
+        password ) VALUES (?,?,?,?,?,?,?)
+    """, (nom_prenom, contact, salaire,datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%Y-%m-%d'),admin,password,)) 
+
+    
+    conn.commit()
+    conn.close()
+
+def fetch_salaeir() :
+
+    conn = sqlite3.connect(path_data_set)
+    
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * from salaries;
+    ''', ())
+    stock = cursor.fetchall()
+    conn.close()
+     
+    return stock
+
+
+
+
+"""for i in ["BOISSONS", "ARTICLES SPORTIFS", "MATERIEL DE SPORT", "BISCUITS ET AUTRES"]:
+    insertion_produit(i)
+
+
+"""

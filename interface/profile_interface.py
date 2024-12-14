@@ -104,6 +104,30 @@ class Profile():
         self.situation_label = QLabel("Assurance :")
         self.situation_value = QLabel()
 
+        
+        self.poids = QLabel("Poids :")
+        self.poids_value = QLabel()
+
+        self.situation_sanitaire = QLabel("Situation sanitaire :")
+        self.situation_sanitaire_value = QLabel()
+
+        self.situation_sanitaire_text = QLabel("Maladie :")
+        self.situation_sanitaire_text_value = QLabel()
+
+        self.longueur = QLabel("La longueur :")
+        self.longueur_value = QLabel()
+
+        self.titre_sport = QLabel("Le titre du sport :")
+        self.titre_sport_value = QLabel()
+
+
+        self.nom_parent = QLabel("Nom du parent :")
+        self.nom_parent_value = QLabel()
+
+        self.contact_parent = QLabel("Contact du parent :")
+        self.contact_parent_value = QLabel()
+
+
         # Ajouter deux informations par ligne 
         self.info_layout.addWidget(self.nom_label, 0, 0)
         self.info_layout.addWidget(self.nom_value, 0, 1)
@@ -131,6 +155,23 @@ class Profile():
         self.info_layout.addWidget(self.seances_value, 5, 3)
         self.info_layout.addWidget(self.situation_label, 6, 0)
         self.info_layout.addWidget(self.situation_value, 6, 1)
+        self.info_layout.addWidget(self.titre_sport, 6, 2)
+        self.info_layout.addWidget(self.titre_sport_value, 6, 3)
+
+        self.info_layout.addWidget(self.poids, 7, 0)
+        self.info_layout.addWidget(self.poids_value, 7, 1)
+        self.info_layout.addWidget(self.longueur, 7, 2)
+        self.info_layout.addWidget(self.longueur_value, 7, 3)
+
+        self.info_layout.addWidget(self.situation_sanitaire, 8, 0)
+        self.info_layout.addWidget(self.situation_sanitaire_value, 8, 1)
+        self.info_layout.addWidget(self.situation_sanitaire_text, 8, 2)
+        self.info_layout.addWidget(self.situation_sanitaire_text_value, 8, 3)
+
+        self.info_layout.addWidget(self.nom_parent, 9, 0)
+        self.info_layout.addWidget(self.nom_parent_value, 9, 1)
+        self.info_layout.addWidget(self.contact_parent, 9, 2)
+        self.info_layout.addWidget(self.contact_parent_value, 9, 3)
 
         # Layout pour organiser la photo à droite
         content_layout = QHBoxLayout()
@@ -143,6 +184,10 @@ class Profile():
         self.modification.clicked.connect(self.medefier)
         self.modification.setObjectName('button_vert')
         button_layout.addWidget(self.modification)
+        self.ajoutersanction = QPushButton("Ajouter une sanction")
+        self.ajoutersanction.clicked.connect(self.ajoutersanction_fc)
+        self.ajoutersanction.setObjectName('button_vert')
+        button_layout.addWidget(self.ajoutersanction)
         self.stopsubscription = QPushButton("Arrêter l'abonnement")
         self.stopsubscription.clicked.connect(self.stopsubscription_fnc)
         self.stopsubscription.setObjectName('button_vert')
@@ -170,7 +215,17 @@ class Profile():
             self.tarif_abbonement = str(row[11])
             self.monton = int(row[11])
             self.seances_value.setText(str(row[12]))
-            self.situation_value.setText(str(row[13])) 
+            self.situation_value.setText(str(row[13]))  
+            self.poids_value.setText(str(row[15]))
+            self.longueur_value.setText(str(row[16]))
+            self.titre_sport_value.setText(str(row[17]))
+            self.nom_parent_value.setText(str(row[18]))
+            self.contact_parent_value.setText(str(row[19]))
+            self.situation_sanitaire_value.setText(str(row[20]))
+            self.situation_sanitaire_text_value.setText(str(row[21]))
+
+
+
             if row[14] and row[14] != 'Aucune':
                 self.photo_label.setPixmap(QPixmap(row[14]).scaled(150, 150))
             else:
@@ -197,7 +252,9 @@ class Profile():
         
 
         
-
+    def ajoutersanction_fc(self):
+        from .ajouter_sanction import Sanction
+        self.main_interface = Sanction(self.main_inter, self.id_profile) 
     
     def medefier(self):
         from .modefier_information import ModefierADh

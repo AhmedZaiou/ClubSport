@@ -122,3 +122,48 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+
+
+
+
+
+A ajouter dans l'inscription et adhérents : 
+ 
+ GENRES DE SPORT
+ Arats martiaux 
+    - kick- boxing
+   - teak- wando
+  - karaté 
+ _Fitness- musculation 
+    - Aérobic
+    - zumba
+    - gymnastique 
+     - buildings
+A ajouter dans le tableau de gestion des hadérents: 
+
+SANCTIONS
+ CAUSE DE LA SANCTION
+GENRES DES SANCTIONS
+ARRET PROVISOIRE
+ARRET DÉFINITIF
+DURÉE D'ARRÊT
+
+Poids / longueur/ situation sanitaire/ titre de sport / assurance
+Dans la situation sanitaire mettre apte / inapte/ genre de maladie , Par exemple diabète cardiaque
+
+
+
+
+A ajouter une nouvelle page : 
+ VENTES DU CLUB
+BOISSONS
+ARTICLES SPORTIFS
+MATERIEL DE SPORT
+BISCUITS ET AUTRES
+[10/12 à 23:18] Mahmoud Sale De Sport: Merci
+[10/12 à 23:18] Mahmoud Sale De Sport: Avec colonne des prix dnachat et de vente  et date d'exoeration
+
+
+
+

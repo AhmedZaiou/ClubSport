@@ -34,7 +34,14 @@ CREATE TABLE IF NOT EXISTS adherents (
     tarif INTEGER,
     seances INTEGER,
     situation TEXT,
-    photo_path TEXT
+    photo_path TEXT,
+            poids TEXT,
+            longeur TEXT,
+            titre_sport TEXT,
+            nom_parent TEXT,
+            contact_parent TEXT,
+            situation_sanitaire TEXT,
+            situation_sanitaire_text TEXT
 )
 ''')
 
@@ -55,6 +62,65 @@ cursor.execute('''
         commentaire TEXT,
         montant INTEGER,
         date_depense DATE
+    )
+    ''')
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS salaries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        nomprenem TEXT, 
+        contat TEXT, 
+        salaire INTEGER,
+        date_commance DATE,
+        last_payment DATE,
+        admin TEXT, 
+        password TEXT
+    )
+    ''')
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS produits (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        nom_produit TEXT
+    )
+    ''')
+
+
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS stock (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        id_produit INTEGER,
+        quentite INTEGER,
+        prix_achat INTEGER,
+        prix_vent_proposer INTEGER,
+        date_expiration DATE,
+        date_ajout DATE,
+        FOREIGN KEY (id_produit) REFERENCES produits (id)
+    )
+    ''')
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS vente (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        nom_produit TEXT,
+        quentite INTEGER,
+        prix_achat INTEGER,
+        prix_vent_final INTEGER,
+        date_expiration DATE,
+        date_vente DATE
+    )
+    ''')
+
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS sanction (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        id_adherent INTEGER,
+        cause TEXT,
+        genre TEXT,
+        duree INTEGER,
+        date_start DATE,
+        date_fin DATE
     )
     ''')
 

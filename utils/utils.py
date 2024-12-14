@@ -133,7 +133,8 @@ def deplacer_et_renommer_image(source_path, destination_folder, nouveau_nom):
     nouveau_chemin = os.path.join(destination_folder, f"{nouveau_nom}{extension}")
     
     # Déplacer et renommer le fichier
-    shutil.move(source_path, nouveau_chemin)
+    if source_path != nouveau_chemin:
+        shutil.copy(source_path, nouveau_chemin)
     
     return nouveau_chemin
 

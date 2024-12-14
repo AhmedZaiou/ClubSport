@@ -69,9 +69,18 @@ class MainInterface(QMainWindow):
         self.btn_revenues = QPushButton("Suivi des revenus")
         self.btn_revenues.clicked.connect(self.show_revenues)
         self.menu_layout.addWidget(self.btn_revenues)
+        self.btn_revenues.setObjectName("buttonmenu")
+
+        self.btn_revenues = QPushButton("Gestion des salariés")
+        self.btn_revenues.clicked.connect(self.show_salarie)
+        self.menu_layout.addWidget(self.btn_revenues)
         self.btn_revenues.setObjectName("buttonmenu") 
 
-        
+        self.btn_revenues = QPushButton("Gestion des ventes")
+        self.btn_revenues.clicked.connect(self.show_ventes)
+        self.menu_layout.addWidget(self.btn_revenues)
+        self.btn_revenues.setObjectName("buttonmenu")
+ 
 
         self.btn_ajout_adhs = QPushButton("Déconnecté")
         self.btn_ajout_adhs.clicked.connect(self.deconnexion)
@@ -105,6 +114,12 @@ class MainInterface(QMainWindow):
     def deconnexion(self):
         from .login_interface import LoginWindow
         self.close() 
+    def show_ventes(self):
+        from .gestion_ventes import Ventes
+        self.main_interface = Ventes(self) 
+    def show_salarie(self):
+        from .gestion_salarie import Salarie
+        self.main_interface = Salarie(self) 
 
      
     
