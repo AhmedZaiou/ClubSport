@@ -118,25 +118,34 @@ def deplacer_et_renommer_image(source_path, destination_folder, nouveau_nom):
     
     Returns:
         str: Le nouveau chemin complet de l'image déplacée et renommée.
+
     """
-    # Vérifier si le fichier source existe
-    if not os.path.exists(source_path):
-        raise FileNotFoundError(f"Le fichier source n'existe pas : {source_path}")
+
+    try:
+
+        # Vérifier si le fichier source existe
+        if not os.path.exists(source_path):
+            raise FileNotFoundError(f"Le fichier source n'existe pas : {source_path}")
+        
+        # Créer le dossier de destination s'il n'existe pas
+        os.makedirs(destination_folder, exist_ok=True)
+        
+        # Obtenir l'extension de l'image source
+        extension = os.path.splitext(source_path)[1]
+        
+        # Construire le chemin complet du nouveau fichier
+        nouveau_chemin = os.path.join(destination_folder, f"{nouveau_nom}{extension}")
+        
+        # Déplacer et renommer le fichier
+        if source_path != nouveau_chemin:
+            shutil.copy(source_path, nouveau_chemin)
+        return nouveau_chemin
+    except:
+        
+        return "Aucune"
+
     
-    # Créer le dossier de destination s'il n'existe pas
-    os.makedirs(destination_folder, exist_ok=True)
     
-    # Obtenir l'extension de l'image source
-    extension = os.path.splitext(source_path)[1]
-    
-    # Construire le chemin complet du nouveau fichier
-    nouveau_chemin = os.path.join(destination_folder, f"{nouveau_nom}{extension}")
-    
-    # Déplacer et renommer le fichier
-    if source_path != nouveau_chemin:
-        shutil.copy(source_path, nouveau_chemin)
-    
-    return nouveau_chemin
 
 
 
@@ -148,6 +157,13 @@ def write_to_excel(file_name="output.xlsx"):
     adherents = fetch_data()
     paiments = recuperer_all_paiements()
     depenses = recuperer_all_depenses1()
+    salarie = recuperer_all_salarie()
+    stock = recuperer_all_stock()
+    ventes = recuperer_all_ventes()
+    sanction = recuperer_all_sanction()
+
+
+
     # Feuille 1
     sheet1 = workbook.active
     sheet1.title = "adherents"

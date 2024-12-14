@@ -49,13 +49,7 @@ class Gestion_adherents():
 
         titre_table_sanction = QLabel('Liste des adhérents sanctionnés : ')
         titre_table_sanction.setObjectName("titre_table")
-        layout.addWidget(titre_table_sanction) 
-
-        self.search_bar_sanction = QLineEdit(self.main_inter)
-        self.search_bar_sanction.setPlaceholderText("Search by 'Nom'...")
-        layout.addWidget(self.search_bar_sanction) 
-
-        self.search_bar_sanction.textChanged.connect(self.filter_table)  # Trigger filter when text changes
+        layout.addWidget(titre_table_sanction)   
 
         # Créer le tableau pour afficher les adhérents
         self.tableWidgetSanction = QTableWidget()

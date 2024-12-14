@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS adherents (
     prenom TEXT,
     email TEXT,
     telephone TEXT,
-    cin TEXT UNIQUE,
-    num_adh TEXT UNIQUE,
+    cin TEXT ,
+    num_adh TEXT ,
     adresse TEXT,
     date_entree DATE,
     age INTEGER,
@@ -75,6 +75,17 @@ cursor.execute('''
         last_payment DATE,
         admin TEXT, 
         password TEXT
+    )
+    ''')
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS paysalaries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        nomprenem TEXT, 
+        commentaire TEXT, 
+        salaire INTEGER,
+        date_con DATE,
+        date_paymet DATE 
     )
     ''')
 

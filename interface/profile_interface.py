@@ -5,6 +5,8 @@ from utils.utils import *
 from dataset.dataset import * 
 from .main_interface import MainInterface 
 from datetime import datetime
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 
 
 class Profile():
@@ -376,7 +378,9 @@ class Profile():
                 date_paiement = str(date[0])+'-'+str(date[1])+'-'+str( date[2])
                 mode_paiement = 'Espèces'
                 month_to_pay = self.month_to_pay_value  
+
                 ajouter_paiement(adherent_id, montant, date_paiement, mode_paiement, month_to_pay)
+                self.telecharger_facture(adherent_id, montant, date_paiement, mode_paiement, month_to_pay)
                 QMessageBox.information(self.main_inter, "Paiement validé", "Le paiement a été confirmé avec succès.")
                 self.main_interface = Profile(adherent_id, self.main_inter)
             else:
@@ -389,8 +393,62 @@ class Profile():
         
 
  
+ 
+    def telecharger_facture(self, adherent_id, montant, date_paiement, mode_paiement, month_to_pay):
+        # Nom du fichier PDF à générer
+        fichier_pdf = f"Facture_Adherent_{adherent_id}.pdf"
 
 
+
+        options = QFileDialog.Options()
+        fichier_pdf, _ = QFileDialog.getSaveFileName(
+            self.main_inter,
+            "Enregistrer le fichier",
+            f"Facture_{self.nom_value.text()}-{self.prenom_value.text()}-{month_to_pay}.pdf",
+            "Documents (*.pdf);;All Files (*)",
+            options=options
+        )
+        if not fichier_pdf:
+            QMessageBox.information(self.main_inter, "Le téléchargement est annulé.", "Le téléchargement est annulé.")
+            return  
+        
+        
+        # Créer le canvas pour le PDF
+        c = canvas.Canvas(fichier_pdf, pagesize=A4)
+        largeur, hauteur = A4  # Dimensions de la page
+        
+        # Ajouter le titre
+        c.setFont("Helvetica-Bold", 20)
+        c.drawString(200, hauteur - 50, "FACTURE Royal Fitness")
+        
+        # Ajouter les informations générales
+        c.setFont("Helvetica", 12)
+        c.drawString(50, hauteur - 100, f"Adhérent : {self.prenom_value.text()} {self.nom_value.text()}")
+        c.drawString(50, hauteur - 130, f"Montant : {montant} Dhs")
+        c.drawString(50, hauteur - 160, f"Date de Paiement : {date_paiement}")
+        c.drawString(50, hauteur - 190, f"Mode de Paiement : {mode_paiement}")
+        c.drawString(50, hauteur - 220, f"Mois payé : {month_to_pay}")
+        
+        # Ajouter une ligne horizontale
+        c.line(50, hauteur - 250, largeur - 50, hauteur - 250)
+        
+        # Ajouter un message de remerciement
+        c.setFont("Helvetica-Oblique", 14)
+        c.setFillColorRGB(0, 0.5, 0)  # Couleur verte
+        c.drawString(50, hauteur - 300, "Merci pour votre paiement !")
+        
+        # Ajouter les coordonnées pour l'assistance
+        c.setFont("Helvetica", 10)
+        c.setFillColorRGB(0, 0, 0)  # Noir
+        c.drawString(50, hauteur - 350, "Pour toute assistance, contactez-nous directement") 
+        
+        # Ajouter la date de génération de la facture
+        c.setFont("Helvetica", 10)
+        c.drawString(50, 50, f"Facture générée le : {datetime.now().strftime('%d/%m/%Y')}")
+
+        # Enregistrer et fermer le fichier PDF
+        c.save()
+        print(f"Facture générée avec succès : {fichier_pdf}")
 
 
 

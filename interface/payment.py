@@ -135,8 +135,22 @@ class Payment( ):
         datae_depense = self.date_entree_input.date().toString("yyyy-MM-dd")
         commentaire = self.user_entry.text() 
         montant = self.password_entry.value()
-        insertion_depense(commentaire, montant, datae_depense)
-        self.main_interface = Payment( self.main_inter)
+
+
+        if not datae_depense or not commentaire or not montant :
+            QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez remplir tous les champs obligatoires.")
+            return
+        reponse = QMessageBox.question(
+                self.main_inter,
+                "Confirmation de l'ajout de dépenses",
+                f"Êtes-vous sûr de vouloir ajouter la dépense  :{commentaire } ?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+        if reponse == QMessageBox.Yes:
+            insertion_depense(commentaire, montant, datae_depense)
+            self.main_interface = Payment( self.main_inter)
+        else:
+            QMessageBox.information(self.main_inter, "Action annulé", "L'action a été annulée.")
 
 
     def filter_table(self):

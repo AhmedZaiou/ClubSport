@@ -79,7 +79,9 @@ class Salarie( ):
 
         self.motdepasse_value = QLineEdit()
         self.motdepasse_value.setPlaceholderText("Mot de passe")
+        self.motdepasse_value.setEchoMode(QLineEdit.Password) 
         self.login_layout.addWidget(self.motdepasse_value)
+ 
  
   
 
@@ -130,9 +132,9 @@ class Salarie( ):
         self.salaire_label_admin = QLabel("Commentaire :")
         self.ladmin_layout.addWidget(self.salaire_label_admin)
 
-        self.motdepasse_value = QLineEdit()
-        self.motdepasse_value.setPlaceholderText("Commentaire")
-        self.ladmin_layout.addWidget(self.motdepasse_value)
+        self.commentaire = QLineEdit()
+        self.commentaire.setPlaceholderText("Commentaire")
+        self.ladmin_layout.addWidget(self.commentaire)
  
   
 
@@ -146,12 +148,18 @@ class Salarie( ):
 
         self.nvMotdepass_admin_value = QLineEdit()
         self.nvMotdepass_admin_value.setPlaceholderText("Nouveau mot de passe ")
+        self.nvMotdepass_admin_value.setEchoMode(QLineEdit.Password)
         self.ladmin_layout.addWidget(self.nvMotdepass_admin_value)
 
         self.modefier_admin= QPushButton("Modefier le mot de passe")
         self.modefier_admin.clicked.connect(self.update_motdepass)
         self.modefier_admin.setObjectName("buttconexion")
         self.ladmin_layout.addWidget(self.modefier_admin)
+
+        self.supprimer_admin= QPushButton("Supprimer le salarié")
+        self.supprimer_admin.clicked.connect(self.supprimer_salarie)
+        self.supprimer_admin.setObjectName("buttconexion")
+        self.ladmin_layout.addWidget(self.supprimer_admin)
 
         graphs_layout.addWidget(self.login_admin)
 
@@ -181,17 +189,96 @@ class Salarie( ):
         self.main_inter.content_layout.addWidget(self.dashbord_widget) 
     
     def update_motdepass(self):
-        pass
-    def payer_salarie(self):
+
+        nvpassword = self.nvMotdepass_admin_value.text()
+        try:
+            if not nvpassword: 
+                reponse = QMessageBox.question(
+                    self.main_inter,
+                    "Confirmer la modification du mot de passe",
+                    f"Êtes-vous sûr de vouloir modifier le mot de passe de :{self.nom_prenom} ?",
+                    QMessageBox.Yes | QMessageBox.No
+                )
+                if reponse == QMessageBox.Yes:  
+                    update_salarie_password(self.salarie_id, nvpassword) 
+                    QMessageBox.information(self.main_inter, "Modification validée", "La modification a été confirmé avec succès.")
+                    self.main_interface = Salarie(self.main_inter)
+                else:
+                    QMessageBox.information(self.main_inter, "Modification annulée", "La modification a été annulée.")
+            else:
+                QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez remplir tous les champs obligatoires.")
+        except:
+            QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez sélectionner un salarié.")
+
+    def payer_salarie(self): 
+        commentaire = self.commentaire.text()
+        date_c = self.user_entry_admin.date().toString("yyyy-MM-dd")
+        salaire = self.user_contact_admin.value()
+
+        try:
+            if not commentaire or not date_c or not salaire or not self.nom_prenom:
+                QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez remplir tous les champs obligatoires.")
+                return
+            
+
         
-        pass
+            reponse = QMessageBox.question(
+                self.main_inter,
+                "Confirmer le paiement de mois",
+                f"Êtes-vous sûr de vouloir payer le mois :{date_c} pour {self.nom_prenom} ?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+            if reponse == QMessageBox.Yes:  
+                insertpaySalarie(self.nom_prenom,commentaire, salaire,date_c)
+                update_salarie_lastpay(self.salarie_id, date_c)
+                QMessageBox.information(self.main_inter, "Paiement confirmé", "Le Paiement a été confirmé avec succès.")
+                self.main_inter = Salarie(self.main_inter)
+            else:
+                QMessageBox.information(self.main_inter, "Paiement annulé", "Le paiement a été annulé.")
+        except:
+            QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez sélectionner un salarié.")
+
+
+
+
+        
+        
+
+ 
+    def supprimer_salarie(self):
+
+        try:
+            reponse = QMessageBox.question(
+                self.main_inter,
+                "Confirmer la suppression ",
+                f"Êtes-vous sûr de vouloir supprimer le salarié {self.nom_prenom} ?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+            if reponse == QMessageBox.Yes:  
+                supprimer_salarie(self.salarie_id) 
+                QMessageBox.information(self.main_inter, "Suppression confirmé", "La auppression a été confirmé avec succès.")
+                self.main_inter = Salarie(self.main_inter)
+            else:
+                QMessageBox.information(self.main_inter, "Suppression annulé", "La Suppression a été annulé.")
+        except:
+            QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez sélectionner un salarié.")
+        
+
+
     def ajouter_salarie(self): 
         nom_prenom = self.user_entry.text()
         contact = self.user_contact.text()
         salaire = self.salaire.value() 
         admin = self.salaire_admin_value.currentText()
-        password =self.motdepasse.text()
-        insertSalarié(nom_prenom, contact, salaire, admin, password)
+        password =self.motdepasse_value.text() 
+
+        if not nom_prenom or not contact or not salaire:
+                QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez remplir tous les champs obligatoires.")
+                return 
+        if admin == "Oui" and not password:
+            QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez saisir le mot de passe ou mettre admin sur non.")
+            return 
+        insertSalarie(nom_prenom, contact, salaire, admin, password)
         self.main_interface = Salarie( self.main_inter)
 
 
@@ -277,7 +364,7 @@ class Salarie( ):
      
     def on_cell_clicked(self, row, column):
         # Si la colonne 12 (Action) est cliquée
-        if column == 6:
+        if column == 6 and  self.tableWidget.item(row, column) is not None:
             self.salarie_id = self.tableWidget.item(row, column).data(Qt.UserRole)  
 
             self.nom_prenom = self.tableWidget.item(row, 0).text()

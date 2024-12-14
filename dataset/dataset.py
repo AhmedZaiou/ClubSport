@@ -651,7 +651,7 @@ def supprimer_sanction(sanction_id):
 
 
 
-def insertSalarié(nom_prenom, contact, salaire,admin,password):
+def insertSalarie(nom_prenom, contact, salaire,admin,password):
 
     conn = sqlite3.connect(path_data_set)
     cursor = conn.cursor()
@@ -687,8 +687,124 @@ def fetch_salaeir() :
 
 
 
-"""for i in ["BOISSONS", "ARTICLES SPORTIFS", "MATERIEL DE SPORT", "BISCUITS ET AUTRES"]:
-    insertion_produit(i)
 
 
-"""
+
+  
+
+
+def insertpaySalarie(nomprenem, commentaire, salaire,date_con):
+
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table des paiements
+    cursor.execute("""
+        INSERT INTO paysalaries (nomprenem, commentaire, salaire,date_con,date_paymet) VALUES (?,?,?,?,?)
+    """, (nomprenem, commentaire, salaire,date_con,datetime.now().strftime('%Y-%m-%d'),)) 
+
+    
+    conn.commit()
+    conn.close()
+
+
+def update_salarie_lastpay(salarie_id, date):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE salaries
+        SET last_payment = ?
+        WHERE id = ?;
+    """, (date,salarie_id,)) 
+    conn.commit()
+    conn.close()
+
+def update_salarie_password(salarie_id, nvpassword):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE salaries
+        SET password = ?
+        WHERE id = ?;
+    """, (nvpassword,salarie_id,)) 
+    conn.commit()
+    conn.close()
+
+def supprimer_salarie(salarie_id):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM salaries WHERE id = ?;
+    """, (salarie_id,))  
+
+    conn.commit()
+    conn.close()
+
+
+
+def loging_pass(username, password):
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor() 
+    cursor.execute("""
+        SELECT admin FROM salaries WHERE nomprenem = ? AND password = ?
+    """, (username,password,)) 
+    admin = cursor.fetchall() 
+
+    conn.commit()
+    conn.close() 
+
+    if len(admin)>0:
+        return admin[0][0] =='Oui'
+    else:
+        return False
+
+
+
+
+def recuperer_all_salarie():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM salaries ;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements
+
+
+def recuperer_all_stock():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM stock ;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements
+
+
+
+def recuperer_all_ventes():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM vente ;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements
+
+
+
+def recuperer_all_sanction():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM sanction ;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements

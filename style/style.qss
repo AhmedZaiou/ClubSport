@@ -249,6 +249,17 @@
             #depenseframe QLabel{
                 color: white;
             }
+            #depenseframe QComboBox{ 
+                padding: 10px;
+                color: black;
+            }
+            #depenseframe QComboBox{
+                height: 30px;
+            }
+            #depenseframe QComboBox{
+                padding: 10px;
+                color: black;
+            }
             #buttonExtraction{
                 font-size: 16px; /* Font size for readability */
                 padding: 10px; /* Padding for a comfortable click area */
@@ -455,7 +466,7 @@
             } 
             #FormulaireWidgetstock QLineEdit {
                 text-align: left;
-                color: white;
+                color: black;
                 padding: 5px;
                 font-size: 20px;
                 min-width: 180px; 

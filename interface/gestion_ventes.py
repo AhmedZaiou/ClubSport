@@ -176,7 +176,7 @@ class Ventes( ):
         self.rapport_month = QPushButton("Générer l'historique des ventes")
         self.rapport_month.clicked.connect(self.rapport_month_fc)
         self.rapport_month.setObjectName("buttonExtraction") 
-        
+
         """
         # Bouton de sélection de photo
         self.rapport_year = QPushButton("Extraire la disponibilité des produits en stock")
@@ -207,7 +207,7 @@ class Ventes( ):
         prix_achat = self.prix_achat.value()
         prix_vente = self.prix_vente.value()
         if produit in 'Autre':
-            autre = self.autre_produit
+            autre = self.autre_produit.text()
             id_prodult = insertion_produit(autre)
         else:
             id_prodult = get_id_produit(produit)
@@ -256,9 +256,6 @@ class Ventes( ):
         ])
         self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-
-        self.tableWidget.setRowCount(10)
-
         #self.all_data = False  # Nombre de lignes visibles à chaque fois 
         #self.tableWidget.verticalScrollBar().valueChanged.connect(self.on_scroll)
 
@@ -305,7 +302,7 @@ class Ventes( ):
                 self.anc_q = int(self.tableWidget.item(row, 1).text())
                 self.prisachat_c = self.tableWidget.item(row, 2).text()
                 self.datexp.setText(self.tableWidget.item(row, 4).text())
-                self.quantite_vente.setValue(int(self.tableWidget.item(row, 1).text()))
+                self.quantite_vente.setValue(1)
                 self.prix_finale.setValue(int(self.tableWidget.item(row, 3).text()))
         except:
             pass

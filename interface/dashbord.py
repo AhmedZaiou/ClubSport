@@ -209,11 +209,13 @@ class Dashbord():
     def on_cell_clicked(self, row, column): 
         # Si la colonne 12 (Action) est cliquée
         if column == 5:
-            self.main_inter.clear_content_frame()
-            adherent_id = self.tableWidget.item(row, column).data(Qt.UserRole)
-            from .profile_interface import Profile
-            self.main_interface = Profile(adherent_id, self.main_inter)
-            
+            if  self.tableWidget.item(row, column) is not None:
+
+                self.main_inter.clear_content_frame()
+                adherent_id = self.tableWidget.item(row, column).data(Qt.UserRole) 
+                from .profile_interface import Profile
+                self.main_interface = Profile(adherent_id, self.main_inter)
+                
 
 
     

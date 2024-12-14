@@ -246,8 +246,8 @@ class ModefierADh():
 
 
         # Vérification des champs obligatoires
-        if not nom or not prenom or not cin:
-            QMessageBox.warning(self, "Champs manquants", "Veuillez remplir tous les champs obligatoires.")
+        if not nom or not prenom or not email or not telephone or not cin or not num_adh or not adresse or not date_entree or not age or not genre or not tarif or not seances or not situation or not photo_path or not situation_sanitaire or not poids or not longeur or not titre_sport:
+            QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez remplir tous les champs obligatoires.")
             return
 
         # Connexion à la base de données SQLite

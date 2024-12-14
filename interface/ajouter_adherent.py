@@ -255,13 +255,13 @@ class AjouterAfh():
                 self.seances_input.setValue(4)  # 4 séances
                 self.nom_parent.setText("Adulte")
                 self.contact_parent.setText("Adulte") 
-                self.nom_parent.setReadOnly(True)
-                self.contact_parent.setReadOnly(True)
+                
+               
             else:
                 self.tarif_input.setValue(120)  # Musculation moins de 18 ans
                 self.seances_input.setValue(4)  # 4 séances
-                self.nom_parent.setReadOnly(False)
-                self.contact_parent.setReadOnly(False)
+                
+                
         elif genre == "Femme":
             self.tarif_input.setValue(150)  # Gymnastique et aérobie
             self.seances_input.setValue(3)  # 3 séances par semaine
@@ -291,6 +291,9 @@ class AjouterAfh():
         if age < 18:
             nom_parent = self.nom_parent.text()
             contact_parent = self.contact_parent.text()
+        else:
+            nom_parent = ""
+            contact_parent = ""
         poids = self.poids.text()
         situation_sanitaire = self.situation_sanitaire.currentText()
         if situation_sanitaire == "apte": 
@@ -298,20 +301,16 @@ class AjouterAfh():
         else:
             situation_sanitaire_text = ""
         longeur = self.longueur.text()
-        titre_sport = self.titre_sport.currentText()
-
-        
-
-
-
+        titre_sport = self.titre_sport.currentText() 
 
         # Vérification des champs obligatoires
-        if not nom or not prenom or not cin:
+        if not nom or not prenom or not email or not telephone or not cin or not num_adh or not adresse or not date_entree or not age or not genre or not tarif or not seances or not situation or not photo_path or not situation_sanitaire or not poids or not longeur or not titre_sport:
             QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez remplir tous les champs obligatoires.")
             return
 
         # Connexion à la base de données SQLite
         try:
+             
             ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text)
             QMessageBox.information(self.main_inter, "Succès", "L'adhérent a été enregistré avec succès.")
 
