@@ -19,9 +19,24 @@ import os
 import shutil
 
 
+import hashlib
+ 
+def generer_hash_md5(message):
+    hash_object = hashlib.md5(message.encode())
+    return hash_object.hexdigest()
+ 
+def verifier_hash_md5(message, hash_md5): 
+    hash_calcule = generer_hash_md5(message)
+    return hash_calcule == hash_md5
+
+
+
+
 
 
 from pathlib import Path
+import hashlib
+from datetime import datetime, timedelta 
 
 current_directory = Path(__file__).parent
 racine = current_directory.parent 
@@ -37,6 +52,7 @@ logo_path = racine/"images"/"logos"/"logoa.png"
 
 
 background_path = racine / "style"/"image.jpg"
+path_code = racine /"dataset"/"text.txt"
 arrowdrop = racine/"images"/"logos"/"ic_arrow_drop_down_black_18dp_1x.png"
 
 from dataset.dataset import *
@@ -44,7 +60,18 @@ from dataset.dataset import *
 
 
 
-
+def code_f(code):
+    list_ = code.split('-') 
+    new_date = datetime.now()    
+    for i in range(0,7):
+        date_i = new_date - timedelta(days=i)
+        
+        code1=f"{list_[0]}-{generer_hash_md5(generer_hash_md5(date_i.strftime('%Y%m%d')))}" 
+        if code1 == code:
+            with open(path_code, 'w') as file:
+                file.write(code)  
+            return True
+    return False
 
 
 
