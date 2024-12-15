@@ -2,9 +2,10 @@
 import pandas as pd 
 import sqlite3 
 from datetime import datetime
-#from utils.utils import *
+from utils.utils import *
 import calendar
-path_data_set = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
+#path_data_set = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
+import subprocess
 
 def fetch_data():
     """Récupère les données de la base SQLite"""
@@ -707,6 +708,38 @@ def insertpaySalarie(nomprenem, commentaire, salaire,date_con):
     conn.commit()
     conn.close()
 
+def insert_code(code):
+
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table des paiements
+    cursor.execute("""
+        INSERT INTO log (code) VALUES (?)
+    """, (code,)) 
+
+    
+    conn.commit()
+    conn.close()
+
+def selectcode():
+
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table des paiements
+    cursor.execute("""
+        SELECT * FROM log
+    """, ()) 
+    codes = cursor.fetchall() 
+
+    
+    conn.commit()
+    conn.close()
+    
+    return  len(codes)>0
+
+
 
 def update_salarie_lastpay(salarie_id, date):
     conn = sqlite3.connect(path_data_set)
@@ -808,3 +841,158 @@ def recuperer_all_sanction():
     paiements = cursor.fetchall()
     conn.close()
     return paiements
+
+
+
+
+
+
+
+
+def initialiser_dataset(path_data_set): 
+    if not dataset.exists():
+        dataset.mkdir(parents=True,exist_ok=True)
+    if not path_profils_images.exists():
+        path_profils_images.mkdir(parents=True,exist_ok=True)
+
+    
+    try:
+        subprocess.run(['attrib', '+h', str(dataset)], check=True)
+        subprocess.run(['attrib', '+h', str(path_profils_images)], check=True)
+    except:
+        pass
+    
+
+
+
+    # Connexion à la base de données SQLite
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    # Création de la table adherents si elle n'existe pas
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS adherents (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT,
+        prenom TEXT,
+        email TEXT,
+        telephone TEXT,
+        cin TEXT ,
+        num_adh TEXT ,
+        adresse TEXT,
+        date_entree DATE,
+        age INTEGER,
+        genre TEXT,
+        tarif INTEGER,
+        seances INTEGER,
+        situation TEXT,
+        photo_path TEXT,
+                poids TEXT,
+                longeur TEXT,
+                titre_sport TEXT,
+                nom_parent TEXT,
+                contact_parent TEXT,
+                situation_sanitaire TEXT,
+                situation_sanitaire_text TEXT
+    )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS paiements (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            adherent_id INTEGER,
+            montant INTEGER,
+            date_paiement DATE,
+            mode_paiement TEXT,
+            moi_concerner DATE,
+            FOREIGN KEY (adherent_id) REFERENCES adherents (id)
+        )
+        ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS depenses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            commentaire TEXT,
+            montant INTEGER,
+            date_depense DATE
+        )
+        ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS salaries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            nomprenem TEXT, 
+            contat TEXT, 
+            salaire INTEGER,
+            date_commance DATE,
+            last_payment DATE,
+            admin TEXT, 
+            password TEXT
+        )
+        ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS paysalaries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            nomprenem TEXT, 
+            commentaire TEXT, 
+            salaire INTEGER,
+            date_con DATE,
+            date_paymet DATE 
+        )
+        ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS produits (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            nom_produit TEXT
+        )
+        ''')
+
+
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS stock (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            id_produit INTEGER,
+            quentite INTEGER,
+            prix_achat INTEGER,
+            prix_vent_proposer INTEGER,
+            date_expiration DATE,
+            date_ajout DATE,
+            FOREIGN KEY (id_produit) REFERENCES produits (id)
+        )
+        ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS vente (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            nom_produit TEXT,
+            quentite INTEGER,
+            prix_achat INTEGER,
+            prix_vent_final INTEGER,
+            date_expiration DATE,
+            date_vente DATE
+        )
+        ''')
+
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS sanction (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            id_adherent INTEGER,
+            cause TEXT,
+            genre TEXT,
+            duree INTEGER,
+            date_start DATE,
+            date_fin DATE
+        )
+        ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            code TEXT
+        )
+        ''')
+
+    conn.commit()
+    conn.close()

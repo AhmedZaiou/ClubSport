@@ -14,7 +14,9 @@ class LoginWindow(QMainWindow):
         self.setWindowTitle("Bureau de Royal Fitness, Taza")
         self.setGeometry(100, 100, 1500, 800)
         self.showFullScreen()
-        if path_code.exists():
+        if not path_data_set.exists():
+            initialiser_dataset(path_data_set)
+        if selectcode():
             self.create_login_interface()
         else:
             self.validateinstall()
@@ -87,9 +89,9 @@ class LoginWindow(QMainWindow):
 
         
     def activer(self):
-        code = self.user_entry.text()
-        print(code, code_f(code))
+        code = self.user_entry.text() 
         if code_f(code):
+            insert_code(code) 
             QMessageBox.warning(self, "Activation réussie", "Activation réussie, veuillez démarrer l'application.")
             self.close()
         else:

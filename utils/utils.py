@@ -43,10 +43,13 @@ racine = current_directory.parent
 
 
 
+dataset = Path.home()/"dataset"
 
-path_data_set = racine / "dataset"/"royal_fitness.db"
 
-path_profils_images = racine/"images"/"profiles"
+path_profils_images = Path.home()/"images"/"profiles"
+
+path_data_set = dataset/"royal_fitness.db"
+
 
 logo_path = racine/"images"/"logos"/"logoa.png"
 
@@ -68,8 +71,6 @@ def code_f(code):
         
         code1=f"{list_[0]}-{generer_hash_md5(generer_hash_md5(date_i.strftime('%Y%m%d')))}" 
         if code1 == code:
-            with open(path_code, 'w') as file:
-                file.write(code)  
             return True
     return False
 
