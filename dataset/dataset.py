@@ -195,7 +195,7 @@ def recuperer_paiements(adherent_id):
     cursor = conn.cursor()
 
     cursor.execute('''
-    SELECT adherent_id, moi_concerner, montant, mode_paiement, date_paiement  FROM paiements WHERE adherent_id = ? ;
+    SELECT adherent_id, moi_concerner, montant, mode_paiement, date_paiement  FROM paiements WHERE adherent_id = ? ORDER BY moi_concerner;
     ''', (adherent_id,))
     paiements = cursor.fetchall()
 
@@ -843,6 +843,16 @@ def recuperer_all_sanction():
     return paiements
 
 
+
+def recuperer_all_paysalaries():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM paysalaries ;
+    ''', ())
+    paiements = cursor.fetchall()
+    conn.close()
+    return paiements
 
 
 

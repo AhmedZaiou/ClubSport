@@ -90,6 +90,12 @@ class Salarie( ):
         self.login_button.setObjectName("buttconexion")
         self.login_layout.addWidget(self.login_button)
 
+
+        self.rapportSalarie = QPushButton("Télécharger le rapport des paiements")
+        self.rapportSalarie.clicked.connect(self.rapport_salarie)
+        self.rapportSalarie.setObjectName("buttconexion")
+        self.login_layout.addWidget(self.rapportSalarie)
+
         graphs_layout.addWidget(self.login_frame)
 
 
@@ -290,7 +296,7 @@ class Salarie( ):
 
         # Loop through all rows and hide/show them based on the search
         for row in range(self.tableWidget.rowCount()):
-            item = self.tableWidget.item(row, 2)  # Assuming column 0 is 'Nom'
+            item = self.tableWidget.item(row, 0)  # Assuming column 0 is 'Nom'
             if item is not None:
                 if filter_text in item.text().lower():  # Case-insensitive comparison
                     self.tableWidget.setRowHidden(row, False)
@@ -436,36 +442,60 @@ class Salarie( ):
 
 
 
-    def generer_graphe_situation(self, nbr_adh,nbr_pyment, date):
+    def rapport_salarie(self):
     
         
-        # Création du graphique
-        fig, ax = plt.subplots(figsize=(6, 6))  # Créer une figure et un axe
-        fig.set_facecolor("white")  # Couleur de fond de la figure
-        ax.set_facecolor('#ffffff')  # Couleur de fond de l'axe
-        # Tracer le graphique en secteur (camembert)
-        ax.pie(
-            [nbr_pyment, nbr_adh - nbr_pyment], 
-            labels=["Paiement effectué", "Paiement non effectué"], 
-            autopct="%1.1f%%", 
-            startangle=90, 
-            colors=["lightgreen", "firebrick"]
-        )  
         
+        options = QFileDialog.Options()
+        output_pdf, _ = QFileDialog.getSaveFileName(
+            self.main_inter,
+            "Enregistrer le fichier",
+            f"rapport-historique-salaries-{datetime.now()}.pdf",
+            "Documents (*.pdf);;All Files (*)",
+            options=options
+        )
+        if not output_pdf:
+            QMessageBox.information(self.main_inter, "Le téléchargement est annulé.", "Le téléchargement est annulé.")
+            return 
 
-        ax.set_title(f"Pourcentage de la situation du mois : ({date})", color='black', fontsize=16) 
+        # Création d'un objet Canvas pour générer le PDF
+        c = canvas.Canvas(output_pdf, pagesize=letter)
 
-        # Paramétrer les couleurs des ticks et des labels
-        ax.tick_params(axis='both', labelcolor='purple')
-        # Sauvegarder le graphique dans un objet BytesIO
-        image_stream = BytesIO()
-        fig.savefig(image_stream, format='png')
-        image_stream.seek(0)
-        temp_image_file = NamedTemporaryFile(delete=False, suffix='.png')
-        image_path = temp_image_file.name
-        fig.savefig(image_path, format='png')
-        temp_image_file.close()
-        return image_path
+        # Ajout de texte dans le PDF
+        c.setFont("Helvetica", 11)  
+        ventes = recuperer_all_paysalaries()
+        
+        page = 1
+        nombre_pages = int(len(ventes)/31) if len(ventes)%31 ==0. else int(len(ventes)/31)+1 
+        
+        c.drawString(100, 710, f"Rapport sur les paiements des salariés : {datetime.now()}. (page {page}/{nombre_pages}).")
+        c.line(100, 690, 500, 690)  
+        c.setFont("Helvetica", 11)
+        page_height = 680
+        line_height = 15
+        x = 100
+        y=680
+
+         
+        
+        for idx, non_payment in enumerate(ventes, start=1):
+            # Vérifier si une nouvelle page est nécessaire
+            if y < 50:  # Espace insuffisant, créer une nouvelle page
+                c.showPage() 
+                page+=1 
+                c.setFont("Helvetica", 11)
+                c.drawString(100, 700, f"Rapport sur les paiements des salariés : {datetime.now()}. (page {page}/{nombre_pages}).")
+                c.line(100, 690, 500, 690)  
+                y = page_height  
+            c.drawString(100, y-15, f"Nom et Prénom      : {non_payment[1]}") 
+            c.drawString(100, y-30, f"Commentaire        :  {non_payment[2]}") 
+            c.drawString(100, y-45, f"Salaire            : {non_payment[3]} dhs ") 
+            c.drawString(100, y-60, f"Mois payer         : {non_payment[4]}") 
+            c.drawString(100, y-75,f"Date de paiement   : {non_payment[5]}")  
+            c.line(100, y-90, 500, y-90)  
+ 
+            y -= 6 *line_height  # Passer à la ligne suivante
+        c.save()
 
     
     

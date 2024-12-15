@@ -53,10 +53,12 @@ class Ventes( ):
 
 
         self.produits = QComboBox()
-        self.produits.addItems(fetch_products())
+        prod = fetch_products()
+        self.produits.addItems(prod)
         self.produits.currentIndexChanged.connect(self.update_produit)
         self.autre_produit = QLineEdit()
-        self.autre_produit.setReadOnly(True)
+        if len(prod)>=2:
+            self.autre_produit.setReadOnly(True)
 
         self.quantite = QSpinBox()
         self.quantite.setRange(1, 10000)
@@ -208,6 +210,9 @@ class Ventes( ):
         prix_vente = self.prix_vente.value()
         if produit in 'Autre':
             autre = self.autre_produit.text()
+            if not autre:
+                QMessageBox.information(self.main_inter, "Succès", "Merci de saisire le nom du produit")
+                return 
             id_prodult = insertion_produit(autre)
         else:
             id_prodult = get_id_produit(produit)
@@ -337,33 +342,32 @@ class Ventes( ):
         page = 1
         nombre_pages = int(len(ventes)/31) if len(ventes)%31 ==0. else int(len(ventes)/31)+1 
         
-        c.drawString(100, 710, f"Rapport d'historique des ventes : {datetime.now()}. (page {page}/{nombre_pages}).")
-        c.line(100, 680, 500, 680) 
-        c.drawString(100, 660, "Nom Produit | Quantité | Prix Achat | Prix Vent Final | Date Expiration | Date Vente") 
+        c.drawString(100, 710, f"Rapport sur l'historique des ventes: {datetime.now()}. (page {page}/{nombre_pages}).")
+        c.line(100, 680, 500, 680)  
         c.setFont("Helvetica", 11)
-        page_height = 640
-        line_height = 20
+        page_height = 680
+        line_height = 15
         x = 100
-        y=640
+        y=680
         
         for idx, non_payment in enumerate(ventes, start=1):
             # Vérifier si une nouvelle page est nécessaire
             if y < 50:  # Espace insuffisant, créer une nouvelle page
                 c.showPage() 
                 page+=1 
-                c.setFont("Helvetica", 16)
-                c.drawString(100, 700, f"Rapport d'historique des ventes : {datetime.now()}. (page {page}/{nombre_pages}).")
-                c.line(100, 680, 500, 680)  
+                c.setFont("Helvetica", 11)
+                c.drawString(100, 700, f"Rapport sur l'historique des ventes : {datetime.now()}. (page {page}/{nombre_pages}).")
+                c.line(100, 690, 500, 690)  
                 y = page_height  
-            c.drawString(100, y-20, f"Nom Produit  |  {non_payment[1]}") 
-            c.drawString(100, y-40, f"Quantité | {non_payment[2]}") 
-            c.drawString(100, y-60, f"Prix Achat :{non_payment[3]} (dhs) ") 
-            c.drawString(100, y-80, f"Prix Vent Final : {non_payment[4]}(dhs)") 
-            c.drawString(100, y-100, f" Date Expiration : {non_payment[5]}") 
-            c.drawString(100, y-120, f"Date Vente : {non_payment[6]}")  
-            c.line(100, y-4, 500, y-4)  
+            c.drawString(100, y-15, f"Nom de produit      :  {non_payment[1]}") 
+            c.drawString(100, y-30, f"Quantité            :  {non_payment[2]}") 
+            c.drawString(100, y-45, f"Prix d'achat        :  {non_payment[3]} dhs ") 
+            c.drawString(100, y-60, f"Prix de vente final : {non_payment[4]} dhs ") 
+            c.drawString(100, y-75, f"Date d'expiration   : {non_payment[5]}") 
+            c.drawString(100, y-90, f"Date de vente       : {non_payment[6]}")  
+            c.line(100, y-105, 500, y-105)  
  
-            y -= 8 *line_height  # Passer à la ligne suivante
+            y -= 7 *line_height  # Passer à la ligne suivante
         c.save()
  
     def rapport_year_fc(self):

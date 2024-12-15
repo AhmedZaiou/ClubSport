@@ -280,6 +280,7 @@ class Profile():
         paiements = recuperer_paiements(adherent_id)
         
         if len(paiements) >0:
+            print(paiements[-1])
             date_laste_paiment = paiements[-1][1].split("-")
             year_last_paiment,moi_last_paiment = int(date_laste_paiment[0]),int(date_laste_paiment[1])
         else:
