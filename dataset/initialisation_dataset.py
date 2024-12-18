@@ -62,7 +62,7 @@ def generate_adherent():
         'tarif': random.choice([100, 200, 300, 400]),
         'seances': random.randint(10, 50),
         'situation': random.choice(["100", "200", "300", "400"]),
-        'photo_path': "Aucune",
+        'photo_path': "",
         'poids': f"{random.randint(50, 100)} kg",
         'longeur': f"{random.randint(150, 200)} cm",
         'titre_sport': random.choice(["Arats martiaux ","kick-boxing", "teak-wando", "karaté ", "Fitness-musculation ", "Aérobic", "zumba" , "gymnastique",  "buildings"]),
@@ -179,7 +179,7 @@ def adddepenses():
         start_date = current_date - relativedelta(months=month_offset)
         start_date = start_date.replace(day=1)  # Début du mois
         
-        for _ in range(10):  # 10 dépenses par mois
+        for _ in range(100):  # 10 dépenses par mois
             # Générer une date aléatoire dans le mois
             day = random.randint(1, 28)  # Pour éviter des problèmes avec des mois courts
             date_depense = start_date.replace(day=day).strftime('%Y-%m-%d')
@@ -198,12 +198,222 @@ def adddepenses():
     conn.commit()
     conn.close()
 
+
+def adddesalaires():
+
+    # Connexion à la base SQLite
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor() 
+    
+    start_date = datetime(2023, 1, 1)
+    end_date = datetime(2024, 12, 31) 
+    for _ in range(5):  # 10 dépenses par mois
+        # Générer une date aléatoire dans le mois
+        day = random.randint(1, 28)  # Pour éviter des problèmes avec des mois courts
+        date_depense = start_date.replace(day=day).strftime('%Y-%m-%d')
+
+        # Générer un commentaire et un montant aléatoires
+        commentaire = f"Dépense du {date_depense}"
+        montant = random.randint(10, 500)  # Montant entre 10 et 500
+        noms = ['Ahmed Zaiou', 'Fatima Hassan', 'Karim El Amri', 'Sarah Ben Ali', 'Mohamed Ouali']
+        types_contrat = ['CDI', 'CDD']
+        roles = ['Admin', 'User']  
+
+        # Insérer la dépense dans la table
+        nomprenem = noms[_]
+        contat = random.choice(types_contrat)
+        salaire = random.randint(2000, 3000)  # Salaires entre 2000 et 7000
+        date_commance = start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
+        last_payment = start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
+        admin = random.choice(roles)
+        password = f'pass{random.randint(1000, 9999)}'  # Génération d'un mot de passe simple
+
+        # Insertion des données
+        cursor.execute('''
+        INSERT INTO salaries (nomprenem, contat, salaire, date_commance, last_payment, admin, password)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (nomprenem, contat, salaire, date_commance.date(), last_payment.date(), admin, password))
+
+
+    # Sauvegarder et fermer la connexion
+    conn.commit()
+    conn.close()
+
+def sala():
+
+    # Connexion à la base SQLite
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor() 
+    noms = ['Ahmed Zaiou', 'Fatima Hassan', 'Karim El Amri', 'Sarah Ben Ali', 'Mohamed Ouali']
+    commentaires = ['Paiement mensuel', 'Bonus de performance', 'Ajustement de salaire', 'Paiement anticipé']   
+
+    start_date = datetime(2023, 1, 1)
+    end_date = datetime(2024, 12, 31)
+
+    # Générer 100 lignes de données
+    for _ in range(24*5):
+        nomprenem = random.choice(noms)
+        commentaire = random.choice(commentaires)
+        salaire = random.randint(2500, 7500)  # Salaire entre 2500 et 7500
+        date_con = start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
+        date_paymet = date_con + timedelta(days=random.randint(0, 30))  # Paiement jusqu'à 30 jours après
+
+        # Insertion dans la table
+        cursor.execute('''
+        INSERT INTO paysalaries (nomprenem, commentaire, salaire, date_con, date_paymet)
+        VALUES (?, ?, ?, ?, ?)
+        ''', (nomprenem, commentaire, salaire, date_con.date(), date_paymet.date()))
+
+    # Sauvegarder et fermer la connexion
+    conn.commit()
+    conn.close()
+
+
+
+def stock():
+
+    # Connexion à la base SQLite
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor() 
+    noms = ['Ahmed Zaiou', 'Fatima Hassan', 'Karim El Amri', 'Sarah Ben Ali', 'Mohamed Ouali']
+    commentaires = ['Paiement mensuel', 'Bonus de performance', 'Ajustement de salaire', 'Paiement anticipé']   
+
+    start_date = datetime(2023, 1, 1)
+    end_date = datetime(2024, 12, 31)
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS produits (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom_produit TEXT
+    )
+    ''')
+
+    # Création de la table stock
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS stock (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        id_produit INTEGER,
+        quentite INTEGER,
+        prix_achat INTEGER,
+        prix_vent_proposer INTEGER,
+        date_expiration DATE,
+        date_ajout DATE,
+        FOREIGN KEY (id_produit) REFERENCES produits (id)
+    )
+    ''')
+
+    # Insertion de produits pour la table produits
+    produits = ['Produit A', 'Produit B', 'Produit C', 'Produit D', 'Produit E']
+    cursor.executemany('INSERT INTO produits (nom_produit) VALUES (?)', [(p,) for p in produits])
+
+    # Récupération des IDs des produits
+    cursor.execute('SELECT id FROM produits')
+    produit_ids = [row[0] for row in cursor.fetchall()]
+
+    # Dates pour les données
+    start_date = datetime(2023, 1, 1)
+    end_date = datetime(2024, 12, 31)
+
+    # Génération de données pour la table stock
+    for _ in range(100):  # Insérer 100 lignes
+        id_produit = random.choice(produit_ids)
+        quentite = random.randint(1, 100)  # Quantité entre 1 et 100
+        prix_achat = random.randint(50, 250)  # Prix d'achat entre 50 et 250
+        prix_vent_proposer = random.randint(100, 400)  # Prix de vente entre 100 et 400
+        date_ajout = start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
+        date_expiration = date_ajout + timedelta(days=random.randint(30, 365))  # Expiration jusqu'à 1 an plus tard
+
+        cursor.execute('''
+        INSERT INTO stock (id_produit, quentite, prix_achat, prix_vent_proposer, date_expiration, date_ajout)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ''', (id_produit, quentite, prix_achat, prix_vent_proposer, date_expiration.date(), date_ajout.date()))
+
+
+
+    
+    # Création de la table vente
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS vente (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        nom_produit TEXT,
+        quentite INTEGER,
+        prix_achat INTEGER,
+        prix_vent_final INTEGER,
+        date_expiration DATE,
+        date_vente DATE
+    )
+    ''')
+
+    # Listes des noms de produits
+    produits = ['Produit A', 'Produit B', 'Produit C', 'Produit D', 'Produit E']
+
+    # Dates pour les données
+    start_date = datetime(2023, 1, 1)
+    end_date = datetime(2024, 12, 31)
+
+    # Génération de données pour la table vente
+    for _ in range(100):  # Insérer 100 lignes
+        nom_produit = random.choice(produits)
+        quentite = random.randint(1, 50)  # Quantité entre 1 et 50
+        prix_achat = random.randint(50, 250)  # Prix d'achat entre 50 et 250
+        prix_vent_final = random.randint(100, 500)  # Prix de vente final entre 100 et 500
+        date_vente = start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
+        date_expiration = date_vente + timedelta(days=random.randint(30, 365))  # Expiration jusqu'à 1 an plus tard
+
+        # Insertion dans la table
+        cursor.execute('''
+        INSERT INTO vente (nom_produit, quentite, prix_achat, prix_vent_final, date_expiration, date_vente)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ''', (nom_produit, quentite, prix_achat, prix_vent_final, date_expiration.date(), date_vente.date()))
+    
+
+
+    # Sauvegarder et fermer la connexion
+    conn.commit()
+    conn.close()
+
+def initialiseSins():
+        # Initialisation de la base de données SQLite
+        conn = sqlite3.connect(path_data_set)
+        cursor = conn.cursor()
+
+        #cursor.execute("DROP TABLE accidents;")
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS accidents (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_adherent TEXT,
+                name_haderent TEXT,
+                nom TEXT,
+                date TEXT,
+                nature TEXT,
+                gravite TEXT,
+                soins TEXT,
+                hospitalisation TEXT,
+                rapport TEXT,
+                indispo TEXT,
+                temoins TEXT,
+                mesures TEXT
+            )
+        ''')
+        conn.commit()
+
 if __name__ == "__main__":
      
-    create_table()
-    insert_adherents(200)
-    generate_pays()
-    adddepenses()
+    #create_table()
+    #insert_adherents(200)
+    #generate_pays()
+    #adddepenses()
+    #adddesalaires()
+    #sala()
+    #stock()
+    initialiseSins()
+
+
+
+    
+
+
 
 
 

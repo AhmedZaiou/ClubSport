@@ -37,6 +37,14 @@ class ModefierADh():
         self.num_adh_input = QLineEdit(data_adherent[6])
         self.adresse_input = QLineEdit(data_adherent[7])
 
+
+        self.nom_parent = QLineEdit()
+        self.contact_parent = QLineEdit()
+
+        self.numero_assurance = QLineEdit(data_adherent[24])
+        self.centure = QLineEdit(data_adherent[25])
+        self.dautreinformation = QLineEdit(data_adherent[22])
+
         self.date_entree_input = QDateEdit()
         self.date_entree_input.setDate(QDate.fromString(data_adherent[8], "yyyy-MM-dd"))
 
@@ -47,6 +55,13 @@ class ModefierADh():
         self.cin_input.setObjectName("QLineEditstyle") 
         self.num_adh_input.setObjectName("QLineEditstyle") 
         self.adresse_input.setObjectName("QLineEditstyle") 
+        self.centure.setObjectName("QLineEditstyle")
+        self.dautreinformation.setObjectName("QLineEditstyle") 
+
+        self.nom_parent.setObjectName("QLineEditstyle") 
+        self.contact_parent.setObjectName("QLineEditstyle") 
+        self.numero_assurance.setObjectName("QLineEditstyle") 
+        
         
         self.age_input = QSpinBox()
         self.age_input.setRange(1, 100)
@@ -72,6 +87,7 @@ class ModefierADh():
 
         self.photo_input = QLabel(data_adherent[14])
         self.photo_path = data_adherent[14]
+        
 
 
 
@@ -92,12 +108,22 @@ class ModefierADh():
         self.situation_sanitaire_text.setObjectName("QLineEditstyle") 
 
         self.titre_sport = QComboBox()
-        list_sport = ["Arats martiaux ","kick-boxing", "teak-wando", "karaté ", "Fitness-musculation ", "Aérobic", "zumba" , "gymnastique",  "buildings"]
+        list_sport = ["Arts martiaux", "Fitness"]
         list_sani = ['Inapte', 'Apte']
         self.titre_sport.addItems(list_sport)
+        disciplines = {
+            "Arts martiaux": ["Judo", "Karaté", "Aïkido", "Kendo", "Jiu-Jitsu", "Kung Fu", "Tai Chi", "Wing Chun", "Sanda", "Taekwondo", "Hapkido", "Kalaripayattu", "Gatka"],
+            "Fitness": ["CrossFit", "Musculation", "Cardio", "Yoga", "Pilates"]
+        }
         
-        self.nom_parent = QLineEdit()
-        self.contact_parent = QLineEdit()
+
+
+        self.discipline_input = QComboBox() 
+
+        
+
+        self.titre_sport.currentTextChanged.connect(self.update_disciplines)
+        
 
 
         self.poids.setText(str(data_adherent[15]))
@@ -107,6 +133,12 @@ class ModefierADh():
         self.contact_parent.setText(str(data_adherent[19]))
         self.situation_sanitaire.itemText(list_sani.index(data_adherent[20]))
         self.situation_sanitaire_text.setText(str(data_adherent[21]))
+        self.update_disciplines(str(data_adherent[17]))
+
+        self.discipline_input.itemText(disciplines[str(data_adherent[17])].index(str(data_adherent[23])))
+        
+
+
 
         # First row: Nom, Prénom
         row_layout_1 = QHBoxLayout()
@@ -167,21 +199,39 @@ class ModefierADh():
 
         row_layout_12 = QHBoxLayout()
         row_layout_12.addWidget(self.titre_sport)
-        row_layout_12.addWidget(QLabel(' '))
-        row_layout_12.addWidget(QLabel('  '))
-        form_layout.addRow("Titre de sport  :", row_layout_12)
+        row_layout_12.addWidget(QLabel('Discipline : '))
+        row_layout_12.addWidget(self.discipline_input)
+        form_layout.addRow("Genre de sport :", row_layout_12)
 
-        row_layout_7 = QHBoxLayout()
-        row_layout_7.addWidget(self.situation_input)
-        row_layout_7.addWidget(QLabel("Photo :"))
-        row_layout_7.addWidget(self.photo_input)
-        form_layout.addRow("Assurance :", row_layout_7)
+        
 
         """row_layout_8 = QHBoxLayout()
         row_layout_8.addWidget(self.situation_input)
         row_layout_8.addWidget(QLabel(" "))
         row_layout_8.addWidget(self.photo_input)
         form_layout.addRow(" ", row_layout_8)"""
+
+
+         
+        
+
+        row_layout_17 = QHBoxLayout()
+        row_layout_17.addWidget(self.numero_assurance)
+        row_layout_17.addWidget(QLabel("Prix assurance :"))
+        row_layout_17.addWidget(self.situation_input)
+        form_layout.addRow("Numero assurance :", row_layout_17)
+
+        row_layout_19 = QHBoxLayout()
+        row_layout_19.addWidget(self.centure)
+        row_layout_19.addWidget(QLabel("D'autre informations :"))
+        row_layout_19.addWidget(self.dautreinformation)
+        form_layout.addRow("Centure :", row_layout_19)
+
+        row_layout_7 = QHBoxLayout()
+        row_layout_7.addWidget(QLabel(" "))
+        row_layout_7.addWidget(QLabel("Photo :"))
+        row_layout_7.addWidget(self.photo_input)
+        form_layout.addRow("", row_layout_7)
 
 
         # Bouton de sélection de photo
@@ -200,10 +250,18 @@ class ModefierADh():
         row_layout_8.addWidget(QLabel(" "))
         row_layout_8.addWidget(self.save_button)
         form_layout.addRow(" ", row_layout_8) 
+        
  
         
         self.main_inter.content_layout.addWidget(self.form_widget)
 
+    def update_disciplines(self, genre):
+        disciplines = {
+            "Arts martiaux": ["Judo", "Karaté", "Aïkido", "Kendo", "Jiu-Jitsu", "Kung Fu", "Tai Chi", "Wing Chun", "Sanda", "Taekwondo", "Hapkido", "Kalaripayattu", "Gatka"],
+            "Fitness": ["CrossFit", "Musculation", "Cardio", "Yoga", "Pilates"]
+        }
+        self.discipline_input.clear()
+        self.discipline_input.addItems(disciplines.get(genre, []))
 
 
     def deactiver_sanitaire(self):
@@ -233,6 +291,9 @@ class ModefierADh():
         if age < 18:
             nom_parent = self.nom_parent.text()
             contact_parent = self.contact_parent.text()
+        else:
+            nom_parent =  ''
+            contact_parent =  ''
         poids = self.poids.text()
         situation_sanitaire = self.situation_sanitaire.currentText()
         if situation_sanitaire == "apte": 
@@ -241,6 +302,11 @@ class ModefierADh():
             situation_sanitaire_text = ""
         longeur = self.longueur.text()
         titre_sport = self.titre_sport.currentText()
+
+        discipline = self.discipline_input.currentText()
+        numero_assurance = self.numero_assurance.text()
+        centure =self.centure.text()
+        dautre_information = self.dautreinformation.text()
 
 
 
@@ -252,7 +318,7 @@ class ModefierADh():
 
         # Connexion à la base de données SQLite
         try:
-            modifier_adh(self.id_adherent,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text)
+            modifier_adh(self.id_adherent,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text, discipline, numero_assurance, centure, dautre_information)
             QMessageBox.information(self.main_inter, "Succès", "Les information à été modéfier avec succès.")
             from .profile_interface import Profile
             self.main_interface = Profile(self.id_adherent, self.main_inter)

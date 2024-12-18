@@ -32,6 +32,9 @@ class AjouterAfh():
         self.cin_input = QLineEdit()
         self.num_adh_input = QLineEdit()
         self.adresse_input = QLineEdit()
+        self.numero_assurance = QLineEdit()
+        self.centure = QLineEdit()
+        self.dautreinformation = QLineEdit()
 
         self.nom_input.setPlaceholderText('Nom')
         self.prenom_input.setPlaceholderText('Prenom')
@@ -40,6 +43,10 @@ class AjouterAfh():
         self.cin_input.setPlaceholderText('CIN')
         self.num_adh_input.setPlaceholderText("Numéro d'adhérent")
         self.adresse_input.setPlaceholderText("Adresse")
+        self.numero_assurance.setPlaceholderText("Numero d'assurance")
+        self.centure.setPlaceholderText("Centure")
+        self.dautreinformation.setPlaceholderText("D'autre information")
+
         
 
         self.date_entree_input = QDateEdit()
@@ -59,6 +66,9 @@ class AjouterAfh():
         self.cin_input.setObjectName("QLineEditstyle") 
         self.num_adh_input.setObjectName("QLineEditstyle") 
         self.adresse_input.setObjectName("QLineEditstyle") 
+        self.numero_assurance.setObjectName("QLineEditstyle")
+        self.centure.setObjectName("QLineEditstyle")
+        self.dautreinformation.setObjectName("QLineEditstyle") 
 
         self.nom_parent.setObjectName("QLineEditstyle") 
         self.contact_parent.setObjectName("QLineEditstyle") 
@@ -80,7 +90,7 @@ class AjouterAfh():
         self.seances_input.setValue(4) 
 
         self.situation_input = QSpinBox()
-        self.situation_input.setRange(1, 1000)
+        self.situation_input.setRange(1, 10000)
         self.situation_input.setValue(100) 
 
         self.photo_input = QLabel("Aucune photo sélectionnée")
@@ -179,9 +189,12 @@ class AjouterAfh():
         
         self.situation_sanitaire_text.setPlaceholderText("Genre de maladie") 
 
+        self.discipline_input = QComboBox()
+        self.update_disciplines("Arts martiaux")
 
         self.titre_sport = QComboBox()
-        self.titre_sport.addItems(["Arats martiaux ","kick-boxing", "teak-wando", "karaté ", "Fitness-musculation ", "Aérobic", "zumba" , "gymnastique",  "buildings"])
+        self.titre_sport.addItems(["Arts martiaux", "Fitness"])
+        self.titre_sport.currentTextChanged.connect(self.update_disciplines)
         
 
         row_layout_9 = QHBoxLayout()
@@ -189,6 +202,8 @@ class AjouterAfh():
         row_layout_9.addWidget(QLabel("Longueur :"))
         row_layout_9.addWidget(self.longueur)
         form_layout.addRow("Poids :", row_layout_9)
+
+        
 
         
 
@@ -200,22 +215,29 @@ class AjouterAfh():
 
         row_layout_12 = QHBoxLayout()
         row_layout_12.addWidget(self.titre_sport)
-        row_layout_12.addWidget(QLabel(' '))
-        row_layout_12.addWidget(QLabel('  '))
-        form_layout.addRow("Titre de sport  :", row_layout_12)
-
-        row_layout_7 = QHBoxLayout()
-        row_layout_7.addWidget(self.situation_input)
-        row_layout_7.addWidget(QLabel("Photo :"))
-        row_layout_7.addWidget(self.photo_input)
-        form_layout.addRow("Assurance :", row_layout_7)
-
- 
+        row_layout_12.addWidget(QLabel('Discipline : '))
+        row_layout_12.addWidget(self.discipline_input)
+        form_layout.addRow("Genre de sport :", row_layout_12)
 
         
 
+        row_layout_17 = QHBoxLayout()
+        row_layout_17.addWidget(self.numero_assurance)
+        row_layout_17.addWidget(QLabel("Prix assurance :"))
+        row_layout_17.addWidget(self.situation_input)
+        form_layout.addRow("Numero assurance :", row_layout_17)
 
- 
+        row_layout_19 = QHBoxLayout()
+        row_layout_19.addWidget(self.centure)
+        row_layout_19.addWidget(QLabel("D'autre informations :"))
+        row_layout_19.addWidget(self.dautreinformation)
+        form_layout.addRow("Centure :", row_layout_19)
+
+        row_layout_7 = QHBoxLayout()
+        row_layout_7.addWidget(self.photo_input)
+        row_layout_7.addWidget(QLabel(" "))
+        row_layout_7.addWidget(QLabel(" "))
+        form_layout.addRow(" Photo :", row_layout_7)
         
  
 
@@ -236,6 +258,15 @@ class AjouterAfh():
         row_layout_8.addWidget(self.save_button)
         form_layout.addRow(" ", row_layout_8) 
         self.main_inter.content_layout.addWidget(self.form_widget)
+    
+
+    def update_disciplines(self, genre):
+        disciplines = {
+            "Arts martiaux": ["Judo", "Karaté", "Aïkido", "Kendo", "Jiu-Jitsu", "Kung Fu", "Tai Chi", "Wing Chun", "Sanda", "Taekwondo", "Hapkido", "Kalaripayattu", "Gatka"],
+            "Fitness": ["CrossFit", "Musculation", "Cardio", "Yoga", "Pilates"]
+        }
+        self.discipline_input.clear()
+        self.discipline_input.addItems(disciplines.get(genre, []))
     
     def deactiver_sanitaire(self):
         if self.situation_sanitaire.currentText() == 'Apte':
@@ -303,15 +334,25 @@ class AjouterAfh():
         longeur = self.longueur.text()
         titre_sport = self.titre_sport.currentText() 
 
+
+
+
+        discipline = self.discipline_input.currentText()
+        numero_assurance = self.numero_assurance.text()
+        centure =self.centure.text()
+        dautre_information = self.dautreinformation.text()
+        
+
+
         # Vérification des champs obligatoires
-        if not nom or not prenom or not email or not telephone or not cin or not num_adh or not adresse or not date_entree or not age or not genre or not tarif or not seances or not situation or not photo_path or not situation_sanitaire or not poids or not longeur or not titre_sport:
+        if not nom or not prenom or not email or not telephone or not cin or not num_adh or not adresse or not date_entree or not age or not genre or not tarif or not seances or not situation or not photo_path or not situation_sanitaire or not poids or not longeur or not titre_sport or not discipline or not numero_assurance or not centure or not  dautre_information:
             QMessageBox.warning(self.main_inter, "Champs manquants", "Veuillez remplir tous les champs obligatoires.")
             return
 
         # Connexion à la base de données SQLite
         try:
              
-            ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text)
+            ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text, discipline, numero_assurance, centure, dautre_information)
             QMessageBox.information(self.main_inter, "Succès", "L'adhérent a été enregistré avec succès.")
 
             # Réinitialisation du formulaire
@@ -343,7 +384,6 @@ class AjouterAfh():
         self.photo_input.setText("Aucune photo sélectionnée")
         self.photo_path = None
         self.situation_sanitaire.setCurrentIndex(0)
-
         self.nom_parent.clear()
         self.contact_parent.clear()
         self.poids.clear()  

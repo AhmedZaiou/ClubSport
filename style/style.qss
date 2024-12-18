@@ -186,8 +186,7 @@
                 background-color: rgba(0, 0, 0, 0.4); ; /* Sleek dark background */
                 border-radius: 15px; /* Softer rounded corners */
                 border: 2px solid #333333; /* Subtle border to outline the form */
-                width: 800px; /* Standard width for a login form */
-                padding: 50px; /* Generous padding for spacing */
+                width: 800px; /* Standard width for a login form */ 
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Light shadow for depth */
                 margin-bottom: 0px; /* Center the form on the page */ 
             }
@@ -304,7 +303,23 @@
             #dashbord_graphe{
                 background-color: rgba(0, 0, 0, 0.3); 
                 margin-top: 50px;
+                color: white;
                 
+            } 
+            #dashbord_graphe  QLabel{
+                color: white;
+            }
+
+
+            #dashbord_graphe_stat{
+                background-color: rgba(0, 0, 0, 0.3); 
+                padding: 5px;
+
+                color: white;
+                
+            } 
+            #dashbord_graphe_stat  QLabel{
+                color: white;
             }
             QTableWidget {
                 background-color: rgba(227, 226, 226, 0.3); /* Fond blanc */
@@ -428,8 +443,8 @@
                 color: white;
                 padding: 5px;
                 size: 50px; 
-                margin-top: 70px;
-                margin-bottom: 150px; 
+                margin-top: 40px;
+                margin-bottom: 20px; 
                 margin-left: 200px;
                 min-width: 400px;
                 font-weight: bold;
@@ -455,7 +470,7 @@
                 padding: 20px; /* Generous padding for spacing */
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Light shadow for depth */
                 margin-bottom: 0px; /* Center the form on the page */ 
-                max-height: 380px;
+                max-height: 380px; 
             }
             #FormulaireWidgetstock QLabel {
                 text-align: left;

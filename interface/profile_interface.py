@@ -129,6 +129,20 @@ class Profile():
         self.contact_parent = QLabel("Contact du parent :")
         self.contact_parent_value = QLabel()
 
+ 
+        self.discipline = QLabel("Discipline :")
+        self.discipline_value = QLabel()
+
+        self.numero_assurance = QLabel("Numéro d'assurance:")
+        self.numero_assurance_value = QLabel()
+
+        self.centure = QLabel("Centure :")
+        self.centure_value = QLabel()
+
+        self.dautre_information = QLabel("Autres informations :")
+        self.dautre_information_value = QLabel()
+
+
 
         # Ajouter deux informations par ligne 
         self.info_layout.addWidget(self.nom_label, 0, 0)
@@ -175,6 +189,16 @@ class Profile():
         self.info_layout.addWidget(self.contact_parent, 9, 2)
         self.info_layout.addWidget(self.contact_parent_value, 9, 3)
 
+        self.info_layout.addWidget(self.discipline, 10, 0)
+        self.info_layout.addWidget(self.discipline_value, 10, 1)
+        self.info_layout.addWidget(self.numero_assurance, 10, 2)
+        self.info_layout.addWidget(self.numero_assurance_value, 10, 3)
+
+        self.info_layout.addWidget(self.centure, 11, 0)
+        self.info_layout.addWidget(self.centure_value, 11, 1)
+        self.info_layout.addWidget(self.dautre_information, 11, 2)
+        self.info_layout.addWidget(self.dautre_information_value, 11, 3)
+
         # Layout pour organiser la photo à droite
         content_layout = QHBoxLayout()
         content_layout.addLayout(self.info_layout)
@@ -190,6 +214,12 @@ class Profile():
         self.ajoutersanction.clicked.connect(self.ajoutersanction_fc)
         self.ajoutersanction.setObjectName('button_vert')
         button_layout.addWidget(self.ajoutersanction)
+
+        self.ajoutersanction = QPushButton("Ajouter un sinistre")
+        self.ajoutersanction.clicked.connect(self.ajoutersinistre_fc)
+        self.ajoutersanction.setObjectName('button_vert')
+        button_layout.addWidget(self.ajoutersanction)
+
         self.stopsubscription = QPushButton("Arrêter l'abonnement")
         self.stopsubscription.clicked.connect(self.stopsubscription_fnc)
         self.stopsubscription.setObjectName('button_vert')
@@ -200,6 +230,7 @@ class Profile():
         
 
         row = load_data(self.id_profile) 
+        print(row)
         if row:
             self.nom_value.setText(str(row[1]))
             self.prenom_value.setText(row[2])
@@ -225,6 +256,10 @@ class Profile():
             self.contact_parent_value.setText(str(row[19]))
             self.situation_sanitaire_value.setText(str(row[20]))
             self.situation_sanitaire_text_value.setText(str(row[21]))
+            self.discipline_value.setText(str(row[23]))
+            self.numero_assurance_value.setText(str(row[24]))
+            self.centure_value.setText(str(row[25]))
+            self.dautre_information_value.setText(str(row[22]))
 
 
 
@@ -256,7 +291,10 @@ class Profile():
         
     def ajoutersanction_fc(self):
         from .ajouter_sanction import Sanction
-        self.main_interface = Sanction(self.main_inter, self.id_profile) 
+        self.main_interface = Sanction(self.main_inter, self.id_profile)
+    def ajoutersinistre_fc(self):
+        from .gestion_sinistre import Sinistre
+        self.main_interface = Sinistre(self.main_inter, self.id_profile, self.num_adh_value.text()) 
     
     def medefier(self):
         from .modefier_information import ModefierADh

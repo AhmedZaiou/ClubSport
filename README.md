@@ -145,6 +145,10 @@ A ajouter dans l'inscription et adhérents :
     - zumba
     - gymnastique 
      - buildings
+
+
+
+
 A ajouter dans le tableau de gestion des hadérents: 
 
 SANCTIONS
@@ -172,3 +176,34 @@ BISCUITS ET AUTRES
 
 
 RoyalFitness-3950a9d1c2d7b88a835d6c2062860f2b
+
+
+Ajouter  Dans l'inscription : 
+
+Document Sportif, 
+
+Deux genre de sport :  arts martiaux, fitness: 
+Arts martiaux : Judo, Karaté, Aïkido, Kendo, Jiu-Jitsu. Kung Fu, Tai Chi, Wing Chun, Sanda. Taekwondo, Hapkido. Kalaripayattu, Gatka.
+
+Centure : 
+
+Numero assurance : 
+
+
+Rapport comptabilité annuel et par mois. 
+
+
+Les accidents de sports : nom cenistre, date accidents, nv accident, soiuns medico, Hospitalisation ?, rapports medical : Text. 
+
+Nom du sinistré : Prénom et nom de la personne concernée.
+Date de l'accident : Date précise de l'incident.
+Nature de l'accident : Brève description de l'accident (ex. : entorse, fracture, chute).
+Gravité de l'accident : Niveau de gravité (mineur, modéré, grave).
+Soins médicaux prodigués : Type de soin reçu sur place (premiers secours, bandages, etc.).
+Hospitalisation requise ? : Indication si l'hospitalisation a été nécessaire (Oui/Non).
+Rapport médical : Texte détaillant les observations et diagnostics médicaux fournis par un professionnel de santé.
+Date et durée d'indisponibilité : Estimation de la période d'arrêt ou d'indisponibilité pour l'utilisateur.
+Rapport de témoin(s) (si applicable) : Récit des événements par un ou plusieurs témoins.
+Mesures prises : Actions entreprises par le club après l'accident (améliorations de la sécurité, suivi du membre, etc.).
+
+

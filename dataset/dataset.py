@@ -2,10 +2,31 @@
 import pandas as pd 
 import sqlite3 
 from datetime import datetime
-from utils.utils import *
+#from utils.utils import *
 import calendar
 #path_data_set = "/Users/ahmedzaiou/Documents/Project-Taza/git/ClubSport/dataset/royal_fitness.db"
 import subprocess
+
+
+
+from pathlib import Path
+import hashlib
+from datetime import datetime, timedelta 
+
+current_directory = Path(__file__).parent
+racine = current_directory.parent 
+
+
+
+dataset = Path.home()/"dataset"
+
+
+path_profils_images = Path.home()/"images"/"profiles"
+
+path_data_set = dataset/"royal_fitness.db"
+
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 def fetch_data():
     """Récupère les données de la base SQLite"""
@@ -96,7 +117,7 @@ def load_data( adherent_id):
 
 def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entree,
         age, genre, tarif, seances, situation, photo_path,
-        poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text):
+        poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text, discipline, numero_assurance, centure, dautre_information):
     connection = sqlite3.connect(path_data_set)
     cursor = connection.cursor()
 
@@ -124,7 +145,11 @@ def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entre
             nom_parent TEXT,
             contact_parent TEXT,
             situation_sanitaire TEXT,
-            situation_sanitaire_text TEXT
+            situation_sanitaire_text TEXT, 
+            discipline TEXT,
+            numero_assurance TEXT,
+            centure TEXT,
+            dautre_information TEXT
         )
     """)
 
@@ -132,10 +157,10 @@ def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entre
     cursor.execute("""
         INSERT INTO adherents (
             nom, prenom, email, telephone, cin, num_adh, adresse,
-            date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            date_entree, age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text, discipline, numero_assurance, centure, dautre_information
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (nom, prenom, email, telephone, cin, num_adh, adresse, date_entree,
-        age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text))
+        age, genre, tarif, seances, situation, photo_path, poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text, discipline, numero_assurance, centure, dautre_information,))
 
     # Validation de la transaction
     connection.commit() 
@@ -143,6 +168,32 @@ def ajouter_adh(nom, prenom, email, telephone, cin, num_adh, adresse, date_entre
                 connection.close()
 
 
+
+def inser_db_sinistre(data): 
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor() 
+    
+    cursor.execute('''
+        INSERT INTO accidents (id_adherent, name_haderent,nom, date, nature, gravite, soins, hospitalisation, rapport, indispo, temoins, mesures)
+        VALUES (:id_adherent, :name_haderent,:nom, :date, :nature, :gravite, :soins, :hospitalisation, :rapport, :indispo, :temoins, :mesures)
+    ''', data)
+    conn.commit() 
+
+    conn.close()
+
+def recuperer_sinistre():
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    SELECT *  FROM accidents;
+    ''')
+    paiements = cursor.fetchall()
+
+    conn.close()
+    return paiements
+
+ 
 
 def affectuer_paiment():
     # Connexion à la base de données
@@ -204,7 +255,7 @@ def recuperer_paiements(adherent_id):
 
 def modifier_adh(adherent_id, nom, prenom, email, telephone, cin, num_adh, adresse, 
                         date_entree, age, genre, tarif, seances, situation, photo_path
-                        , poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text):
+                        , poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text, discipline, numero_assurance, centure, dautre_information):
      
     connection = sqlite3.connect(path_data_set)
     cursor = connection.cursor()
@@ -216,11 +267,11 @@ def modifier_adh(adherent_id, nom, prenom, email, telephone, cin, num_adh, adres
             nom = ?, prenom = ?, email = ?, telephone = ?, cin = ?, 
             num_adh = ?, adresse = ?, date_entree = ?, age = ?, 
             genre = ?, tarif = ?, seances = ?, situation = ?, photo_path = ?,
-             poids = ?, longeur = ?, titre_sport = ?, nom_parent = ?, contact_parent = ?, situation_sanitaire = ?, situation_sanitaire_text = ?
+             poids = ?, longeur = ?, titre_sport = ?, nom_parent = ?, contact_parent = ?, situation_sanitaire = ?, situation_sanitaire_text = ?, discipline = ?, numero_assurance = ?, centure = ?, dautre_information = ?
         WHERE id = ?
     """, (nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, 
           age, genre, tarif, seances, situation, photo_path, 
-          poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text,adherent_id,))
+          poids, longeur, titre_sport, nom_parent, contact_parent, situation_sanitaire, situation_sanitaire_text,discipline, numero_assurance, centure, dautre_information,adherent_id,))
 
     # Validation de la transaction
     connection.commit()
@@ -1006,3 +1057,162 @@ def initialiser_dataset(path_data_set):
 
     conn.commit()
     conn.close()
+
+
+def recuperer_compta_each_month(number = 12):
+    
+    # Date de départ
+    start_date = datetime.now() - relativedelta(months=number)
+    start_date = start_date.strftime('%Y-%m') 
+    date_actuelle = datetime.strptime(start_date, '%Y-%m')  # Convertir en objet datetime
+    mois_actuel = datetime.now().strftime('%Y-%m')
+    mois_actuel = datetime.strptime(mois_actuel, '%Y-%m') 
+    list_compta = []
+     
+    while mois_actuel >= date_actuelle: 
+        list_compta.append(comptabilite_par_mois(date_actuelle.strftime('%Y-%m')))
+
+        date_actuelle += relativedelta(months=1)
+    return list_compta
+
+
+
+def recuperer_compta_each_year():
+     # Date de départ
+    start_date = '2023'
+    date_actuelle = datetime.strptime(start_date, '%Y')  # Convertir en objet datetime
+    mois_actuel = datetime.now().strftime('%Y')
+    mois_actuel = datetime.strptime(mois_actuel, '%Y') 
+    list_compta = []
+     
+    while datetime.now() > date_actuelle: 
+        list_compta.append(comptabilite_par_annee(date_actuelle.strftime('%Y')))
+        date_actuelle += relativedelta(months=12)
+    return list_compta
+
+
+# Fonction pour obtenir la comptabilité par mois
+def comptabilite_par_mois(mois_actuel):
+    # Connexion à la base de données
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor()
+    # Récupérer la date actuelle
+
+    # Ventes par mois
+    cursor.execute('''
+    SELECT strftime('%Y-%m', date_vente) AS mois, SUM(prix_vent_final * quentite) AS total_ventes
+    FROM vente
+    GROUP BY mois
+    HAVING mois = ?
+    ''', (mois_actuel,))
+    ventes_mois = cursor.fetchone()
+
+    # Ventes par mois
+    cursor.execute('''
+    SELECT strftime('%Y-%m', date_vente) AS mois, SUM(prix_achat * quentite) AS total_ventes
+    FROM vente
+    GROUP BY mois
+    HAVING mois = ?
+    ''', (mois_actuel,))
+    achat_mois = cursor.fetchone()
+    
+    # Paiements par mois
+    cursor.execute('''
+    SELECT strftime('%Y-%m', date_paiement) AS mois, SUM(montant) AS total_paiements
+    FROM paiements
+    GROUP BY mois
+    HAVING mois = ?
+    ''', (mois_actuel,))
+    paiements_mois = cursor.fetchone()
+
+    # Dépenses par mois
+    cursor.execute('''
+    SELECT strftime('%Y-%m', date_depense) AS mois, SUM(montant) AS total_depenses
+    FROM depenses
+    GROUP BY mois
+    HAVING mois = ?
+    ''', (mois_actuel,))
+    depenses_mois = cursor.fetchone()
+
+    # Salaires par mois
+    cursor.execute('''
+    SELECT strftime('%Y-%m', date_con) AS mois, SUM(salaire) AS total_salaires
+    FROM paysalaries
+    GROUP BY mois
+    HAVING mois = ?
+    ''', (mois_actuel,))
+    salaires_mois = cursor.fetchone()
+    conn.close()
+    resultats = {
+        "mois" : mois_actuel,
+        "ventes" : ventes_mois[1] if ventes_mois else 0,
+        "achats" :  achat_mois[1] if achat_mois else 0,
+        "paiments" : paiements_mois[1] if paiements_mois else 0,
+        "dépenses" : depenses_mois[1] if depenses_mois else 0,
+        "salaires" : salaires_mois[1] if salaires_mois else 0 
+    }
+
+    return resultats
+
+
+# Fonction pour obtenir la comptabilité par année
+def comptabilite_par_annee(annee_actuelle):
+    # Connexion à la base de données
+    conn = sqlite3.connect(path_data_set)
+    cursor = conn.cursor() 
+
+    # Ventes par année
+    cursor.execute('''
+    SELECT strftime('%Y', date_vente) AS annee, SUM(prix_vent_final * quentite) AS total_ventes
+    FROM vente
+    GROUP BY annee
+    HAVING annee = ?
+    ''', (annee_actuelle,))
+    ventes_annee = cursor.fetchone()
+
+    # Ventes par année
+    cursor.execute('''
+    SELECT strftime('%Y', date_vente) AS annee, SUM(prix_achat * quentite) AS total_ventes
+    FROM vente
+    GROUP BY annee
+    HAVING annee = ?
+    ''', (annee_actuelle,))
+    achat_annee = cursor.fetchone()
+
+    # Paiements par année
+    cursor.execute('''
+    SELECT strftime('%Y', date_paiement) AS annee, SUM(montant) AS total_paiements
+    FROM paiements
+    GROUP BY annee
+    HAVING annee = ?
+    ''', (annee_actuelle,))
+    paiements_annee = cursor.fetchone()
+
+    # Dépenses par année
+    cursor.execute('''
+    SELECT strftime('%Y', date_depense) AS annee, SUM(montant) AS total_depenses
+    FROM depenses
+    GROUP BY annee
+    HAVING annee = ?
+    ''', (annee_actuelle,))
+    depenses_annee = cursor.fetchone()
+
+    # Salaires par année
+    cursor.execute('''
+    SELECT strftime('%Y', date_con) AS annee, SUM(salaire) AS total_salaires
+    FROM paysalaries
+    GROUP BY annee
+    HAVING annee = ?
+    ''', (annee_actuelle,))
+    salaires_annee = cursor.fetchone()
+    conn.close()
+    resultats ={
+        "annee" : annee_actuelle,
+        "ventes" : ventes_annee[1] if ventes_annee else 0,
+        "achats" : achat_annee[1] if achat_annee else 0,
+        "paiements" : paiements_annee[1] if paiements_annee else 0,
+        "dépenses" : depenses_annee[1] if depenses_annee else 0,
+        "salaires" : salaires_annee[1] if salaires_annee else 0
+     }
+    
+    return resultats

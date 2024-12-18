@@ -80,6 +80,20 @@ class MainInterface(QMainWindow):
         self.btn_revenues.clicked.connect(self.show_ventes)
         self.menu_layout.addWidget(self.btn_revenues)
         self.btn_revenues.setObjectName("buttonmenu")
+        self.btn_revenues = QPushButton("Gestion des sinistres")
+        self.btn_revenues.clicked.connect(self.show_sinistres)
+        self.menu_layout.addWidget(self.btn_revenues)
+        self.btn_revenues.setObjectName("buttonmenu")
+
+        self.btn_revenues = QPushButton("Comptabilité de club")
+        self.btn_revenues.clicked.connect(self.show_compta)
+        self.menu_layout.addWidget(self.btn_revenues)
+        self.btn_revenues.setObjectName("buttonmenu")
+
+        self.btn_revenues = QPushButton("Generer rapport Compta")
+        self.btn_revenues.clicked.connect(self.generer_rapport_compta)
+        self.menu_layout.addWidget(self.btn_revenues)
+        self.btn_revenues.setObjectName("buttonmenu")
  
 
         self.btn_ajout_adhs = QPushButton("Déconnecté")
@@ -120,6 +134,27 @@ class MainInterface(QMainWindow):
     def show_salarie(self):
         from .gestion_salarie import Salarie
         self.main_interface = Salarie(self) 
+    def show_compta(self):
+        from .comptainterface import Compta
+        self.main_interface = Compta(self) 
+    def show_sinistres(self):
+        from .gestion_sinistre import Sinistre
+        self.main_interface = Sinistre(self, None,None) 
+
+    def generer_rapport_compta(self):
+        options = QFileDialog.Options()
+        output_pdf, _ = QFileDialog.getSaveFileName(
+            self,
+            "Enregistrer le fichier",
+            "rapport-total.pdf",
+            "Documents (*.pdf);;All Files (*)",
+            options=options
+        )
+        if not output_pdf:
+            QMessageBox.information(self, "Le téléchargement est annulé.", "Le téléchargement est annulé.")
+            return  
+        generate_compta_rapport(output_pdf)
+        
 
      
     

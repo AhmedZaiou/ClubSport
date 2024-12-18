@@ -6,7 +6,7 @@ from dataset.dataset import *
 from .main_interface import MainInterface
 import matplotlib.pyplot as plt
 from PyQt5.QtGui import QColor, QFont
-
+import numpy as np
 
 class Dashbord():
     def __init__(self, main_inter): 
@@ -101,36 +101,55 @@ class Dashbord():
 
     def plot_revenue_graph(self):
         """Affiche les revenus mensuels pour l'année en cours avec le total annuel"""
-         
-        
-        # Filtrer les données pour l'année en cours
-        current_year = datetime.now().year 
-        data, total_revenue = recuperer_stat_paiment()
-        data_depense, total_depense = recuperer_stat_depenses()
-        revenue_by_month = pd.Series(data) 
-        depense_by_month = pd.Series(data_depense) 
 
-        ax = self.revenue_canvas.figure.add_subplot(111)
+        """Affiche le pourcentage des situations pour le mois actuel"""
+        donnees = recuperer_compta_each_month()
+        annees = [d['mois'] for d in donnees]
+        ventes = [d['ventes'] for d in donnees]
+        achats = [d['achats'] for d in donnees]
+        paiements = [d['paiments'] for d in donnees]
+        depenses = [d['dépenses'] for d in donnees]
+        salaires = [d['salaires'] for d in donnees]
+
+        ax = self.revenue_canvas.figure.add_subplot(111) 
+
         self.revenue_canvas.figure.set_facecolor((0, 0, 0, 0.1))
         ax.clear()
         ax.set_facecolor((0, 0, 0, 0.1))
-        revenue_by_month.plot(kind="bar", ax=ax, color="lightgreen", alpha=0.75, width=0.4, position=1,label="Revenus")
-        depense_by_month.plot(kind="bar", ax=ax, color="firebrick", alpha=0.75, width=0.4, position=0,label="Dépenses")
-        difference = revenue_by_month - depense_by_month
 
-        ax.plot(difference.index, difference, color="blue", marker=".", label="Résultats", linewidth=.7)
+        # Largeur des barres
+        bar_width = 0.15
+        x = range(len(annees))
 
-        ax.set_title(f"Résultats de l'années {current_year}  : {total_revenue-total_depense} Dhs",  color='white',  fontsize=16) 
-        ax.set_ylabel("Revenus et dépenses Mensuels (Dhs)",  color='white',  fontsize=12) 
+        # Tracer les différentes catégories
+
+        ax.bar(x, paiements, bar_width, label='Paiements', color='#9ACD32', alpha=0.75) 
+        ax.bar(x, ventes, bar_width, bottom=paiements, label='Ventes', color='#98fb98', alpha=0.75)
+
+
+
+        ax.bar([i - bar_width for i in x], achats, bar_width, label='Achats', color='#FF6347', alpha=0.75)
+        ax.bar([i - bar_width for i in x], depenses, bar_width, bottom=achats, label='Dépenses', color='red', alpha=0.75)
+        s=np.array(depenses)+np.array(achats)
+        ax.bar([i -  bar_width for i in x], salaires, bar_width, bottom=s,label='Salaires', color='#FF4500', alpha=0.75)
+
+        ax.set_title("Évolution des Comptes par mois",color='white', fontsize=14)
+        ax.set_xlabel("Mois", color='white',fontsize=12 )
+        ax.set_ylabel("Valeurs", color='white',fontsize=12 )
+        ax.set_xticks(x)
+        ax.set_xticklabels(annees, rotation=90)
         ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en noir
         ax.tick_params(axis='y', colors='white')
-        ax.legend(facecolor='none',labelcolor='white', edgecolor='none')
-
-        self.revenue_canvas.figure.subplots_adjust(left=0.2, right=0.9, top=0.85, bottom=0.25)
+        ax.legend()#(facecolor='none',labelcolor='white', edgecolor='none')
+        self.revenue_canvas.figure.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.25)
         for label in ax.texts:
             label.set_color('white')
             label.set_fontsize(14)
-        self.revenue_canvas.draw()
+
+        # Sauvegarder l'image
+        self.revenue_canvas.draw() 
+
+ 
 
     def populate_table(self):
         """Charge les adhérents dans le tableau avec des fonctionnalités supplémentaires"""

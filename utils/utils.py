@@ -17,8 +17,16 @@ from datetime import datetime
 from openpyxl import Workbook
 import os
 import shutil
+from io import BytesIO
+from tempfile import NamedTemporaryFile
+from reportlab.lib.pagesizes import letter
+import pandas as pd
+import matplotlib.pyplot as plt
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
 
-
+import numpy as np
 import hashlib
  
 def generer_hash_md5(message):
@@ -210,4 +218,156 @@ def write_to_excel(file_name="output.xlsx"):
     # Sauvegarde du fichier Excel
     workbook.save(file_name) 
 
+
+
+
+
+
+def generer_graphique_compta(donnees):
+    mois = [d['mois'] for d in donnees]
+    ventes = [d['ventes'] for d in donnees]
+    achats = [d['achats'] for d in donnees]
+    paiements = [d['paiments'] for d in donnees]
+    depenses = [d['dépenses'] for d in donnees]
+    salaires = [d['salaires'] for d in donnees]
+
+    # Largeur des barres
+    bar_width = 0.15
+    x = np.arange(len(mois))  # Conversion pour gestion des calculs
+
+    # Créer la figure et l'axe
+    fig, ax = plt.subplots(figsize=(12, 6))
+    fig.set_facecolor((0, 0, 0, 0.1))
+    ax.set_facecolor((0, 0, 0, 0.1))
+
+    # Tracer les différentes catégories
+    ax.bar(x, paiements, bar_width, label='Paiements', color='#9ACD32', alpha=0.75)
+    ax.bar(x, ventes, bar_width, bottom=paiements, label='Ventes', color='#98fb98', alpha=0.75)
+
+    ax.bar(x - bar_width, achats, bar_width, label='Achats', color='#FF6347', alpha=0.75)
+    ax.bar(x - bar_width, depenses, bar_width, bottom=achats, label='Dépenses', color='red', alpha=0.75)
+
+    s = np.array(depenses) + np.array(achats)
+    ax.bar(x - bar_width, salaires, bar_width, bottom=s, label='Salaires', color='#FF4500', alpha=0.75)
+
+    # Ajouter les titres et étiquettes
+    ax.set_title("Évolution des Comptes par Mois", color='white', fontsize=14)
+    ax.set_xlabel("Mois", color='white', fontsize=12)
+    ax.set_ylabel("Valeurs", color='white', fontsize=12)
+    ax.set_xticks(x)
+    ax.set_xticklabels(mois, rotation=90)
+    ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en blanc
+    ax.tick_params(axis='y', colors='white')
+
+    # Légende
+    ax.legend()
+
+    # Ajuster les marges
+    fig.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.25)
  
+
+    image_stream = BytesIO()
+    fig.savefig(image_stream, format='png')
+    image_stream.seek(0)
+    temp_image_file = NamedTemporaryFile(delete=False, suffix='.png')
+    image_path = temp_image_file.name
+    fig.savefig(image_path, format='png')
+    temp_image_file.close()
+    return image_path
+
+
+    
+
+
+def generate_compta_rapport(path): 
+        
+
+        data = recuperer_compta_each_month(24)
+        data_year = recuperer_compta_each_year()
+        
+        
+        path_evolution = generer_graphique_compta(data)        
+        # Création d'un objet Canvas pour générer le PDF
+        c = canvas.Canvas(path, pagesize=letter)
+
+        # Ajout de texte dans le PDF
+        c.setFont("Helvetica", 16)
+        c.drawString(100, 700, f"Rapport de Comptabilité.")
+        
+        c.line(100, 680, 500, 680)
+        c.setFont("Helvetica", 12)  
+        c.drawString(100, 660, f"""Ce rapport donne un résumé de la comptabilité de l'année en cours""")
+        c.drawString(100, 640, f"""et de l'année précédente.""")
+
+
+        c.drawImage(path_evolution, 100, 360, width=450, height=250) 
+
+        date_now = datetime.now().strftime("%Y-%m")
+        
+
+        revenue_ce_moi = data_year[-1]["ventes"] + data_year[-1]["paiements"] 
+        depense_ce_moi = data_year[-1]["achats"] + data_year[-1]["dépenses"] + data_year[-1]["salaires"] 
+
+        c.setFont("Helvetica", 14)
+        # Ajouter du texte à différentes positions
+        c.drawString(100, 340, f"Situation de l'année actuel {data_year[-1]["annee"]} : ")
+        c.setFont("Helvetica", 12) 
+        c.drawString(120, 320, f"Revenus par catégorie : ")
+        c.drawString(130, 300, f"- Ventes {data_year[-1]["ventes"]} Dhs.")
+        c.drawString(130, 280, f"- Paiments des adhérents :  {data_year[-1]["paiements"]} Dhs.")
+        c.drawString(120, 260, f"Dépenses par catégorie :  ")
+        c.drawString(130, 240, f"- Salaires {data_year[-1]["salaires"] } Dhs.")
+        c.drawString(130, 220, f"- Achats  : {data_year[-1]["achats"]} Dhs.")
+        c.drawString(130, 200, f"- Autres dépenses : {data_year[-1]["dépenses"]} Dhs.")
+        c.drawString(120, 180, f"Résumé financier :")
+
+        c.drawString(130, 160, f"- Revenus totaux :  {revenue_ce_moi} Dhs. ")
+        c.drawString(130, 140, f"- Dépenses totales :  {depense_ce_moi} Dhs.")
+        c.drawString(130, 120, f"- Résultat net :{revenue_ce_moi - depense_ce_moi} Dhs ")
+        c.drawString(100, 100, f"La liste de chaque mois se trouve dans les pages suivantes.")
+
+
+        data = recuperer_compta_each_month(24)
+
+        for i in range(len(data)-1, 0, -2): 
+            c.showPage()
+
+            c.setFont("Helvetica", 14)
+            # Ajouter du texte à différentes positions
+            c.drawString(100, 700, f"Situation de mois : {data[i]["mois"]} : ")
+            c.setFont("Helvetica", 12) 
+            c.drawString(120, 680, f"Revenus par catégorie : ")
+            c.drawString(130, 660, f"- Ventes {data[i]["ventes"]} Dhs.")
+            c.drawString(130, 640, f"- Paiments des adhérents :  {data[i]["paiments"]} Dhs.")
+            c.drawString(120, 620, f"Dépenses par catégorie :  ")
+            c.drawString(130, 600, f"- Salaires {data[i]["salaires"] } Dhs.")
+            c.drawString(130, 580, f"- Achats  : {data[i]["achats"]} Dhs.")
+            c.drawString(130, 560, f"- Autres dépenses : {data[i]["dépenses"]} Dhs.")
+            c.drawString(120, 540, f"Résumé financier :")
+            c.drawString(130, 520, f"- Revenus totaux :  {revenue_ce_moi} Dhs. ")
+            c.drawString(130, 500, f"- Dépenses totales :  {depense_ce_moi} Dhs.")
+            c.drawString(130, 480, f"- Résultat net :{revenue_ce_moi - depense_ce_moi} Dhs ") 
+            c.line(100, 460, 500, 460)
+            c.setFont("Helvetica", 14)
+            if i == 0:
+                break
+            # Ajouter du texte à différentes positions
+            c.drawString(100, 440, f"Situation de mois : {data[i-1]["mois"]} : ")
+            c.setFont("Helvetica", 12) 
+            c.drawString(120, 420, f"Revenus par catégorie : ")
+            c.drawString(130, 400, f"- Ventes {data[i-1]["ventes"]} Dhs.")
+            c.drawString(130, 380, f"- Paiments des adhérents :  {data[i-1]["paiments"]} Dhs.")
+            c.drawString(120, 360, f"Dépenses par catégorie :  ")
+            c.drawString(130, 340, f"- Salaires {data[i-1]["salaires"] } Dhs.")
+            c.drawString(130, 320, f"- Achats  : {data[i-1]["achats"]} Dhs.")
+            c.drawString(130, 300, f"- Autres dépenses : {data[i-1]["dépenses"]} Dhs.")
+            c.drawString(120, 280, f"Résumé financier :")
+            c.drawString(130, 260, f"- Revenus totaux :  {revenue_ce_moi} Dhs. ")
+            c.drawString(130, 240, f"- Dépenses totales :  {depense_ce_moi} Dhs.")
+            c.drawString(130, 220, f"- Résultat net :{revenue_ce_moi - depense_ce_moi} Dhs ")
+
+
+        c.save()
+
+
+   
