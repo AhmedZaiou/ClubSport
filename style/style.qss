@@ -11,9 +11,9 @@
             }  
             
             #logotop{  
-                margin-left: 360px;  /* Marge à gauche de 200px */
+                margin-left: 460px;  /* Marge à gauche de 200px */
                 text-align: center;
-                margin-top: 150;   /* Marge en haut de 35px */
+                margin-top: 100;   /* Marge en haut de 35px */
                 font-family: Arial;  /* Police de caractère Arial */
                 font-size: 16px;     /* Taille de la police à 16px */
                 color: #333333;    /* Couleur du texte */
@@ -26,7 +26,7 @@
                 font-size: 48px;                 /* Gras pour accentuer */
                 color: white;               /* Couleur sombre */
                 line-height: 30px;             /* Assure que le texte est centré verticalement */
-                margin-top: 215px;               /* Ajout d'espace horizontal */
+                margin-top: 205px;               /* Ajout d'espace horizontal */
                 text-align: left;             /* Alignement à droite */
                 letter-spacing: 1.5px;         /* Espacement entre les lettres */
                 background-color: transparent; /* Fond transparent */
@@ -172,6 +172,7 @@
                 color: white; /* Purple color, can be changed */
                 margin-top: 10px; /* Adds space above the title */
                 font-family: 'Arial', sans-serif; /* You can customize the font */
+                
             }
             #QLineEditstyle{
                 font-size: 14px;

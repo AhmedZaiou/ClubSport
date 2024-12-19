@@ -8,7 +8,7 @@ class MainInterface(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.setWindowTitle("Bureau de Royal Fitness, Taza")
+        self.setWindowTitle("FitManager")
         self.setGeometry(100, 100, 1500, 800)
         self.showFullScreen()
         self.setStyleSheet(set_styles())
@@ -40,7 +40,7 @@ class MainInterface(QMainWindow):
         self.menu_layout.addWidget(self.logo_label)
         
         # Ajouter le titre à droite
-        self.title_label = QLabel("Bureau de Royal Fitness, Taza") 
+        self.title_label = QLabel("Application : FitManager") 
         self.title_label.setObjectName("titremenu")
         self.menu_layout.addWidget(self.title_label, alignment=Qt.AlignRight)
  

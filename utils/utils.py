@@ -366,7 +366,6 @@ def generate_compta_rapport(path):
             c.drawString(130, 240, f"- Dépenses totales :  {depense_ce_moi} Dhs.")
             c.drawString(130, 220, f"- Résultat net :{revenue_ce_moi - depense_ce_moi} Dhs ")
 
-
         c.save()
 
 

@@ -11,7 +11,7 @@ class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         # Configuration principale
-        self.setWindowTitle("Bureau de Royal Fitness, Taza")
+        self.setWindowTitle("FitManager")
         self.setGeometry(100, 100, 1500, 800)
         self.showFullScreen()
         if not path_data_set.exists():
@@ -50,13 +50,13 @@ class LoginWindow(QMainWindow):
         self.main_layout.addWidget(top_widget) 
        # Ajouter le logo à gauche
         self.logo_label = QLabel()
-        self.logo_label.setPixmap(QPixmap(str(logo_path)).scaled(240, 240, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.logo_label.setPixmap(QPixmap(str(logo_path)).scaled(340, 240, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.logo_label.setObjectName("logotop")
         self.logo_label.setAlignment(Qt.AlignLeft)
         top_layout.addWidget(self.logo_label)
         
         # Ajouter le titre à droite
-        self.title_label = QLabel("Bureau de Royal Fitness, Taza")
+        self.title_label = QLabel("FitManager")
         self.title_label.setObjectName("titleLabel")
         self.title_label.setAlignment(Qt.AlignLeft)
         top_layout.addWidget(self.title_label, alignment=Qt.AlignLeft)
@@ -135,7 +135,7 @@ class LoginWindow(QMainWindow):
         top_layout.addWidget(self.logo_label)
         
         # Ajouter le titre à droite
-        self.title_label = QLabel("Bureau de Royal Fitness, Taza")
+        self.title_label = QLabel("Application : FitManager")
         self.title_label.setObjectName("titleLabel")
         self.title_label.setAlignment(Qt.AlignLeft)
         top_layout.addWidget(self.title_label, alignment=Qt.AlignLeft)
