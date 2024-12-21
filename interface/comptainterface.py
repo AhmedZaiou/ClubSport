@@ -264,11 +264,11 @@ class Compta(MainInterface):
 
         # Pay salarial du mois
         row6_layout = QHBoxLayout()
-        label_rev_salarial = QLabel("Total des revenus monseils :")
+        label_rev_salarial = QLabel("Total des revenus mensuels :")
         self.rev_salarial_input = QLabel(str(total_r)+ " Dhs")
         row6_layout.addWidget(label_rev_salarial)
         row6_layout.addWidget(self.rev_salarial_input)
-        label_depensett = QLabel("Total des dépenses monseils :")
+        label_depensett = QLabel("Total des dépenses mensuelles :")
         self.depense_inputtt = QLabel(str(total_d)+ " Dhs")
         row6_layout.addWidget(label_depensett)
         row6_layout.addWidget(self.depense_inputtt)
@@ -334,7 +334,7 @@ class Compta(MainInterface):
 
 
 
-        label_depense_annee = QLabel("Dépense annuels:")
+        label_depense_annee = QLabel("Dépenses annuelles:")
         self.depense_annee_input = QLabel(str(year_keys['dépenses'])+ " Dhs")
         row6_layout.addWidget(label_depense_annee)
         row6_layout.addWidget(self.depense_annee_input)
@@ -352,7 +352,7 @@ class Compta(MainInterface):
         self.rev_salarial_input_year = QLabel(str(total_r_y)+" Dhs")
         row7_layout.addWidget(label_rev_salarial_year)
         row7_layout.addWidget(self.rev_salarial_input_year)
-        label_depensett_year = QLabel("Total des dépenses annuels :")
+        label_depensett_year = QLabel("Total des dépenses annuelles :")
         self.depense_inputtt_year = QLabel(str(total_d_y)+" Dhs")
         row7_layout.addWidget(label_depensett_year)
         row7_layout.addWidget(self.depense_inputtt_year)
