@@ -1,5 +1,5 @@
 import sqlite3
-from faker import Faker
+#from faker import Faker
 import random
 from datetime import datetime, timedelta
 
@@ -12,6 +12,10 @@ racine = current_directory.parent
 
 
 path_data_set = racine / "dataset"/"royal_fitness.db"
+
+
+print(path_data_set)
+exit()
 
 def creer_base_et_tables(nom_base):
     """Crée une base de données SQLite avec les tables adherents et paiements."""
