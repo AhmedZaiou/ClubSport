@@ -85,18 +85,18 @@ class MainInterface(QMainWindow):
         self.menu_layout.addWidget(self.btn_revenues)
         self.btn_revenues.setObjectName("buttonmenu")
 
-        self.btn_revenues = QPushButton("Comptabilité de club")
+        self.btn_revenues = QPushButton("Comptabilité du club")
         self.btn_revenues.clicked.connect(self.show_compta)
         self.menu_layout.addWidget(self.btn_revenues)
         self.btn_revenues.setObjectName("buttonmenu")
 
-        self.btn_revenues = QPushButton("Generer rapport Compta")
+        self.btn_revenues = QPushButton("Generé rapport Compta")
         self.btn_revenues.clicked.connect(self.generer_rapport_compta)
         self.menu_layout.addWidget(self.btn_revenues)
         self.btn_revenues.setObjectName("buttonmenu")
  
 
-        self.btn_ajout_adhs = QPushButton("Déconnecté")
+        self.btn_ajout_adhs = QPushButton("Déconnecter")
         self.btn_ajout_adhs.clicked.connect(self.deconnexion)
         self.menu_layout.addWidget(self.btn_ajout_adhs)
         self.btn_ajout_adhs.setObjectName("buttonmenu")
