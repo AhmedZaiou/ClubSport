@@ -90,7 +90,7 @@ class MainInterface(QMainWindow):
         self.menu_layout.addWidget(self.btn_revenues)
         self.btn_revenues.setObjectName("buttonmenu")
 
-        self.btn_revenues = QPushButton("Generé rapport Compta")
+        self.btn_revenues = QPushButton("Génerer rapport Compta")
         self.btn_revenues.clicked.connect(self.generer_rapport_compta)
         self.menu_layout.addWidget(self.btn_revenues)
         self.btn_revenues.setObjectName("buttonmenu")
