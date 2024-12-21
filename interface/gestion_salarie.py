@@ -157,7 +157,7 @@ class Salarie( ):
         self.nvMotdepass_admin_value.setEchoMode(QLineEdit.Password)
         self.ladmin_layout.addWidget(self.nvMotdepass_admin_value)
 
-        self.modefier_admin= QPushButton("Modefier le mot de passe")
+        self.modefier_admin= QPushButton("Modifier le mot de passe")
         self.modefier_admin.clicked.connect(self.update_motdepass)
         self.modefier_admin.setObjectName("buttconexion")
         self.ladmin_layout.addWidget(self.modefier_admin)

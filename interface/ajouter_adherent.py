@@ -48,7 +48,7 @@ class AjouterAfh():
         self.num_adh_input.setPlaceholderText("Numéro d'adhérent")
         self.adresse_input.setPlaceholderText("Adresse")
         self.numero_assurance.setPlaceholderText("Numero d'assurance")
-        self.centure.setPlaceholderText("Centure")
+        self.centure.setPlaceholderText("Ceinture")
         self.dautreinformation.setPlaceholderText("D'autre information") 
 
         
@@ -233,9 +233,9 @@ class AjouterAfh():
 
         row_layout_19 = QHBoxLayout()
         row_layout_19.addWidget(self.centure)
-        row_layout_19.addWidget(QLabel("D'autre informations :"))
+        row_layout_19.addWidget(QLabel("D'autres informations :"))
         row_layout_19.addWidget(self.dautreinformation)
-        form_layout.addRow("Centure :", row_layout_19)
+        form_layout.addRow("Ceinture :", row_layout_19)
 
         row_layout_7 = QHBoxLayout()
         row_layout_7.addWidget(self.photo_input)
