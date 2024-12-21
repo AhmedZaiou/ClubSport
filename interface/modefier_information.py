@@ -41,9 +41,9 @@ class ModefierADh():
         self.nom_parent = QLineEdit()
         self.contact_parent = QLineEdit()
 
-        self.numero_assurance = QLineEdit(data_adherent[24])
-        self.centure = QLineEdit(data_adherent[25])
-        self.dautreinformation = QLineEdit(data_adherent[22])
+        self.numero_assurance = QLineEdit(data_adherent[23])
+        self.centure = QLineEdit(data_adherent[24])
+        self.dautreinformation = QLineEdit(data_adherent[25])
 
         self.date_entree_input = QDateEdit()
         self.date_entree_input.setDate(QDate.fromString(data_adherent[8], "yyyy-MM-dd"))
@@ -133,9 +133,9 @@ class ModefierADh():
         self.contact_parent.setText(str(data_adherent[19]))
         self.situation_sanitaire.itemText(list_sani.index(data_adherent[20]))
         self.situation_sanitaire_text.setText(str(data_adherent[21]))
-        self.update_disciplines(str(data_adherent[17]))
+        self.update_disciplines(str(data_adherent[17])) 
 
-        self.discipline_input.itemText(disciplines[str(data_adherent[17])].index(str(data_adherent[23])))
+        self.discipline_input.itemText(disciplines[str(data_adherent[17])].index(str(data_adherent[22])))
         
 
 

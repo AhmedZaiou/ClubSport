@@ -16,9 +16,7 @@ class LoginWindow(QMainWindow):
         self.showFullScreen()
         if not path_data_set.exists():
             initialiser_dataset(path_data_set)
-        if selectcode():
-            #print(recuperer_compta_each_month())
-            #print(recuperer_compta_each_year())
+        if selectcode(): 
             self.create_login_interface()
         else:
             self.validateinstall()

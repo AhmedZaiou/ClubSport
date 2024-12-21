@@ -394,7 +394,7 @@ def dinscription(id):
 
     data = load_data( id)
 
-    (id_profile ,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path) = data
+    (id_profile ,nom, prenom, email, telephone, cin, num_adh, adresse, date_entree, age, genre, tarif, seances, situation, photo_path) = data[:15]
     connection = sqlite3.connect(path_data_set)
     cursor = connection.cursor()
 
@@ -427,7 +427,7 @@ def dinscription(id):
             date_entree, age, genre, tarif, seances, situation, photo_path
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (id_profile, nom, prenom, email, telephone, cin, num_adh, adresse, date_entree,
-        age, genre, tarif, seances, situation, photo_path))
+        age, genre, tarif, seances, situation, photo_path,))
     
     cursor.execute("""
         DELETE FROM adherents WHERE id = ?;
@@ -948,13 +948,18 @@ def initialiser_dataset(path_data_set):
         seances INTEGER,
         situation TEXT,
         photo_path TEXT,
-                poids TEXT,
-                longeur TEXT,
-                titre_sport TEXT,
-                nom_parent TEXT,
-                contact_parent TEXT,
-                situation_sanitaire TEXT,
-                situation_sanitaire_text TEXT
+        poids TEXT,
+        longeur TEXT,
+        titre_sport TEXT,
+        nom_parent TEXT,
+        contact_parent TEXT,
+        situation_sanitaire TEXT,
+        situation_sanitaire_text TEXT, 
+        discipline TEXT,
+        numero_assurance TEXT,
+        centure TEXT,
+        dautre_information TEXT
+        
     )
     ''')
 
@@ -1054,6 +1059,11 @@ def initialiser_dataset(path_data_set):
             code TEXT
         )
         ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS accidents (id INTEGER PRIMARY KEY AUTOINCREMENT, id_adherent, name_haderent,nom, date, nature, gravite, soins, hospitalisation, rapport, indispo, temoins, mesures) 
+        ''')
+    
+ 
 
     conn.commit()
     conn.close()

@@ -4,6 +4,8 @@ from PyQt5.QtCore import Qt
 from utils.utils import *
 from dataset.dataset import *
 from .main_interface import MainInterface
+from PyQt5.QtGui import QRegularExpressionValidator
+from PyQt5.QtCore import QRegularExpression
  
 
 class AjouterAfh():
@@ -36,6 +38,8 @@ class AjouterAfh():
         self.centure = QLineEdit()
         self.dautreinformation = QLineEdit()
 
+        
+
         self.nom_input.setPlaceholderText('Nom')
         self.prenom_input.setPlaceholderText('Prenom')
         self.email_input.setPlaceholderText('Email')
@@ -45,7 +49,7 @@ class AjouterAfh():
         self.adresse_input.setPlaceholderText("Adresse")
         self.numero_assurance.setPlaceholderText("Numero d'assurance")
         self.centure.setPlaceholderText("Centure")
-        self.dautreinformation.setPlaceholderText("D'autre information")
+        self.dautreinformation.setPlaceholderText("D'autre information") 
 
         
 
@@ -390,6 +394,9 @@ class AjouterAfh():
         self.situation_sanitaire_text.clear()  
         self.longueur.clear()
         self.titre_sport.setCurrentIndex(0)
+        self.numero_assurance.clear()  
+        self.centure.clear()  
+        self.dautreinformation.clear() 
         
     def select_photo(self):
         """Ouvrir une boîte de dialogue pour sélectionner une photo."""

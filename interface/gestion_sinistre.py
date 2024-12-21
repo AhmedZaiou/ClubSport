@@ -61,7 +61,7 @@ class Sinistre( ):
         
         # Tableau pour afficher les adhérents avec situation = NON
 
-        titre_table = QLabel('Produits en stock :')
+        titre_table = QLabel('Liste des sinistres :')
         titre_table.setObjectName("titre_table")
         layout.addWidget(titre_table)
 
@@ -90,8 +90,8 @@ class Sinistre( ):
         self.nom_input = QLineEdit()
         
         self.date_label = QLabel("Date de l'accident :")
-        self.date_input = QLineEdit()
-        self.date_input.setPlaceholderText("YYYY-MM-DD")
+        self.date_input = QDateEdit()
+        self.date_input.setDate(QDate.currentDate()) 
         
         self.nature_label = QLabel("Nature de l'accident :")
         self.nature_input = QLineEdit()
@@ -237,8 +237,15 @@ class Sinistre( ):
 
     def on_cell_clicked_vente(self, row, column):
         # Si la colonne 12 (Action) est cliquée
-        from .profile_interface import Profile
-        self.main_interface = Profile(self.id_adherent, self.main_inter)
+        if column == 11 :
+            id_adherent = self.tableWidget.item(row, column).data(Qt.UserRole)  
+            res = load_data(id_adherent)
+            if res:
+                from .profile_interface import Profile
+                self.main_interface = Profile(id_adherent, self.main_inter)
+            else:
+                QMessageBox.information(self.main_inter, "Attenttion", "L'abonné est déjà Supprimer.")
+
     
  
 
@@ -250,7 +257,7 @@ class Sinistre( ):
             "id_adherent" : self.id_adherent,
             "name_haderent" : self.name_adherent,
             "nom": self.nom_input.text(),
-            "date": self.date_input.text(),
+            "date": self.date_input.date().toString("yyyy-MM-dd"),
             "nature": self.nature_input.text(),
             "gravite": self.gravite_input.currentText(),
             "soins": self.soins_input.text(),
@@ -263,6 +270,8 @@ class Sinistre( ):
 
         inser_db_sinistre(data)
         self.resetForm()
+        from .profile_interface import Profile
+        self.main_interface = Profile(self.id_adherent, self.main_inter)
 
     def resetForm(self):
         # Réinitialisation du formulaire

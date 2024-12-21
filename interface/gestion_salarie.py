@@ -198,7 +198,7 @@ class Salarie( ):
 
         nvpassword = self.nvMotdepass_admin_value.text()
         try:
-            if not nvpassword: 
+            if nvpassword is not None: 
                 reponse = QMessageBox.question(
                     self.main_inter,
                     "Confirmer la modification du mot de passe",

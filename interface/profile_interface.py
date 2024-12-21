@@ -229,8 +229,7 @@ class Profile():
         main_layout.addLayout(content_layout)
         
 
-        row = load_data(self.id_profile) 
-        print(row)
+        row = load_data(self.id_profile)  
         if row:
             self.nom_value.setText(str(row[1]))
             self.prenom_value.setText(row[2])
@@ -256,10 +255,10 @@ class Profile():
             self.contact_parent_value.setText(str(row[19]))
             self.situation_sanitaire_value.setText(str(row[20]))
             self.situation_sanitaire_text_value.setText(str(row[21]))
-            self.discipline_value.setText(str(row[23]))
-            self.numero_assurance_value.setText(str(row[24]))
-            self.centure_value.setText(str(row[25]))
-            self.dautre_information_value.setText(str(row[22]))
+            self.discipline_value.setText(str(row[22]))
+            self.numero_assurance_value.setText(str(row[23]))
+            self.centure_value.setText(str(row[24]))
+            self.dautre_information_value.setText(str(row[25]))
 
 
 
@@ -294,7 +293,7 @@ class Profile():
         self.main_interface = Sanction(self.main_inter, self.id_profile)
     def ajoutersinistre_fc(self):
         from .gestion_sinistre import Sinistre
-        self.main_interface = Sinistre(self.main_inter, self.id_profile, self.num_adh_value.text()) 
+        self.main_interface = Sinistre(self.main_inter, self.id_profile, self.nom_value.text()) 
     
     def medefier(self):
         from .modefier_information import ModefierADh
@@ -317,12 +316,12 @@ class Profile():
         adherent_id = self.id_profile
         paiements = recuperer_paiements(adherent_id)
         
-        if len(paiements) >0:
-            print(paiements[-1])
+        if len(paiements) >0: 
             date_laste_paiment = paiements[-1][1].split("-")
             year_last_paiment,moi_last_paiment = int(date_laste_paiment[0]),int(date_laste_paiment[1])
         else:
-            start_date = self.date_entree.split('-') 
+            start_date = self.date_entree_value.text().split('-') 
+            print(start_date)
             year_last_paiment,moi_last_paiment = int(start_date[0]),int(start_date[1])
             year_last_paiment,moi_last_paiment  = decrement_month(year_last_paiment,moi_last_paiment)
          

@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPixmap, QPalette, QBrush
 from PyQt5.QtCore import Qt, QDate
 import sqlite3 
 from PyQt5.QtGui import QColor
-
+import matplotlib.pyplot as plt
 import sys 
 import pandas as pd
 from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QWidget, QTableWidget, QTableWidgetItem
@@ -21,7 +21,7 @@ from io import BytesIO
 from tempfile import NamedTemporaryFile
 from reportlab.lib.pagesizes import letter
 import pandas as pd
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
@@ -222,8 +222,7 @@ def write_to_excel(file_name="output.xlsx"):
 
 
 
-
-def generer_graphique_compta(donnees):
+def generer_graphique_compta( donnees):
     mois = [d['mois'] for d in donnees]
     ventes = [d['ventes'] for d in donnees]
     achats = [d['achats'] for d in donnees]
@@ -264,7 +263,7 @@ def generer_graphique_compta(donnees):
 
     # Ajuster les marges
     fig.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.25)
- 
+
 
     image_stream = BytesIO()
     fig.savefig(image_stream, format='png')
@@ -279,7 +278,7 @@ def generer_graphique_compta(donnees):
     
 
 
-def generate_compta_rapport(path): 
+def generate_compta_rapport( path): 
         
 
         data = recuperer_compta_each_month(24)
@@ -369,5 +368,3 @@ def generate_compta_rapport(path):
 
         c.save()
 
-
-   
