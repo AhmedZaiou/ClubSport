@@ -181,7 +181,7 @@ class Payment( ):
         ax.clear()
         ax.set_facecolor((0, 0, 0, 0.1))
         revenue_by_month.plot(kind="bar", ax=ax, color="firebrick", alpha=0.75)
-        ax.set_title(f"Dépenses Mensuels ({current_year}) - Total : {total_revenue} Dhs",  color='white',  fontsize=16) 
+        ax.set_title(f"Dépenses Mensuelles ({current_year}) - Total : {total_revenue} Dhs",  color='white',  fontsize=16) 
         ax.set_ylabel("Dépenses (Dhs)",  color='white',  fontsize=16) 
         ax.tick_params(axis='x', colors='white')  # Ticks de l'axe X en noir
         ax.tick_params(axis='y', colors='white')
@@ -457,7 +457,7 @@ class Payment( ):
         depense_by_month.plot(kind="line", ax=ax, color="firebrick", alpha=0.75, label= "Dépenses")
         
         # Ajouter le titre et l'étiquette de l'axe Y
-        ax.set_title("Revenus et dépenses mensuels", fontsize=16)
+        ax.set_title("Revenus et dépenses mensuelles", fontsize=16)
         ax.set_ylabel("Situation en Dhs",  fontsize=16)
  
 

@@ -204,7 +204,7 @@ class Sinistre( ):
         # Effacer les anciennes lignes dans le tableau
         self.tableWidget.setColumnCount(12)  # Nombre de colonnes affichées
         self.tableWidget.setHorizontalHeaderLabels([
-         "Nom adhérent","Nom sinistre", "Date", "Nature", "Gravite", "Soins", "Hospitalisation", "Rapport", "Indispo", "Temoins", "Mesures", "Action"
+         "Nom adhérent","Nom sinistre", "Date", "Nature", "Gravité", "Soins", "Hospitalisation", "Rapport", "Indispo", "Témoins", "Mesures", "Action"
         ])
         self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
